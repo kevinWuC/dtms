@@ -67,16 +67,8 @@ public class TrainConfigController {
             return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "考试ID为空,请填写");
         }
 
-        if (StringUtils.isBlank(trainConfigDTO.getExamName())) {
-            return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "考试名称为空,请填写");
-        }
-
         if (null == trainConfigDTO.getPassPoint()) {
             return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "考试及格分为空,请填写");
-        }
-
-        if (null == trainConfigDTO.getTotalPoint()) {
-            return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "考试总分为空,请填写");
         }
 
         if (null == trainConfigDTO.getReadFen()) {

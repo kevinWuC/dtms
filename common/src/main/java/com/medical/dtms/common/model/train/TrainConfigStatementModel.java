@@ -1,6 +1,10 @@
 package com.medical.dtms.common.model.train;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.medical.dtms.common.convert.LongJsonDeserializer;
+import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,6 +17,12 @@ import java.util.List;
 @Data
 public class TrainConfigStatementModel {
 
+    /**
+     * 培训类型ID
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long trainTypeId;
     /**
      * 培训类型名称
      **/
@@ -39,6 +49,15 @@ public class TrainConfigStatementModel {
      * 培训文件列表
      **/
     private List<TrainFileModel> listFile;
+    /**
+     * 及格分数
+     **/
+    private Integer passPoint;
+
+    /**
+     * 应培训时数
+     **/
+    private Integer readFen;
     /**
      * 考试名称
      **/
