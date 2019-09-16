@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.qms.DataBaseMapper">
+
+    <!--  数据库表查询-->
+    <select id="showTables" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        TABLE_NAME
+        FROM information_schema.TABLES
+        WHERE table_schema = #{dataBaseName}
+    </select>
+</mapper>

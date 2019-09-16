@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.train.TrainConfigMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.train.TrainConfigDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="train_type_id" jdbcType="BIGINT" property="trainTypeId"/>
+        <result column="train_name" jdbcType="VARCHAR" property="trainName"/>
+        <result column="train_description" jdbcType="VARCHAR" property="trainDescription"/>
+        <result column="start_date" jdbcType="TIMESTAMP" property="startDate"/>
+        <result column="end_date" jdbcType="TIMESTAMP" property="endDate"/>
+        <result column="is_start" jdbcType="BIT" property="isStart"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="train_info" jdbcType="VARCHAR" property="trainInfo"/>
+        <result column="exam_id" jdbcType="BIGINT" property="examId"/>
+        <result column="exam_name" jdbcType="VARCHAR" property="examName"/>
+        <result column="pass_point" jdbcType="INTEGER" property="passPoint"/>
+        <result column="total_point" jdbcType="INTEGER" property="totalPoint"/>
+        <result column="read_fen" jdbcType="INTEGER" property="readFen"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    id, biz_id, train_type_id, train_name, train_description, start_date, end_date, is_start,
+    answer, train_info, exam_id, exam_name, pass_point, total_point,read_fen, is_deleted, creator,
+    creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+   tb_dtms_train_config
+  </sql>
+
+    <!-- 主键查询是否存在 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+        and
+        is_deleted = 0
+    </select>
+
+    <!-- 通过主键删除培训 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update
+        <include refid="table_name"/>
+        set
+        is_deleted = 1
+        where
+        biz_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 新增培训 -->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.train.TrainConfigDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{trainTypeId,jdbcType=BIGINT},
+        #{trainName,jdbcType=VARCHAR}, #{trainDescription,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP},
+        #{endDate,jdbcType=TIMESTAMP}, #{isStart,jdbcType=BIT}, #{answer,jdbcType=VARCHAR},
+        #{trainInfo,jdbcType=VARCHAR}, #{examId,jdbcType=BIGINT}, #{examName,jdbcType=VARCHAR},
+        #{passPoint,jdbcType=INTEGER},#{totalPoint,jdbcType=INTEGER}, #{readFen,jdbcType=INTEGER}, 0,
+        #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR}, NOW(),
+        #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR}, NOW()
+        )
+    </insert>
+
+
+    <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.train.TrainConfigDO">
+        insert into tb_dtms_train_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="trainType != null">
+                train_type,
+            </if>
+            <if test="trainName != null">
+                train_name,
+            </if>
+            <if test="trainDescription != null">
+                train_description,
+            </if>
+            <if test="startDate != null">
+                start_date,
+            </if>
+            <if test="endDate != null">
+                end_date,
+            </if>
+            <if test="isStart != null">
+                is_start,
+            </if>
+            <if test="answer != null">
+                answer,
+            </if>
+            <if test="trainInfo != null">
+                train_info,
+            </if>
+            <if test="examId != null">
+                exam_id,
+            </if>
+            <if test="examName != null">
+                exam_name,
+            </if>
+            <if test="passPoint != null">
+                pass_point,
+            </if>
+            <if test="readFen != null">
+                read_fen,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="modifierId != null">
+                modifier_id,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="bizId != null">
+                #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="trainType != null">
+                #{trainType,jdbcType=VARCHAR},
+            </if>
+            <if test="trainName != null">
+                #{trainName,jdbcType=VARCHAR},
+            </if>
+            <if test="trainDescription != null">
+                #{trainDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isStart != null">
+                #{isStart,jdbcType=BIT},
+            </if>
+            <if test="answer != null">
+                #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="trainInfo != null">
+                #{trainInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="examId != null">
+                #{examId,jdbcType=VARCHAR},
+            </if>
+            <if test="examName != null">
+                #{examName,jdbcType=VARCHAR},
+            </if>
+            <if test="passPoint != null">
+                #{passPoint,jdbcType=INTEGER},
+            </if>
+            <if test="readFen != null">
+                #{readFen,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 培训配置更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.train.TrainConfigDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="trainTypeId != null">
+                train_type_id = #{trainTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="trainName != null">
+                train_name = #{trainName,jdbcType=VARCHAR},
+            </if>
+            <if test="trainDescription != null">
+                train_description = #{trainDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isStart != null">
+                is_start = #{isStart,jdbcType=BIT},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="trainInfo != null">
+                train_info = #{trainInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="examId != null">
+                exam_id = #{examId,jdbcType=BIGINT},
+            </if>
+            <if test="examName != null">
+                exam_name = #{examName,jdbcType=VARCHAR},
+            </if>
+            <if test="passPoint != null">
+                pass_point = #{passPoint,jdbcType=INTEGER},
+            </if>
+            <if test="totalPoint != null">
+                total_point = #{totalPoint,jdbcType=INTEGER},
+            </if>
+            <if test="readFen != null">
+                read_fen = #{readFen,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.train.TrainConfigDO">
+    update tb_dtms_train_config
+    set biz_id = #{bizId,jdbcType=BIGINT},
+      train_type_id = # #{trainTypeId,jdbcType=BIGINT},
+      train_name = #{trainName,jdbcType=VARCHAR},
+      train_description = #{trainDescription,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      is_start = #{isStart,jdbcType=BIT},
+      answer = #{answer,jdbcType=VARCHAR},
+      train_info = #{trainInfo,jdbcType=VARCHAR},
+      exam_id = #{examId,jdbcType=BIGINT},
+      exam_name = #{examName,jdbcType=VARCHAR},
+      pass_point = #{passPoint,jdbcType=INTEGER},
+      total_point = #{totalPoint,jdbcType=INTEGER},
+      read_fen = #{readFen,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      creator = #{creator,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modifier_id = #{modifierId,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <!-- 通过培训名称确定唯一性 -->
+    <select id="getTrainConfigByTrainName" parameterType="com.medical.dtms.dto.train.query.TrainConfigQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where
+        is_deleted = 0
+        <if test="trainName != null">
+          and  train_name = #{trainName,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!-- 培训配置-列表查询 -->
+    <select id="listTrainConfigs" parameterType="com.medical.dtms.dto.train.query.TrainConfigQuery"
+            resultType="com.medical.dtms.common.model.train.TrainConfigModel">
+        select
+            config.biz_id AS bizId , details.item_name AS trainTypeName ,config.train_name AS trainName
+            ,config.train_description AS trainDescription ,config.start_date AS startDate
+            ,config.end_date AS endDate ,config.is_start AS isStart
+            ,config.gmt_created AS gmtCreated
+        from
+        tb_dtms_train_config config
+        left join tb_dtms_qms_item_details details on config.train_type_id = details.biz_id
+        where config.is_deleted = 0
+        and details.is_deleted = 0
+        ORDER BY
+        config.gmt_created DESC
+    </select>
+
+
+    <select id="selectTrainConfig" parameterType="java.lang.Long"
+            resultType="com.medical.dtms.common.model.train.TrainConfigQueryModel">
+        select
+            config.biz_id AS bizId , details.item_name AS trainTypeName ,config.train_name AS trainName
+            ,config.train_description AS trainDescription ,config.start_date AS startDate
+            ,config.end_date AS endDate ,config.is_start AS isStart
+           ,config.exam_name AS examName ,config.gmt_created AS gmtCreated
+        from
+        tb_dtms_train_config config
+        left join tb_dtms_qms_item_details details on config.train_type_id = details.biz_id
+        where config.is_deleted = 0
+        and details.is_deleted = 0
+        and config.biz_id = #{bizId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

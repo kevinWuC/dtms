@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.file.FileApplyMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.file.FileApplyDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="log_id" jdbcType="BIGINT" property="logId"/>
+        <result column="file_no" jdbcType="VARCHAR" property="fileNo"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_type_id" jdbcType="BIGINT" property="fileTypeId"/>
+        <result column="apply_type" jdbcType="BIGINT" property="applyType"/>
+        <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate"/>
+        <result column="file_version" jdbcType="VARCHAR" property="fileVersion"/>
+        <result column="effect_date" jdbcType="TIMESTAMP" property="effectDate"/>
+        <result column="apply_dept_id" jdbcType="BIGINT" property="applyDeptId"/>
+        <result column="apply_dept_name" jdbcType="VARCHAR" property="applyDeptName"/>
+        <result column="make_dept_id" jdbcType="BIGINT" property="makeDeptId"/>
+        <result column="make_dept_name" jdbcType="VARCHAR" property="makeDeptName"/>
+        <result column="apply_reason_id" jdbcType="BIGINT" property="applyReasonId"/>
+        <result column="audit_user_id" jdbcType="VARCHAR" property="auditUserId"/>
+        <result column="audit_user_name" jdbcType="VARCHAR" property="auditUserName"/>
+        <result column="approver_user_id" jdbcType="VARCHAR" property="approverUserId"/>
+        <result column="approver_user_name" jdbcType="VARCHAR" property="approverUserName"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="approver_date" jdbcType="TIMESTAMP" property="approverDate"/>
+        <result column="result" jdbcType="BIT" property="result"/>
+        <result column="is_finish" jdbcType="BIT" property="isFinish"/>
+        <result column="before_change" jdbcType="VARCHAR" property="beforeChange"/>
+        <result column="after_change" jdbcType="VARCHAR" property="afterChange"/>
+        <result column="file_apply_type" jdbcType="INTEGER" property="fileApplyType"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, file_id, log_id, file_no, file_name, file_type_id, apply_type, apply_date, 
+    file_version, effect_date, apply_dept_id, apply_dept_name, make_dept_id,make_dept_name,apply_reason_id, audit_user_id,
+    audit_user_name, approver_user_id, approver_user_name, content, approver_date, result, 
+    is_finish, before_change, after_change,file_apply_type,is_deleted, creator, creator_id, gmt_created,
+    modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+   tb_dtms_file_apply
+  </sql>
+
+    <!-- 查询申请详情-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+        and is_deleted = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!--  新增申请-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.file.FileApplyDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fileId,jdbcType=BIGINT},
+        #{logId,jdbcType=BIGINT}, #{fileNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+        #{fileTypeId,jdbcType=BIGINT}, #{applyType,jdbcType=BIGINT}, #{applyDate,jdbcType=TIMESTAMP},
+        #{fileVersion,jdbcType=VARCHAR}, #{effectDate,jdbcType=TIMESTAMP},
+        #{applyDeptId,jdbcType=BIGINT},#{applyDeptName,jdbcType=VARCHAR},
+        #{makeDeptId,jdbcType=BIGINT},#{makeDeptName,jdbcType=VARCHAR},
+        #{applyReasonId,jdbcType=BIGINT}, #{auditUserId,jdbcType=VARCHAR},
+        #{auditUserName,jdbcType=VARCHAR}, #{approverUserId,jdbcType=VARCHAR}, #{approverUserName,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR}, #{approverDate,jdbcType=TIMESTAMP}, #{result,jdbcType=BIT},
+        #{isFinish,jdbcType=BIT}, #{beforeChange,jdbcType=VARCHAR},
+        #{afterChange,jdbcType=VARCHAR},#{fileApplyType,jdbcType=INTEGER},
+        0, #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR},
+        NOW(), #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR},
+        NOW())
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.file.FileApplyDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="logId != null">
+                log_id = #{logId,jdbcType=BIGINT},
+            </if>
+            <if test="fileNo != null">
+                file_no = #{fileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileTypeId != null">
+                file_type_id = #{fileTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="applyType != null">
+                apply_type = #{applyType,jdbcType=BIGINT},
+            </if>
+            <if test="applyDate != null">
+                apply_date = #{applyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileVersion != null">
+                file_version = #{fileVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="effectDate != null">
+                effect_date = #{effectDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyDeptId != null">
+                apply_dept_id = #{applyDeptId,jdbcType=BIGINT},
+            </if>
+            <if test="applyDeptName != null">
+                apply_dept_name = #{applyDeptName,jdbcType=VARCHAR},
+            </if>
+            <if test="makeDeptId != null">
+                make_dept_id = #{makeDeptId,jdbcType=BIGINT},
+            </if>
+            <if test="makeDeptName != null">
+                make_dept_name = #{makeDeptName,jdbcType=VARCHAR},
+            </if>
+            <if test="applyReasonId != null">
+                apply_reason_id = #{applyReasonId,jdbcType=BIGINT},
+            </if>
+            <if test="auditUserId != null">
+                audit_user_id = #{auditUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="auditUserName != null">
+                audit_user_name = #{auditUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="approverUserId != null">
+                approver_user_id = #{approverUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="approverUserName != null">
+                approver_user_name = #{approverUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="approverDate != null">
+                approver_date = #{approverDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="result != null">
+                result = #{result,jdbcType=BIT},
+            </if>
+            <if test="isFinish != null">
+                is_finish = #{isFinish,jdbcType=BIT},
+            </if>
+            <if test="beforeChange != null">
+                before_change = #{beforeChange,jdbcType=VARCHAR},
+            </if>
+            <if test="afterChange != null">
+                after_change = #{afterChange,jdbcType=VARCHAR},
+            </if>
+            <if test="fileApplyType != null">
+                file_apply_type = #{fileApplyType,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 申请审核 分页查询-->
+    <select id="pageListApplyCheck" parameterType="com.medical.dtms.dto.file.query.FileModelQuery"
+            resultType="com.medical.dtms.common.model.file.ApplyCheckModel">
+        SELECT
+            apply.biz_id AS bizId,
+            file.biz_id AS fileId,
+            file.file_apply_type AS fileApplyType,
+            details.item_name AS applyTypeName,
+            detail.item_name AS applyReasonName,
+            apply.apply_dept_name AS applyDeptName,
+            apply.gmt_created AS applyTime,
+            apply.file_no AS fileNo,
+            apply.file_version AS fileVersion,
+            apply.file_name AS fileName,
+            dt.item_name AS fileTypeIdName,
+            file.creator AS applyUserName,
+            file.approver_user_name AS approveUserName,
+            file.gmt_modified AS approveTime,
+            file.auditor_name AS auditorName,
+            apply.is_finish AS isFinish,
+            apply.result AS result,
+            file.approver_content AS approverContent
+        FROM
+            tb_dtms_file_apply apply
+        LEFT JOIN tb_dtms_file_model file ON apply.file_id = file.biz_id
+        LEFT JOIN tb_dtms_qms_item_details details ON apply.apply_type = details.biz_id
+        LEFT JOIN tb_dtms_qms_item_details detail ON apply.apply_reason_id = detail.biz_id
+        LEFT JOIN tb_dtms_qms_item_details dt ON file.file_type_id = dt.biz_id
+        WHERE
+            apply.is_deleted = 0
+        AND file.is_deleted = 0
+        AND details.is_deleted = 0
+    </select>
+
+    <!-- 根据id 回显详情-->
+    <select id="selectById" parameterType="java.lang.Long"
+            resultType="com.medical.dtms.common.model.file.FileApplyDetailModel">
+        SELECT
+            apply.biz_id AS bizId,
+            apply.file_id AS fileId,
+            apply.file_no AS fileNo,
+            apply.file_name AS fileName,
+            apply.file_type_id AS fileTypeId,
+            dt.item_name AS fileTypeName,
+            apply.apply_type AS  applyType,
+            details.item_name AS applyTypeName,
+            file.file_apply_type AS fileApplyType,
+            apply.gmt_created AS applyDate,
+            apply.file_version AS fileVersion,
+            apply.effect_date AS effectDate,
+            apply.apply_dept_id AS applyDeptId,
+            apply.apply_dept_name AS applyDeptName,
+            apply.make_dept_id AS makeDeptId,
+            apply.make_dept_name AS makeDeptName,
+            apply.apply_reason_id AS applyReasonId,
+            detail.item_name AS applyReasonName,
+            apply.audit_user_id AS auditUserId,
+            apply.audit_user_name AS auditUserName,
+            apply.approver_user_id AS approverUserId,
+            apply.approver_user_name AS approverUserName,
+            apply.content AS content,
+            apply.approver_date AS approverDate,
+            apply.result AS result,
+            apply.is_finish AS isFinish,
+            file.approver_content AS approverContent
+        FROM
+            tb_dtms_file_apply apply
+        LEFT JOIN tb_dtms_file_model file ON apply.file_id = file.biz_id
+        LEFT JOIN tb_dtms_qms_item_details details ON apply.apply_type = details.biz_id
+        LEFT JOIN tb_dtms_qms_item_details detail ON apply.apply_reason_id = detail.biz_id
+        LEFT JOIN tb_dtms_qms_item_details dt ON file.file_type_id = dt.biz_id
+        WHERE
+            apply.is_deleted = 0
+        AND file.is_deleted = 0
+        AND details.is_deleted = 0
+        and apply.biz_id = #{bizId,jdbcType=BIGINT}
+    </select>
+</mapper>

@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.file.FileModelMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.file.FileModelDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="file_no" jdbcType="VARCHAR" property="fileNo"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_type_id" jdbcType="BIGINT" property="fileTypeId"/>
+        <result column="file_version" jdbcType="VARCHAR" property="fileVersion"/>
+        <result column="apply_type" jdbcType="BIGINT" property="applyType"/>
+        <result column="file_apply_type" jdbcType="INTEGER" property="fileApplyType"/>
+        <result column="approver_user_id" jdbcType="VARCHAR" property="approverUserId"/>
+        <result column="approver_user_name" jdbcType="VARCHAR" property="approverUserName"/>
+        <result column="approver_content" jdbcType="VARCHAR" property="approverContent"/>
+        <result column="effect_date" jdbcType="TIMESTAMP" property="effectDate"/>
+        <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate"/>
+        <result column="apply_year" jdbcType="INTEGER" property="applyYear"/>
+        <result column="office_page_sie" jdbcType="INTEGER" property="officePageSie"/>
+        <result column="apply_dept_id" jdbcType="BIGINT" property="applyDeptId"/>
+        <result column="apply_user_id" jdbcType="BIGINT" property="applyUserId"/>
+        <result column="apply_reason_id" jdbcType="BIGINT" property="applyReasonId"/>
+        <result column="auditor_id" jdbcType="BIGINT" property="auditorId"/>
+        <result column="auditor_name" jdbcType="VARCHAR" property="auditorName"/>
+        <result column="file_info" jdbcType="VARCHAR" property="fileInfo"/>
+        <result column="is_annual_verification" jdbcType="BIT" property="isAnnualVerification"/>
+        <result column="year_audit_cycle" jdbcType="INTEGER" property="yearAuditCycle"/>
+        <result column="annual_verification_dept_id" jdbcType="BIGINT" property="annualVerificationDeptId"/>
+        <result column="file_content" jdbcType="VARCHAR" property="fileContent"/>
+        <result column="signator1_id" jdbcType="VARCHAR" property="signator1Id"/>
+        <result column="signator2_id" jdbcType="VARCHAR" property="signator2Id"/>
+        <result column="approver_id" jdbcType="VARCHAR" property="approverId"/>
+        <result column="file_status" jdbcType="INTEGER" property="fileStatus"/>
+        <result column="is_received" jdbcType="BIT" property="isReceived"/>
+        <result column="receive_date" jdbcType="TIMESTAMP" property="receiveDate"/>
+        <result column="receiver_id" jdbcType="VARCHAR" property="receiverId"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="allow_modify" jdbcType="BIT" property="allowModify"/>
+        <result column="allow_bad" jdbcType="BIT" property="allowBad"/>
+        <result column="apply_status" jdbcType="INTEGER" property="applyStatus"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     id, biz_id, file_no, file_name, file_type_id, file_version, apply_type,file_apply_type, approver_user_id,
+    approver_user_name, approver_content, effect_date, apply_date, apply_year, office_page_sie,
+    apply_dept_id, apply_user_id, apply_reason_id, auditor_id, auditor_name, file_info,
+    is_annual_verification, year_audit_cycle, annual_verification_dept_id, file_content,
+    signator1_id, signator2_id, approver_id, file_status, is_received, receive_date,
+    receiver_id, receiver_name, allow_modify, allow_bad, apply_status, is_deleted, creator,
+    creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+       tb_dtms_file_model
+    </sql>
+
+    <!--  文件报批回显-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long"
+            resultType="com.medical.dtms.common.model.file.FileDetailModel">
+       SELECT
+            file.biz_id AS bizId,
+            file.file_no AS fileNo,
+            file.file_name AS fileName,
+            file.effect_date AS effectDate,
+            file.file_type_id AS fileTypeId,
+            dt.item_name AS fileTypeName,
+            file.file_version AS fileVersion,
+            file.apply_type AS  applyType,
+            details.item_name AS applyTypeName,
+            file.approver_user_id  AS approverUserId,
+            file.approver_user_name AS approverUserName,
+            file.gmt_created AS applyDate,
+            file.office_page_sie AS officePageSie,
+            file.apply_dept_id AS applyDeptId,
+            dept.dept_name AS applyDeptName,
+            file.creator_id  AS applyUserId,
+            file.creator AS applyUserName,
+            file.apply_reason_id AS applyReasonId,
+            detail.item_name AS applyReasonName,
+            file.auditor_id  AS auditorId,
+            file.auditor_name AS auditorName,
+            file.file_info AS fileInfo,
+            file.is_annual_verification AS isAnnualVerification,
+            file.year_audit_cycle AS yearAuditCycle,
+            file.annual_verification_dept_id AS annualVerificationDeptId,
+            dep.dept_name AS annualVerificationDeptName,
+            file.signator1_id AS signator1Id,
+            file.signator2_id AS signator2Id,
+            file.approver_id AS approverId
+        FROM
+            tb_dtms_file_model file
+        LEFT JOIN tb_dtms_qms_item_details dt ON file.file_type_id = dt.biz_id
+        LEFT JOIN tb_dtms_qms_item_details details ON file.apply_type = details.biz_id
+        LEFT JOIN tb_dtms_qms_item_details detail ON file.apply_reason_id = detail.biz_id
+        LEFT JOIN tb_dtms_qms_dept dept ON file.apply_dept_id = dept.biz_id
+        LEFT JOIN tb_dtms_qms_dept dep ON file.annual_verification_dept_id = dep.biz_id
+        WHERE file.is_deleted = 0
+        AND details.is_deleted = 0
+        and dept.is_deleted = 0
+        and file.biz_id = #{bizId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 添加文件-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.file.FileModelDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (
+        #{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fileNo,jdbcType=VARCHAR},
+        #{fileName,jdbcType=VARCHAR}, #{fileTypeId,jdbcType=BIGINT}, #{fileVersion,jdbcType=VARCHAR},
+        #{applyType,jdbcType=BIGINT}, #{fileApplyType,jdbcType=INTEGER},#{approverUserId,jdbcType=VARCHAR},
+        #{approverUserName,jdbcType=VARCHAR},
+        #{approverContent,jdbcType=VARCHAR}, #{effectDate,jdbcType=TIMESTAMP}, #{applyDate,jdbcType=TIMESTAMP},
+        #{applyYear,jdbcType=INTEGER}, #{officePageSie,jdbcType=INTEGER}, #{applyDeptId,jdbcType=BIGINT},
+        #{applyUserId,jdbcType=BIGINT}, #{applyReasonId,jdbcType=BIGINT}, #{auditorId,jdbcType=BIGINT},
+        #{auditorName,jdbcType=VARCHAR}, #{fileInfo,jdbcType=VARCHAR}, #{isAnnualVerification,jdbcType=BIT},
+        #{yearAuditCycle,jdbcType=INTEGER}, #{annualVerificationDeptId,jdbcType=BIGINT},
+        #{fileContent,jdbcType=VARCHAR}, #{signator1Id,jdbcType=VARCHAR}, #{signator2Id,jdbcType=VARCHAR},
+        #{approverId,jdbcType=VARCHAR}, #{fileStatus,jdbcType=INTEGER}, #{isReceived,jdbcType=BIT},
+        #{receiveDate,jdbcType=TIMESTAMP}, #{receiverId,jdbcType=VARCHAR}, #{receiverName,jdbcType=VARCHAR},
+        #{allowModify,jdbcType=BIT}, #{allowBad,jdbcType=BIT}, 1,
+        0, #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR},
+        NOW(), #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR},
+        NOW()
+        )
+    </insert>
+
+    <!-- 更新文件 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.file.FileModelDO">
+        update tb_dtms_file_model
+        <set>
+            gmt_modified = NOW(),
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="fileNo != null">
+                file_no = #{fileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileTypeId != null">
+                file_type_id = #{fileTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="fileVersion != null">
+                file_version = #{fileVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="applyType != null">
+                apply_type = #{applyType,jdbcType=BIGINT},
+            </if>
+            <if test="fileApplyType != null">
+                file_apply_type = #{fileApplyType,jdbcType=INTEGER},
+            </if>
+            <if test="approverUserId != null">
+                approver_user_id = #{approverUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="approverUserName != null">
+                approver_user_name = #{approverUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="approverContent != null">
+                approver_content = #{approverContent,jdbcType=VARCHAR},
+            </if>
+            <if test="effectDate != null">
+                effect_date = #{effectDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyDate != null">
+                apply_date = #{applyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyYear != null">
+                apply_year = #{applyYear,jdbcType=INTEGER},
+            </if>
+            <if test="officePageSie != null">
+                office_page_sie = #{officePageSie,jdbcType=INTEGER},
+            </if>
+            <if test="applyDeptId != null">
+                apply_dept_id = #{applyDeptId,jdbcType=BIGINT},
+            </if>
+            <if test="applyUserId != null">
+                apply_user_id = #{applyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="applyReasonId != null">
+                apply_reason_id = #{applyReasonId,jdbcType=BIGINT},
+            </if>
+            <if test="auditorId != null">
+                auditor_id = #{auditorId,jdbcType=BIGINT},
+            </if>
+            <if test="auditorName != null">
+                auditor_name = #{auditorName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileInfo != null">
+                file_info = #{fileInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="isAnnualVerification != null">
+                is_annual_verification = #{isAnnualVerification,jdbcType=BIT},
+            </if>
+            <if test="yearAuditCycle != null">
+                year_audit_cycle = #{yearAuditCycle,jdbcType=INTEGER},
+            </if>
+            <if test="annualVerificationDeptId != null">
+                annual_verification_dept_id = #{annualVerificationDeptId,jdbcType=BIGINT},
+            </if>
+            <if test="fileContent != null">
+                file_content = #{fileContent,jdbcType=VARCHAR},
+            </if>
+            <if test="signator1Id != null">
+                signator1_id = #{signator1Id,jdbcType=VARCHAR},
+            </if>
+            <if test="signator2Id != null">
+                signator2_id = #{signator2Id,jdbcType=VARCHAR},
+            </if>
+            <if test="approverId != null">
+                approver_id = #{approverId,jdbcType=VARCHAR},
+            </if>
+            <if test="fileStatus != null">
+                file_status = #{fileStatus,jdbcType=INTEGER},
+            </if>
+            <if test="isReceived != null">
+                is_received = #{isReceived,jdbcType=BIT},
+            </if>
+            <if test="receiveDate != null">
+                receive_date = #{receiveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="receiverId != null">
+                receiver_id = #{receiverId,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverName != null">
+                receiver_name = #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="allowModify != null">
+                allow_modify = #{allowModify,jdbcType=BIT},
+            </if>
+            <if test="allowBad != null">
+                allow_bad = #{allowBad,jdbcType=BIT},
+            </if>
+            <if test="applyStatus != null">
+                apply_status = #{applyStatus,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <!-- 查询文件信息 -->
+    <select id="getFileByCondition" resultMap="BaseResultMap"
+            parameterType="com.medical.dtms.dto.file.query.FileModelQuery">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="fileNo != null and fileNo != ''">
+            and file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName != ''">
+            and file_name = #{fileName,jdbcType=VARCHAR}
+        </if>
+        <if test="bizId != null">
+            and biz_id = #{bizId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 查询文件列表-->
+    <select id="listFiles" parameterType="com.medical.dtms.dto.file.query.FileModelQuery"
+            resultType="com.medical.dtms.common.model.file.FileModel">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        file.file_version AS fileVersion,dept.dept_name AS applyDeptName,
+        file.creator AS applyUserName,file.apply_date AS applyDate,
+        file.file_status AS fileStatus,file.file_apply_type AS fileApplyType
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept
+        on file.apply_dept_id = dept.biz_id
+        where file.is_deleted = 0
+        and dept.is_deleted = 0
+        <if test="fileNo != null and fileNo !=''">
+            and file.file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file.file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file.file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and file.apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and file.creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="applyType != null">
+            and file.apply_type = #{applyType}
+        </if>
+        and apply_user_id = #{applyUserId}
+        order by file.gmt_created desc
+    </select>
+
+    <!-- 文件查询列表展示 只展示生效的文件-->
+    <select id="listFileQueryFiles" parameterType="com.medical.dtms.dto.file.query.FileModelQuery"
+            resultType="com.medical.dtms.common.model.file.FileQueryModel">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        file.file_content AS fileContent,file.file_version AS fileVersion,file.effect_date AS effectDate,
+        details.item_name AS fileTypeIdName,
+        dept.dept_name AS applyDeptName,
+        file.creator AS applyUserName,file.approver_user_name AS approverUserName,file.auditor_name AS auditorName
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id
+        left join tb_dtms_qms_item_details details on file.file_type_id = details.biz_id
+        where file.is_deleted = 0
+        and dept.is_deleted = 0
+        and details.is_deleted = 0
+        <if test="fileStatus != null and fileStatus !=''">
+            and file.file_status = #{fileStatus}
+        </if>
+        <if test="fileNo != null and fileNo !=''">
+            and file.file_no = #{fileNo}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file.file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file.file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and file.apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and file.creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="auditorName != null">
+            and file.auditor_name LIKE concat(concat('%',#{auditorName,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="applyYear != null">
+            and file.apply_year = #{applyYear,jdbcType=INTEGER}
+        </if>
+        <if test="fileIds != null and fileIds.size >0">
+            and file.biz_id in
+            <foreach collection="fileIds" open="(" close=")" separator="," item="fileId" index=",">
+                #{fileId}
+            </foreach>
+        </if>
+        order by file.gmt_created desc
+    </select>
+
+    <!-- 文件审批 列表展示-->
+    <select id="pageListFilesInApproval" parameterType="com.medical.dtms.dto.file.query.FileModelQuery"
+            resultType="com.medical.dtms.common.model.file.FileApprovalModel">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        details.item_name AS fileTypeIdName,
+        file.file_version AS fileVersion,
+        dept.dept_name AS applyDeptName,
+        file.creator AS applyUserName,
+        file.effect_date AS effectDate,
+        file.file_status AS fileStatus,file.file_apply_type AS fileApplyType
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id
+        left join tb_dtms_qms_item_details details on file.file_type_id = details.biz_id
+        where file.is_deleted = 0
+        and dept.is_deleted = 0
+        and details.is_deleted = 0
+        and file.file_status = 2
+        <if test="fileNo != null and fileNo !=''">
+            and file.file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file.file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file.file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and file.apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and file.creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="applyType != null">
+            and file.apply_type = #{applyType,jdbcType=BIGINT}
+        </if>
+        <if test="signor1Id != null and signor1Id != ''">
+            and POSITION(#{signor1Id} IN signator1_id)
+        </if>
+        <if test="signator2Id != null and signator2Id != ''">
+            or POSITION(#{signator2Id} IN signator2_id)
+        </if>
+        <if test="approverId != null and approverId != ''">
+            or POSITION(#{approverId} IN approver_id)
+        </if>
+        order by file.gmt_created desc
+    </select>
+
+    <!-- 文件接收列表展示 -->
+    <select id="pageListForReceive" parameterType="com.medical.dtms.dto.file.query.FileModelQuery"
+            resultType="com.medical.dtms.common.model.file.FileReceiveModel">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,dept.dept_name AS applyDeptName,
+        file.file_content AS fileContent,
+        file.is_received AS isReceived, file.receive_date AS receiveDate,file.receiver_name AS receiverName
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id
+        where file.is_deleted = 0
+        and dept.is_deleted = 0
+        <if test="fileNo != null and fileNo !=''">
+            and file.file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file.file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file.file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and file.apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and file.creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="fileIds != null and fileIds.size >0">
+            and file.biz_id in
+            <foreach collection="fileIds" open="(" close=")" separator="," item="fileId" index=",">
+                #{fileId}
+            </foreach>
+        </if>
+        <if test="isReceived != null and isReceived == false">
+            and file.is_received is NULL
+        </if>
+        order by file.gmt_created desc
+    </select>
+
+    <!-- 文件类别下拉框-->
+    <select id="listFileTypes" resultType="com.medical.dtms.common.model.dropdown.DropDownModel"
+            parameterType="com.medical.dtms.common.model.dropdown.query.DropDownQuery">
+        select DISTINCT(file.file_type_id) AS fileTypeId,details.item_name AS fileTypeIdName
+        FROM tb_dtms_file_model file
+        LEFT JOIN tb_dtms_qms_item_details details on file.file_type_id = details.biz_id
+        where file.is_deleted = 0
+        and details.is_deleted = 0
+        order by any_value(file.gmt_created) desc
+    </select>
+
+    <select id="listApplyTypesInFileModel" resultType="com.medical.dtms.common.model.dropdown.DropDownModel"
+            parameterType="com.medical.dtms.common.model.dropdown.query.DropDownQuery">
+         select DISTINCT(file.apply_type) AS applyTypeId,details.item_name AS applyTypeName
+        FROM tb_dtms_file_model file
+        LEFT JOIN tb_dtms_qms_item_details details on file.apply_type = details.biz_id
+        where file.is_deleted = 0
+        and details.is_deleted = 0
+        order by any_value(file.gmt_created) desc
+    </select>
+
+    <!-- 发布年度-->
+    <select id="listApplyYears" resultType="com.medical.dtms.common.model.dropdown.DropDownModel"
+            parameterType="com.medical.dtms.common.model.dropdown.query.DropDownQuery">
+        select distinct(apply_year) AS applyYear
+        FROM
+        <include refid="table_name"/>
+        where is_deleted = 0
+        order by any_value(gmt_created) desc
+    </select>
+
+
+    <select id="pageListForTrainFileSelect" parameterType="com.medical.dtms.dto.train.query.TrainFileQuery"
+            resultType="com.medical.dtms.common.model.train.TrainFileModel">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        details.item_name AS fileTypeIdName
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_item_details details on file.file_type_id = details.biz_id
+        where file.is_deleted = 0
+        and details.is_deleted = 0
+        and file.biz_id  not in (select file_id from tb_dtms_train_files where train_id = #{trainId,jdbcType=BIGINT} and is_deleted=0)
+        order by file.gmt_created desc
+    </select>
+
+    <select id="pageListForTrainFileSelected" parameterType="com.medical.dtms.dto.train.query.TrainFileQuery"
+            resultType="com.medical.dtms.common.model.train.TrainFileModel">
+        select
+        files.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        details.item_name AS fileTypeIdName
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_train_files files on file.biz_id = files.file_id
+        left join tb_dtms_qms_item_details details on file.file_type_id = details.biz_id
+        where file.is_deleted = 0
+        and details.is_deleted = 0
+        and files.is_deleted = 0
+        and files.train_id = #{trainId,jdbcType=BIGINT}
+        order by files.gmt_created desc
+    </select>
+
+
+    <!--  修改申请列表 -->
+    <select id="pageListApply" resultType="com.medical.dtms.common.model.file.FileApplyModel"
+            parameterType="com.medical.dtms.dto.file.query.FileModelQuery">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        dept.dept_name AS applyDeptName,file.file_version AS fileVersion,file.effect_date AS effectDate,
+        file.creator AS applyUserName,file.approver_user_name AS approverUserName,file.auditor_name AS auditorName,
+        file.allow_modify AS allowModify,file.allow_bad AS allowBad,file.apply_status AS applyStatus,
+        file.gmt_modified AS operatorDate,file.modifier AS operatorName
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id
+        where file.is_deleted = 0
+        and dept.is_deleted = 0
+        <if test="fileNo != null and fileNo !=''">
+            and file.file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file.file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file.file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and file.apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and file.creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="applyType != null">
+            and file.apply_type = #{applyType,jdbcType=BIGINT}
+        </if>
+        order by file.gmt_created desc
+    </select>
+
+    <!--  编写部门下拉-->
+    <select id="listApplyDeptInFileModel" parameterType="com.medical.dtms.common.model.dropdown.query.DropDownQuery"
+            resultType="com.medical.dtms.common.model.dropdown.DropDownModel">
+        select distinct(file.apply_dept_id) AS applyDeptId,dept.dept_name AS applyDeptName
+        FROM tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id
+        where dept.is_deleted = 0
+        and file.is_deleted = 0
+        order by any_value(file.gmt_created) desc
+    </select>
+
+    <!--文件年审（分页展示）-->
+    <select id="pageListFileYear" resultType="com.medical.dtms.common.model.file.FileYearModel"
+            parameterType="com.medical.dtms.dto.file.query.FileModelQuery">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        file.file_version AS fileVersion,dept.dept_name AS applyDeptName,
+        file.creator AS applyUserName,file.apply_date AS applyDate,
+        file.file_status AS fileStatus,file.file_apply_type AS fileApplyType
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id
+        left join tb_dtms_file_year yea on yea.file_id = file.biz_id
+        where file.is_deleted = 0
+        and dept.is_deleted = 0
+        and yea.is_deleted = 0
+        <if test="fileNo != null and fileNo !=''">
+            and file.file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file.file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file.file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and file.apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and file.creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        order by file.gmt_created desc
+    </select>
+
+    <!-- 查询归档/作废文件 -->
+    <select id="queryListArchiveOrInvalidFile" parameterType="com.medical.dtms.dto.file.query.FileModelQuery"
+            resultType="com.medical.dtms.common.model.file.ArchiveOrInvalidModel">
+        select
+        file.biz_id AS bizId,file.file_no AS fileNo,file.file_name AS fileName,
+        file.file_version AS fileVersion,file.effect_date AS effectDate,dept.dept_name AS applyDeptName,
+        file.gmt_modified AS operatorDate,file.modifier AS operatorName
+        from
+        tb_dtms_file_model file
+        left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id
+        where file.is_deleted = 0
+        and dept.is_deleted = 0
+        <if test="fileNo != null and fileNo !=''">
+            and file.file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file.file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file.file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and file.apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and file.creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="applyType != null">
+            and file.apply_type = #{applyType,jdbcType=BIGINT}
+        </if>
+        <if test="fileStatus != null">
+            and file.file_status = #{fileStatus,jdbcType=BIGINT}
+        </if>
+        <if test="fileIds != null and fileIds.size >0">
+            and file.biz_id in
+            <foreach collection="fileIds" open="(" close=")" separator="," item="fileId" index=",">
+                #{fileId}
+            </foreach>
+        </if>
+        order by file.gmt_created desc
+    </select>
+
+    <!-- 分页查询退回文件-->
+    <select id="pageListBackFile" parameterType="com.medical.dtms.dto.file.query.FileModelQuery"
+            resultType="com.medical.dtms.common.model.file.BackFileModel">
+        select
+        biz_id AS bizId,file_no AS fileNo,file_name AS fileName,
+        file_version AS fileVersion,
+        creator AS applyUserName,apply_date AS applyDate,
+        auditor_name AS auditorName,approver_content AS approverContent
+        from
+        tb_dtms_file_model
+        where is_deleted = 0
+        <if test="fileNo != null and fileNo !=''">
+            and file_no = #{fileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="fileName != null and fileName !=''">
+            and file_name LIKE concat(concat('%',#{fileName}),'%')
+        </if>
+        <if test="fileTypeId != null">
+            and file_type_id = #{fileTypeId,jdbcType=BIGINT}
+        </if>
+        <if test="applyDeptId != null">
+            and apply_dept_id = #{applyDeptId,jdbcType=BIGINT}
+        </if>
+        <if test="applyUser != null">
+            and creator LIKE concat(concat('%',#{applyUser,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="applyType != null">
+            and apply_type = #{applyType,jdbcType=BIGINT}
+        </if>
+        <if test="fileStatus != null">
+            and file_status = #{fileStatus,jdbcType=BIGINT}
+        </if>
+        order by gmt_created desc
+    </select>
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSRoleMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.role.QMSRoleDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="allow_query" jdbcType="BIT" property="allowQuery"/>
+        <result column="allow_read" jdbcType="BIT" property="allowRead"/>
+        <result column="allow_edit" jdbcType="BIT" property="allowEdit"/>
+        <result column="allow_delete" jdbcType="BIT" property="allowDelete"/>
+        <result column="allow_bad" jdbcType="BIT" property="allowBad"/>
+        <result column="allow_upload" jdbcType="BIT" property="allowUpload"/>
+        <result column="allow_down" jdbcType="BIT" property="allowDown"/>
+        <result column="allow_audit" jdbcType="BIT" property="allowAudit"/>
+        <result column="allow_approve" jdbcType="BIT" property="allowApprove"/>
+        <result column="allow_receive" jdbcType="BIT" property="allowReceive"/>
+        <result column="allow_authorization" jdbcType="BIT" property="allowAuthorization"/>
+        <result column="allow_print" jdbcType="BIT" property="allowPrint"/>
+        <result column="allow_archive" jdbcType="BIT" property="allowArchive"/>
+        <result column="allow_configure" jdbcType="BIT" property="allowConfigure"/>
+        <result column="allow_enable" jdbcType="BIT" property="allowEnable"/>
+        <result column="allow_freeze" jdbcType="BIT" property="allowFreeze"/>
+        <result column="allow_year" jdbcType="BIT" property="allowYear"/>
+        <result column="allow_device" jdbcType="BIT" property="allowDevice"/>
+        <result column="allow_down_source_file" jdbcType="BIT" property="allowDownSourceFile"/>
+        <result column="sort_code" jdbcType="VARCHAR" property="sortCode"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, role_name, allow_query, allow_read, allow_edit, allow_delete, allow_bad,
+    allow_upload, allow_down, allow_audit, allow_approve, allow_receive, allow_authorization,
+    allow_print, allow_archive, allow_configure, allow_enable, allow_freeze, allow_year,
+    allow_device, allow_down_source_file, sort_code, is_deleted, creator, creator_id,
+    gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+       tb_dtms_qms_role
+    </sql>
+
+    <!-- 删除角色-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 添加角色-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.role.QMSRoleDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR},
+        #{allowQuery,jdbcType=BIT}, #{allowRead,jdbcType=BIT}, #{allowEdit,jdbcType=BIT},
+        #{allowDelete,jdbcType=BIT}, #{allowBad,jdbcType=BIT}, #{allowUpload,jdbcType=BIT},
+        #{allowDown,jdbcType=BIT}, #{allowAudit,jdbcType=BIT}, #{allowApprove,jdbcType=BIT},
+        #{allowReceive,jdbcType=BIT}, #{allowAuthorization,jdbcType=BIT}, #{allowPrint,jdbcType=BIT},
+        #{allowArchive,jdbcType=BIT}, #{allowConfigure,jdbcType=BIT}, #{allowEnable,jdbcType=BIT},
+        #{allowFreeze,jdbcType=BIT}, #{allowYear,jdbcType=BIT}, #{allowDevice,jdbcType=BIT},
+        #{allowDownSourceFile,jdbcType=BIT}, #{sortCode,jdbcType=VARCHAR},0,
+        #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR}, NOW(),
+        #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR}, NOW()
+        )
+    </insert>
+
+    <!-- 更新角色数据-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.role.QMSRoleDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="roleName != null">
+                role_name = #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="allowQuery != null">
+                allow_query = #{allowQuery,jdbcType=BIT},
+            </if>
+            <if test="allowRead != null">
+                allow_read = #{allowRead,jdbcType=BIT},
+            </if>
+            <if test="allowEdit != null">
+                allow_edit = #{allowEdit,jdbcType=BIT},
+            </if>
+            <if test="allowDelete != null">
+                allow_delete = #{allowDelete,jdbcType=BIT},
+            </if>
+            <if test="allowBad != null">
+                allow_bad = #{allowBad,jdbcType=BIT},
+            </if>
+            <if test="allowUpload != null">
+                allow_upload = #{allowUpload,jdbcType=BIT},
+            </if>
+            <if test="allowDown != null">
+                allow_down = #{allowDown,jdbcType=BIT},
+            </if>
+            <if test="allowAudit != null">
+                allow_audit = #{allowAudit,jdbcType=BIT},
+            </if>
+            <if test="allowApprove != null">
+                allow_approve = #{allowApprove,jdbcType=BIT},
+            </if>
+            <if test="allowReceive != null">
+                allow_receive = #{allowReceive,jdbcType=BIT},
+            </if>
+            <if test="allowAuthorization != null">
+                allow_authorization = #{allowAuthorization,jdbcType=BIT},
+            </if>
+            <if test="allowPrint != null">
+                allow_print = #{allowPrint,jdbcType=BIT},
+            </if>
+            <if test="allowArchive != null">
+                allow_archive = #{allowArchive,jdbcType=BIT},
+            </if>
+            <if test="allowConfigure != null">
+                allow_configure = #{allowConfigure,jdbcType=BIT},
+            </if>
+            <if test="allowEnable != null">
+                allow_enable = #{allowEnable,jdbcType=BIT},
+            </if>
+            <if test="allowFreeze != null">
+                allow_freeze = #{allowFreeze,jdbcType=BIT},
+            </if>
+            <if test="allowYear != null">
+                allow_year = #{allowYear,jdbcType=BIT},
+            </if>
+            <if test="allowDevice != null">
+                allow_device = #{allowDevice,jdbcType=BIT},
+            </if>
+            <if test="allowDownSourceFile != null">
+                allow_down_source_file = #{allowDownSourceFile,jdbcType=BIT},
+            </if>
+            <if test="sortCode != null">
+                sort_code = #{sortCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <!--条件查询角色信息-->
+    <select id="getRoleByCondition" parameterType="com.medical.dtms.dto.role.query.QMSRoleQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="roleName != null and roleName != ''">
+            and role_name = #{roleName,jdbcType=VARCHAR}
+        </if>
+        <if test="bizId != null">
+            and biz_id = #{bizId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 分页展示角色数据-->
+    <select id="listQMSRoles" resultType="com.medical.dtms.common.model.role.QMSRoleModel"
+            parameterType="com.medical.dtms.dto.role.query.QMSRoleQuery">
+        select
+        biz_id AS bizId,role_name AS roleName,allow_query AS allowQuery,allow_read AS allowRead,allow_edit AS allowEdit,
+        allow_delete AS allowDelete,allow_bad AS allowBad,allow_upload AS allowUpload,allow_down AS allowDown,
+        allow_audit AS allowAudit,allow_approve AS allowApprove,allow_receive AS allowReceive,allow_authorization AS
+        allowAuthorization,
+        allow_print AS allowPrint,allow_archive AS allowArchive,
+        allow_configure AS allowConfigure,allow_enable AS allowEnable,allow_freeze AS allowFreeze,allow_year AS allowYear,
+        allow_device AS allowDevice,allow_down_source_file AS allowDownSourceFile,sort_code AS sortCode
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        order by gmt_created desc
+    </select>
+</mapper>

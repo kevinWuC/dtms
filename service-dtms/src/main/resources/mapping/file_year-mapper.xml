@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.file.FileYearMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.file.FileYearDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="file_no" jdbcType="VARCHAR" property="fileNo"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_type_id" jdbcType="BIGINT" property="fileTypeId"/>
+        <result column="file_version" jdbcType="VARCHAR" property="fileVersion"/>
+        <result column="version_effect" jdbcType="BIT" property="versionEffect"/>
+        <result column="version_effect_info" jdbcType="VARCHAR" property="versionEffectInfo"/>
+        <result column="advancement" jdbcType="BIT" property="advancement"/>
+        <result column="advancement_info" jdbcType="VARCHAR" property="advancementInfo"/>
+        <result column="format" jdbcType="BIT" property="format"/>
+        <result column="format_info" jdbcType="VARCHAR" property="formatInfo"/>
+        <result column="operability" jdbcType="BIT" property="operability"/>
+        <result column="operability_info" jdbcType="VARCHAR" property="operabilityInfo"/>
+        <result column="applicability" jdbcType="BIT" property="applicability"/>
+        <result column="applicability_info" jdbcType="VARCHAR" property="applicabilityInfo"/>
+        <result column="examined_other" jdbcType="VARCHAR" property="examinedOther"/>
+        <result column="examined_date" jdbcType="TIMESTAMP" property="examinedDate"/>
+        <result column="examined_user_id" jdbcType="VARCHAR" property="examinedUserId"/>
+        <result column="examined_user_name" jdbcType="VARCHAR" property="examinedUserName"/>
+        <result column="examined_status" jdbcType="BIT" property="examinedStatus"/>
+        <result column="is_year_approve" jdbcType="BIT" property="isYearApprove"/>
+        <result column="effect_date" jdbcType="TIMESTAMP" property="effectDate"/>
+        <result column="apply_dept_id" jdbcType="VARCHAR" property="applyDeptId"/>
+        <result column="annual_verification_dept_id" jdbcType="VARCHAR" property="annualVerificationDeptId"/>
+        <result column="annual_verification_dept_name" jdbcType="VARCHAR" property="annualVerificationDeptName"/>
+        <result column="year_conclusion" jdbcType="BIT" property="yearConclusion"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, biz_id, file_id, file_no, file_name, file_type_id, file_version, version_effect, version_effect_info, advancement, advancement_info,
+    format, format_info, operability, operability_info, applicability, applicability_info, 
+    examined_other, examined_date, examined_user_id, examined_user_name, examined_status, 
+    is_year_approve, effect_date, apply_dept_id, annual_verification_dept_id, annual_verification_dept_name, 
+    year_conclusion, creator, is_deleted, creator_id, gmt_created, modifier, modifier_id, 
+    gmt_modified
+  </sql>
+
+    <sql id="table_name">
+        tb_dtms_file_year
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <!--新增年审记录-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.file.FileYearDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fileId,jdbcType=BIGINT}, #{fileNo,jdbcType=VARCHAR},
+        #{fileName,jdbcType=VARCHAR}, #{fileTypeId,jdbcType=BIGINT}, #{fileVersion,jdbcType=VARCHAR},
+        #{versionEffect,jdbcType=BIT}, #{versionEffectInfo,jdbcType=VARCHAR},
+        #{advancement,jdbcType=BIT}, #{advancementInfo,jdbcType=VARCHAR}, #{format,jdbcType=BIT},
+        #{formatInfo,jdbcType=VARCHAR}, #{operability,jdbcType=BIT}, #{operabilityInfo,jdbcType=VARCHAR},
+        #{applicability,jdbcType=BIT}, #{applicabilityInfo,jdbcType=VARCHAR}, #{examinedOther,jdbcType=VARCHAR},
+        NOW(), #{examinedUserId,jdbcType=VARCHAR}, #{examinedUserName,jdbcType=VARCHAR},
+        #{examinedStatus,jdbcType=BIT}, #{isYearApprove,jdbcType=BIT}, #{effectDate,jdbcType=TIMESTAMP},
+        #{applyDeptId,jdbcType=VARCHAR}, #{annualVerificationDeptId,jdbcType=VARCHAR},
+        #{annualVerificationDeptName,jdbcType=VARCHAR}, #{yearConclusion,jdbcType=BIT},
+        #{creator,jdbcType=VARCHAR},0, #{creatorId,jdbcType=VARCHAR},
+        NOW(), #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR},
+        NOW())
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.file.FileYearDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            gmt_modified = NOW(),
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="fileNo != null">
+                file_no = #{fileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileTypeId != null">
+                file_type_id = #{fileTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="fileVersion != null">
+                file_version = #{fileVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="versionEffect != null">
+                version_effect = #{versionEffect,jdbcType=BIT},
+            </if>
+            <if test="versionEffectInfo != null">
+                version_effect_info = #{versionEffectInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="advancement != null">
+                advancement = #{advancement,jdbcType=BIT},
+            </if>
+            <if test="advancementInfo != null">
+                advancement_info = #{advancementInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="format != null">
+                format = #{format,jdbcType=BIT},
+            </if>
+            <if test="formatInfo != null">
+                format_info = #{formatInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="operability != null">
+                operability = #{operability,jdbcType=BIT},
+            </if>
+            <if test="operabilityInfo != null">
+                operability_info = #{operabilityInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="applicability != null">
+                applicability = #{applicability,jdbcType=BIT},
+            </if>
+            <if test="applicabilityInfo != null">
+                applicability_info = #{applicabilityInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="examinedOther != null">
+                examined_other = #{examinedOther,jdbcType=VARCHAR},
+            </if>
+            <if test="examinedDate != null">
+                examined_date = #{examinedDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="examinedUserId != null">
+                examined_user_id = #{examinedUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="examinedUserName != null">
+                examined_user_name = #{examinedUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="examinedStatus != null">
+                examined_status = #{examinedStatus,jdbcType=BIT},
+            </if>
+            <if test="isYearApprove != null">
+                is_year_approve = #{isYearApprove,jdbcType=BIT},
+            </if>
+            <if test="effectDate != null">
+                effect_date = #{effectDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyDeptId != null">
+                apply_dept_id = #{applyDeptId,jdbcType=VARCHAR},
+            </if>
+            <if test="annualVerificationDeptId != null">
+                annual_verification_dept_id = #{annualVerificationDeptId,jdbcType=VARCHAR},
+            </if>
+            <if test="annualVerificationDeptName != null">
+                annual_verification_dept_name = #{annualVerificationDeptName,jdbcType=VARCHAR},
+            </if>
+            <if test="yearConclusion != null">
+                year_conclusion = #{yearConclusion,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <!--年审记录（分页展示）-->
+    <select id="pageListFileYearRecord" resultType="com.medical.dtms.common.model.file.FileYearRecordModel"
+            parameterType="com.medical.dtms.dto.file.query.FileModelQuery">
+        select
+        biz_id AS bizId, file_id AS fileId, file_no AS fileNo, file_name AS fileName, file_version AS fileVersion,
+        examined_date AS examinedDate, advancement AS advancement, advancement_info AS advancementInfo,
+        format AS format, format_info AS formatInfo, operability AS operability,operability_info AS operabilityInfo,
+        applicability AS applicability, applicability_info AS applicabilityInfo,
+        examined_other AS examinedOther, examined_user_name AS examinedUserName,effect_date AS
+        effectDate,year_conclusion AS yearConclusion
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="bizId != null">
+            and file_id = #{bizId}
+        </if>
+        <if test="yearApplyIds != null and yearApplyIds.size >0">
+            and biz_id in
+            <foreach collection="yearApplyIds" open="(" close=")" separator="," item="id" index=",">
+                #{id}
+            </foreach>
+        </if>
+        order by gmt_modified desc
+    </select>
+</mapper>

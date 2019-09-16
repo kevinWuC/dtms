@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSUserInJobsMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.user.QMSUserInJobsDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="job_id" jdbcType="BIGINT" property="jobId"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, user_id, job_id, is_deleted, creator, creator_id, gmt_created, modifier,
+    modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_user_in_jobs
+  </sql>
+
+    <!-- 新增 用户与岗位关联-->
+    <insert id="insert" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="rel" separator=",">
+            (
+            #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.userId,jdbcType=BIGINT},
+            #{rel.jobId,jdbcType=BIGINT}, 0, #{rel.creator,jdbcType=VARCHAR},
+            #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
+            #{rel.modifierId,jdbcType=VARCHAR}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 查询用户管理的职位/用户数据-->
+    <select id="listQMSUserInJob" parameterType="com.medical.dtms.dto.user.query.BaseUserQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=BIGINT}
+        </if>
+        <if test="jobId != null">
+            and job_id = #{jobId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 根据用户 id/职位id 删除数据-->
+    <delete id="deleteQMSUserInJobByCondition" parameterType="com.medical.dtms.service.dataobject.user.QMSUserInJobsDO">
+        UPDATE
+        <include refid="table_name"/>
+        SET is_deleted = 1
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="jobId != null">
+                and job_id = #{jobId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 根据用户 ids 查询岗位 ids-->
+    <select id="listJobIdsByUserIds" parameterType="java.util.List"
+            resultType="com.medical.dtms.common.model.syslog.BaseSimpleUserModel">
+        select user_id AS userId,job_id AS jobId
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and user_id in
+        <foreach collection="list" index="index" separator="," open="(" close=")" item="userId">
+            #{userId}
+        </foreach>
+    </select>
+</mapper>

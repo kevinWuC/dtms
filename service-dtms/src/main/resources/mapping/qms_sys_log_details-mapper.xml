@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSSysLogDetailsMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="biz_id" jdbcType="BIGINT" property="bizId" />
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName" />
+        <result column="field_text" jdbcType="VARCHAR" property="fieldText" />
+        <result column="new_value" jdbcType="LONGVARCHAR" property="newValue" />
+        <result column="old_value" jdbcType="LONGVARCHAR" property="oldValue" />
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId" />
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    </resultMap>
+    <sql id="Base_Column_List">
+     id, biz_id, field_name, field_text,new_value, old_value, is_deleted, creator, creator_id, gmt_created,
+    modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_sys_log_details
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fieldName,jdbcType=VARCHAR},
+        #{fieldText,jdbcType=VARCHAR},#{newValue,jdbcType=LONGVARCHAR},
+        #{oldValue,jdbcType=LONGVARCHAR}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="fieldName != null">
+                field_name = #{fieldName,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldText != null">
+                field_text = #{fieldText,jdbcType=VARCHAR},
+            </if>
+            <if test="newValue != null">
+                new_value = #{newValue,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="oldValue != null">
+                old_value = #{oldValue,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.file.FileAttachmentsMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.file.FileAttachmentsDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_path" jdbcType="VARCHAR" property="filePath"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, file_id, file_name, file_path, is_deleted, creator, creator_id, gmt_created, 
+    modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_file_attachments
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.file.FileAttachmentsDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (
+        #{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fileId,jdbcType=BIGINT},
+        #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT},
+        #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP},
+        #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.file.FileAttachmentsDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="filePath != null">
+                file_path = #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 保存附件信息-->
+    <insert id="batchInsertFiles" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="file" separator=",">
+            #{file.id,jdbcType=BIGINT}, #{file.bizId,jdbcType=BIGINT}, #{file.fileId,jdbcType=BIGINT},
+            #{file.fileName,jdbcType=VARCHAR}, #{file.filePath,jdbcType=VARCHAR},0,
+            #{file.creator,jdbcType=VARCHAR}, #{file.creatorId,jdbcType=VARCHAR}, NOW(),
+            #{file.modifier,jdbcType=VARCHAR}, #{file.modifierId,jdbcType=VARCHAR}, NOW()
+        </foreach>
+    </insert>
+
+    <!-- 查询文件附件-->
+    <select id="pageListFileAttach" resultType="com.medical.dtms.common.model.file.FileAttachmentModel"
+            parameterType="com.medical.dtms.dto.file.query.FileModelQuery">
+        select
+        file_name AS attachmentName,gmt_created AS upLoadTime
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="bizId != null">
+            and file_id = #{bizId,jdbcType=BIGINT}
+        </if>
+    </select>
+</mapper>

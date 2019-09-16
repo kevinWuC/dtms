@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSSysLoginLogMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.log.QMSSysLoginLogDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="login_log_status" jdbcType="BIT" property="loginLogStatus"/>
+        <result column="ip_address" jdbcType="VARCHAR" property="ipAddress"/>
+        <result column="ip_address_name" jdbcType="VARCHAR" property="ipAddressName"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="BIGINT" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, biz_id, create_date, account, login_log_status, ip_address, ip_address_name, is_deleted,
+    creator, creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_sys_login_log
+  </sql>
+
+    <!-- 主键查询是否存在-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+        and is_deleted = 0
+    </select>
+
+    <!-- 登陆日志 删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 登陆日志 新增 -->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLoginLogDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP},
+        #{account,jdbcType=VARCHAR}, #{loginLogStatus,jdbcType=BIT}, #{ipAddress,jdbcType=VARCHAR},
+        #{ipAddressName,jdbcType=VARCHAR}, 0 , #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=BIGINT}, NOW(), #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, NOW())
+    </insert>
+
+    <!-- 登陆日志 新增 -->
+    <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLoginLogDO">
+        insert into
+        <include refid="table_name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="loginLogStatus != null">
+                login_log_status,
+            </if>
+            <if test="ipAddress != null">
+                ip_address,
+            </if>
+            <if test="ipAddressName != null">
+                ip_address_name,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="modifierId != null">
+                modifier_id,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="bizId != null">
+                #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="loginLogStatus != null">
+                #{loginLogStatus,jdbcType=BIT},
+            </if>
+            <if test="ipAddress != null">
+                #{ipAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddressName != null">
+                #{ipAddressName,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="gmtCreated != null">
+                #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 登陆日志 更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLoginLogDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                login_log_status = #{loginLogStatus,jdbcType=BIT},
+            </if>
+            <if test="ipAddress != null">
+                ip_address = #{ipAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddressName != null">
+                ip_address_name = #{ipAddressName,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 登陆日志 更新 -->
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLoginLogDO">
+        update
+        <include refid="table_name"/>
+        set biz_id = #{bizId,jdbcType=BIGINT},
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+        account = #{account,jdbcType=VARCHAR},
+        login_log_status = #{loginLogStatus,jdbcType=BIT},
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+        ip_address_name = #{ipAddressName,jdbcType=VARCHAR},
+        is_deleted = #{isDeleted,jdbcType=BIT},
+        creator = #{creator,jdbcType=VARCHAR},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+        modifier = #{modifier,jdbcType=VARCHAR},
+        modifier_id = #{modifierId,jdbcType=VARCHAR},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="listLoginLogs" parameterType="com.medical.dtms.dto.log.query.QMSSysLoginLogQuery"
+            resultType="com.medical.dtms.common.model.syslog.SysLoginLogModel">
+        SELECT
+        create_date AS createDate ,  account AS account ,  login_log_status AS loginLogStatus ,ip_address AS ipAddress,
+        ip_address_name AS ipAddressName
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="beginTime != null  and endTime != null ">
+                create_date <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+                AND
+                create_date <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="account != null and account != ''">
+                AND account = #{account,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY
+        create_date DESC
+    </select>
+
+    <!--  查询用户的登录时间、登录次数-->
+    <select id="listUserLastVisitAndVisitTime" parameterType="java.util.List"
+            resultType="com.medical.dtms.common.model.syslog.SimpleLogInLogModel">
+        select any_value(creator_id) AS userId,
+        MAX(create_date) AS lastVisit,
+        COUNT(account) AS logOnCount
+        FROM
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and creator_id IN
+        <foreach collection="list" item="userId" open="(" close=")" index="index" separator=",">
+            #{userId}
+        </foreach>
+    </select>
+</mapper>

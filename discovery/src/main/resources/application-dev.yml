@@ -1,0 +1,13 @@
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+  server:
+    peer-eureka-nodes-update-interval-ms: 60000
+    enable-self-preservation: false
+  client:
+    service-url:
+      defaultZone: http://${eureka-server:localhost}:8761/eureka/
+    eureka-service-url-poll-interval-seconds: 60
+    register-with-eureka: false

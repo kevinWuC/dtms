@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSRoleInMenuMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.role.QMSRoleInMenuDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <result column="menu_id" jdbcType="BIGINT" property="menuId"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, role_id, menu_id, is_deleted, creator, creator_id, gmt_created, modifier,
+    modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_role_in_menu
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.role.QMSRoleInMenuDO">
+        insert into
+        <include refid="table_name"/>
+        (id, biz_id, role_id,
+        menu_id, is_deleted, creator,
+        creator_id, gmt_created, modifier,
+        modifier_id, gmt_modified)
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT},
+        #{menuId,jdbcType=BIGINT}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.role.QMSRoleInMenuDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=BIGINT},
+            </if>
+            <if test="menuId != null">
+                menu_id = #{menuId,jdbcType=BIGINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.role.QMSRoleInMenuDO">
+        update
+        <include refid="table_name"/>
+        set biz_id = #{bizId,jdbcType=BIGINT},
+        role_id = #{roleId,jdbcType=BIGINT},
+        menu_id = #{menuId,jdbcType=BIGINT},
+        is_deleted = #{isDeleted,jdbcType=BIT},
+        creator = #{creator,jdbcType=VARCHAR},
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+        gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+        modifier = #{modifier,jdbcType=VARCHAR},
+        modifier_id = #{modifierId,jdbcType=VARCHAR},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 查询角色与菜单关联数据 -->
+    <select id="listRoleInMenu" resultMap="BaseResultMap"
+            parameterType="com.medical.dtms.dto.role.query.QMSRoleInMenuQuery">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="roleId != null">
+            and role_id = #{roleId,jdbcType=BIGINT}
+        </if>
+        <if test="menuId != null">
+            and menu_id = #{menuId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 根据角色 id/菜单id 删除数据-->
+    <delete id="deleteByCondition" parameterType="com.medical.dtms.service.dataobject.role.QMSRoleInMenuDO">
+        UPDATE
+        <include refid="table_name"/>
+        SET is_deleted = 1
+        <where>
+            <if test="roleId != null">
+                and role_id = #{roleId,jdbcType=BIGINT}
+            </if>
+            <if test="menuId != null">
+                and menu_id = #{menuId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 新增 角色 菜单关联-->
+    <insert id="addQMSRoleInMenu" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="rel" separator=",">
+            (
+            #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.roleId,jdbcType=BIGINT},
+            #{rel.menuId,jdbcType=BIGINT}, 0, #{rel.creator,jdbcType=VARCHAR},
+            #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
+            #{rel.modifierId,jdbcType=VARCHAR}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据角色ids 查询菜单-->
+    <select id="listMenuByRole" parameterType="java.util.List"
+            resultType="com.medical.dtms.common.model.menu.QMSMenuModel">
+        select rim.role_id AS roleId, menu.biz_id AS bizId,menu.parent_id AS parentId,menu.code AS code,menu.full_name AS
+        fullName,menu.description AS description,
+        menu.img AS img,menu.category AS category,menu.navigate_url AS navigateUrl,menu.target AS target,menu.is_unfold
+        AS isUnfold,menu.allow_edit AS allowEdit,
+        menu.allow_delete AS allowDelete,menu.enabled AS enabled,menu.sort_code AS sortCode
+        from tb_dtms_qms_role_in_menu rim
+        left join tb_dtms_qms_menu menu on rim.menu_id = menu.biz_id
+        where rim.role_id in
+        <foreach collection="list" item="roleId" open="(" close=")" index="index" separator=",">
+            #{roleId}
+        </foreach>
+        and rim.is_deleted = 0
+        and menu.is_deleted = 0
+    </select>
+</mapper>

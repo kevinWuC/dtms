@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.exam.ExamModelMapper">
+  <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamModelDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="BIGINT" property="examId" />
+    <result column="exam_name" jdbcType="VARCHAR" property="examName" />
+    <result column="exam_duration" jdbcType="INTEGER" property="examDuration" />
+    <result column="total_points" jdbcType="INTEGER" property="totalPoints" />
+    <result column="is_use" jdbcType="BIT" property="isUse" />
+    <result column="is_peixun" jdbcType="BIT" property="isPeixun" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
+    <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+      biz_id, exam_name, exam_duration, total_points, is_use, is_peixun, create_date, 
+    create_user_id, create_user_name, modify_date, modify_user_id, modify_user_name
+  </sql>
+   
+  <insert id="insertExam" parameterType="com.medical.dtms.service.dataobject.exam.ExamModelDO">
+    insert into tb_dtms_exam_model (<include refid="Base_Column_List"/>)
+    values (  #{examId,jdbcType=BIGINT}, #{examName,jdbcType=VARCHAR}, 
+      #{examDuration,jdbcType=INTEGER}, #{totalPoints,jdbcType=INTEGER}, 0, 
+      #{isPeixun,jdbcType=BIT}, NOW(), #{createUserId,jdbcType=VARCHAR}, 
+      #{createUserName,jdbcType=VARCHAR}, NOW(), #{modifyUserId,jdbcType=VARCHAR}, 
+      #{modifyUserName,jdbcType=VARCHAR})
+  </insert>
+  
+  <delete id="deleteByExamId">
+   	delete from tb_dtms_exam_model
+   	where biz_id = #{examId}
+   </delete>
+   
+  <select id="listExamByQuery" parameterType="com.medical.dtms.dto.exam.query.ExamQuery" resultType="com.medical.dtms.dto.exam.ExamModelDTO">
+  	select  biz_id as examId,exam_name as examName,total_points as totalPoints,
+  	is_use as isUse,create_date as createDate,create_user_name  as createUserName
+  	from tb_dtms_exam_model
+  	<where>
+  		<if test="examName != null and examName != ''">
+  			and exam_name like concat(concat('%',#{examName}),'%')
+  		</if>
+  		<if test="startTime != null">
+  			and create_date  &gt;= #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  			and create_date &lt;= #{endTime}
+  		</if>
+  	</where> 
+  	order by create_date desc
+  </select>
+  
+  <select id="getExamByExamId" resultType="com.medical.dtms.common.model.exam.ExamDetailModel">
+  	select  biz_id as examId,exam_name as examName,total_points as totalPoints,
+  	exam_duration as examDuration, is_use as isUse, is_peixun as isPeixun
+  	from tb_dtms_exam_model
+  	where biz_id = #{examId}
+  </select>
+  
+  
+  <update id="updateExam" parameterType="com.medical.dtms.service.dataobject.exam.ExamModelDO">
+    update tb_dtms_exam_model
+    <set>
+       modify_date = NOW(),
+      <if test="examName != null">
+        exam_name = #{examName,jdbcType=VARCHAR},
+      </if>
+      <if test="examDuration != null">
+        exam_duration = #{examDuration,jdbcType=INTEGER},
+      </if>
+      <if test="totalPoints != null">
+        total_points = #{totalPoints,jdbcType=INTEGER},
+      </if>
+      <if test="isUse != null">
+        is_use = #{isUse,jdbcType=BIT},
+      </if>
+      <if test="isPeixun != null">
+        is_peixun = #{isPeixun,jdbcType=BIT},
+      </if>
+      <if test="modifyUserId != null">
+        modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUserName != null">
+        modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where biz_id = #{examId,jdbcType=BIGINT}
+  </update> 
+   
+   
+   <select id="listExamForPlan" resultType="com.medical.dtms.common.model.exam.ExamPlanModel">
+   		select biz_id as examId ,exam_name as examName ,total_points as totalPoints
+   		from tb_dtms_exam_model
+   		order by modify_date desc
+   </select>
+</mapper>

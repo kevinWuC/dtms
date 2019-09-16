@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSSysLogsMapper" >
+  <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.log.QMSSysLogsDO" >
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="BIGINT" property="bizId" />
+    <result column="operation_type" jdbcType="INTEGER" property="operationType" />
+    <result column="table_name" jdbcType="VARCHAR" property="tableName" />
+    <result column="business_name" jdbcType="VARCHAR" property="businessName" />
+    <result column="object_id" jdbcType="VARCHAR" property="objectId" />
+    <result column="operation_ip" jdbcType="VARCHAR" property="operationIp" />
+    <result column="create_date" jdbcType="VARCHAR" property="createDate" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="creator_id" jdbcType="VARCHAR" property="creatorId" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="modifier_id" jdbcType="VARCHAR" property="modifierId" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, biz_id, operation_type, table_name, business_name, object_id, operation_ip, create_date, 
+    create_user_id, create_user_name, is_deleted, creator, creator_id, gmt_created, modifier, 
+    modifier_id, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_dtms_qms_sys_logs
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_dtms_qms_sys_logs
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
+    insert into tb_dtms_qms_sys_logs (id, biz_id, operation_type, 
+      table_name, business_name, object_id, 
+      operation_ip, create_date, create_user_id, 
+      create_user_name, is_deleted, creator, 
+      creator_id, gmt_created, modifier, 
+      modifier_id, gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{operationType,jdbcType=INTEGER}, 
+      #{tableName,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR}, 
+      #{operationIp,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, 
+      #{createUserName,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
+      #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, 
+      #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
+    insert into tb_dtms_qms_sys_logs
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bizId != null">
+        biz_id,
+      </if>
+      <if test="operationType != null">
+        operation_type,
+      </if>
+      <if test="tableName != null">
+        table_name,
+      </if>
+      <if test="businessName != null">
+        business_name,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="operationIp != null">
+        operation_ip,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="gmtCreated != null">
+        gmt_created,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modifierId != null">
+        modifier_id,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="bizId != null">
+        #{bizId,jdbcType=BIGINT},
+      </if>
+      <if test="operationType != null">
+        #{operationType,jdbcType=INTEGER},
+      </if>
+      <if test="tableName != null">
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessName != null">
+        #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="operationIp != null">
+        #{operationIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreated != null">
+        #{gmtCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modifierId != null">
+        #{modifierId,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
+    update tb_dtms_qms_sys_logs
+    <set>
+      <if test="bizId != null">
+        biz_id = #{bizId,jdbcType=BIGINT},
+      </if>
+      <if test="operationType != null">
+        operation_type = #{operationType,jdbcType=INTEGER},
+      </if>
+      <if test="tableName != null">
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessName != null">
+        business_name = #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="operationIp != null">
+        operation_ip = #{operationIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorId != null">
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreated != null">
+        gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modifierId != null">
+        modifier_id = #{modifierId,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
+    update tb_dtms_qms_sys_logs
+    set biz_id = #{bizId,jdbcType=BIGINT},
+      operation_type = #{operationType,jdbcType=INTEGER},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      business_name = #{businessName,jdbcType=VARCHAR},
+      object_id = #{objectId,jdbcType=VARCHAR},
+      operation_ip = #{operationIp,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      creator = #{creator,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modifier_id = #{modifierId,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

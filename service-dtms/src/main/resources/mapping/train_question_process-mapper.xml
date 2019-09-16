@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.train.TrainQuestionProcessMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="train_id" jdbcType="BIGINT" property="trainId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="questions_id" jdbcType="BIGINT" property="questionsId"/>
+        <result column="question_type_id" jdbcType="BIGINT" property="questionTypeId"/>
+        <result column="user_answer" jdbcType="VARCHAR" property="userAnswer"/>
+        <result column="is_right" jdbcType="BIT" property="isRight"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId"/>
+        <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, train_id, user_id, questions_id, question_type_id, user_answer, is_right, 
+    create_date, create_user_id, create_user_name, modify_date, modify_user_id, modify_user_name
+  </sql>
+
+    <sql id="table_name">
+       tb_dtms_train_question_process
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{trainId,jdbcType=BIGINT},
+        #{userId,jdbcType=BIGINT}, #{questionsId,jdbcType=BIGINT}, #{questionTypeId,jdbcType=BIGINT},
+        #{userAnswer,jdbcType=VARCHAR}, #{isRight,jdbcType=BIT}, NOW(),
+        #{createUserId,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR}, NOW(),
+        #{modifyUserId,jdbcType=BIGINT}, #{modifyUserName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO">
+        insert into
+        <include refid="table_name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="trainId != null">
+                train_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="questionsId != null">
+                questions_id,
+            </if>
+            <if test="questionTypeId != null">
+                question_type_id,
+            </if>
+            <if test="userAnswer != null">
+                user_answer,
+            </if>
+            <if test="isRight != null">
+                is_right,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="createUserName != null">
+                create_user_name,
+            </if>
+            <if test="modifyDate != null">
+                modify_date,
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id,
+            </if>
+            <if test="modifyUserName != null">
+                modify_user_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="bizId != null">
+                #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="trainId != null">
+                #{trainId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="questionsId != null">
+                #{questionsId,jdbcType=BIGINT},
+            </if>
+            <if test="questionTypeId != null">
+                #{questionTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="userAnswer != null">
+                #{userAnswer,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null">
+                #{isRight,jdbcType=BIT},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createUserName != null">
+                #{createUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyDate != null">
+                #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                #{modifyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="modifyUserName != null">
+                #{modifyUserName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="trainId != null">
+                train_id = #{trainId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="questionsId != null">
+                questions_id = #{questionsId,jdbcType=BIGINT},
+            </if>
+            <if test="questionTypeId != null">
+                question_type_id = #{questionTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="userAnswer != null">
+                user_answer = #{userAnswer,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null">
+                is_right = #{isRight,jdbcType=BIT},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createUserName != null">
+                create_user_name = #{createUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="modifyUserName != null">
+                modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO">
+        update
+        <include refid="table_name"/>
+        set biz_id = #{bizId,jdbcType=BIGINT},
+        train_id = #{trainId,jdbcType=BIGINT},
+        user_id = #{userId,jdbcType=BIGINT},
+        questions_id = #{questionsId,jdbcType=BIGINT},
+        question_type_id = #{questionTypeId,jdbcType=BIGINT},
+        user_answer = #{userAnswer,jdbcType=VARCHAR},
+        is_right = #{isRight,jdbcType=BIT},
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+        modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+        modify_user_name = #{modifyUserName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

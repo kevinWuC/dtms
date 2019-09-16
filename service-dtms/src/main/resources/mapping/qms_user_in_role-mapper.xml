@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSUserInRoleMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.user.QMSUserInRoleDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, user_id, role_id, is_deleted, creator, creator_id, gmt_created, modifier,
+    modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_user_in_role
+  </sql>
+
+    <!--  新增 用户与角色关联-->
+    <insert id="insert" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="rel" separator=",">
+            (
+            #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.userId,jdbcType=BIGINT},
+            #{rel.roleId,jdbcType=BIGINT},0, #{rel.creator,jdbcType=VARCHAR},
+            #{rel.creatorId,jdbcType=VARCHAR},NOW(), #{rel.modifier,jdbcType=VARCHAR},
+            #{rel.modifierId,jdbcType=VARCHAR}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 查询用户管理的角色/用户 关联数据-->
+    <select id="listQMSUserInRole" parameterType="com.medical.dtms.dto.user.query.BaseUserQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=BIGINT}
+        </if>
+        <if test="roleId != null">
+            and role_id = #{roleId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!--  根据用户 id/角色id 删除数据-->
+    <delete id="deleteQMSUserInRoleByCondition"
+            parameterType="com.medical.dtms.service.dataobject.user.QMSUserInRoleDO">
+        UPDATE
+        <include refid="table_name"/>
+        SET is_deleted = 1
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 根据用户id 查询角色-->
+    <select id="listRoleInfoByUserId" resultType="com.medical.dtms.common.model.user.QMSUserInRoleModel">
+        select role.role_name AS roleName,usr.role_id AS roleId
+        from tb_dtms_qms_user_in_role usr
+        left join tb_dtms_qms_role role on usr.role_id = role.biz_id
+        WHERE usr.user_id = #{userId}
+        and usr.is_deleted = 0
+        and role.is_deleted = 0
+    </select>
+
+    <!-- 根据用户 ids 查询角色 ids-->
+    <select id="listRoleIdsByUserIds" parameterType="java.util.List"
+            resultType="com.medical.dtms.common.model.syslog.BaseSimpleUserModel">
+        select user_id AS userId,role_id AS roleId
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and user_id in
+        <foreach collection="list" index="index" separator="," open="(" close=")" item="userId">
+            #{userId}
+        </foreach>
+    </select>
+</mapper>

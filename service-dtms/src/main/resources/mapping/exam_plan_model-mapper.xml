@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.exam.ExamPlanModelMapper">
+  <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamPlanModelDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="BIGINT" property="examPlanModelId" />
+    <result column="exam_plan_name" jdbcType="VARCHAR" property="examPlanName" />
+    <result column="use_dept_id" jdbcType="BIGINT" property="useDeptId" />
+    <result column="exam_id" jdbcType="BIGINT" property="examId" />
+    <result column="exam_info" jdbcType="VARCHAR" property="examInfo" />
+    <result column="exam_content" jdbcType="VARCHAR" property="examContent" />
+    <result column="is_start" jdbcType="BIT" property="isStart" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="exam_duration" jdbcType="INTEGER" property="examDuration" />
+    <result column="total_points" jdbcType="INTEGER" property="totalPoints" />
+    <result column="pass_points" jdbcType="INTEGER" property="passPoints" />
+    <result column="type_points1" jdbcType="INTEGER" property="typePoints1" />
+    <result column="type_points2" jdbcType="INTEGER" property="typePoints2" />
+    <result column="type_points3" jdbcType="INTEGER" property="typePoints3" />
+    <result column="type_points4" jdbcType="INTEGER" property="typePoints4" />
+    <result column="type_points5" jdbcType="INTEGER" property="typePoints5" />
+     <result column="is_deleted" jdbcType="BIT" property="deleted" />
+    <result column="createdate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId" />
+    <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+    <result column="sort_code" jdbcType="INTEGER" property="sortCode" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.medical.dtms.dto.exam.ExamPlanModelDTO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="BIGINT" property="examPlanModelId" />
+    <result column="exam_plan_name" jdbcType="VARCHAR" property="examPlanName" />
+    <result column="use_dept_id" jdbcType="BIGINT" property="useDeptId" />
+     <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="exam_id" jdbcType="BIGINT" property="examId" />
+    <result column="exam_info" jdbcType="VARCHAR" property="examInfo" />
+    <result column="exam_content" jdbcType="VARCHAR" property="examContent" />
+    <result column="is_start" jdbcType="BIT" property="isStart" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="exam_duration" jdbcType="INTEGER" property="examDuration" />
+    <result column="total_points" jdbcType="INTEGER" property="totalPoints" />
+    <result column="pass_points" jdbcType="INTEGER" property="passPoints" />
+    <result column="type_points1" jdbcType="INTEGER" property="typePoints1" />
+    <result column="type_points2" jdbcType="INTEGER" property="typePoints2" />
+    <result column="type_points3" jdbcType="INTEGER" property="typePoints3" />
+    <result column="type_points4" jdbcType="INTEGER" property="typePoints4" />
+    <result column="type_points5" jdbcType="INTEGER" property="typePoints5" />
+     <result column="is_deleted" jdbcType="BIT" property="deleted" />
+    <result column="createdate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId" />
+    <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
+    <result column="sort_code" jdbcType="INTEGER" property="sortCode" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+     biz_id, exam_plan_name, use_dept_id, exam_id, exam_info, exam_content, is_start, 
+    start_date, end_date, exam_duration, total_points, pass_points, type_points1, type_points2, 
+    type_points3, type_points4, type_points5, is_deleted,createdate, create_user_id, create_user_name, 
+    modify_date, modify_user_id, modify_user_name, sort_code
+  </sql>
+   
+  <insert id="insertExamPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamPlanModelDO">
+    insert into tb_dtms_exam_plan_model (<include refid="Base_Column_List"/>)
+    values (  #{examPlanModelId,jdbcType=BIGINT}, #{examPlanName,jdbcType=VARCHAR}, 
+      #{useDeptId,jdbcType=BIGINT}, #{examId,jdbcType=BIGINT}, #{examInfo,jdbcType=VARCHAR}, 
+      #{examContent,jdbcType=VARCHAR}, 0, #{startDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{examDuration,jdbcType=INTEGER}, #{totalPoints,jdbcType=INTEGER}, 
+      #{passPoints,jdbcType=INTEGER}, #{typePoints1,jdbcType=INTEGER}, #{typePoints2,jdbcType=INTEGER}, 
+      #{typePoints3,jdbcType=INTEGER}, #{typePoints4,jdbcType=INTEGER}, #{typePoints5,jdbcType=INTEGER}, 
+      0,NOW(), #{createUserId,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR}, 
+      NOW(), #{modifyUserId,jdbcType=BIGINT}, #{modifyUserName,jdbcType=VARCHAR}, 
+      #{sortCode,jdbcType=INTEGER})
+  </insert>
+ 
+  <update id="updateExamPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamPlanModelDO">
+    update tb_dtms_exam_plan_model
+    <set>
+    	modify_date = NOW(),
+      <if test="examPlanName != null and examPlanName !=''">
+        exam_plan_name = #{examPlanName,jdbcType=VARCHAR},
+      </if>
+      <if test="useDeptId != null ">
+        use_dept_id = #{useDeptId,jdbcType=BIGINT},
+      </if>
+      <if test="examId != null ">
+        exam_id = #{examId,jdbcType=BIGINT},
+      </if>
+      <if test="examInfo != null and examInfo !=''">
+        exam_info = #{examInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="examContent != null and examContent != ''">
+        exam_content = #{examContent,jdbcType=VARCHAR},
+      </if>
+      <if test="isStart != null">
+        is_start = #{isStart,jdbcType=BIT},
+      </if>
+      <if test="startDate != null">
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examDuration != null">
+        exam_duration = #{examDuration,jdbcType=INTEGER},
+      </if>
+      <if test="totalPoints != null">
+        total_points = #{totalPoints,jdbcType=INTEGER},
+      </if>
+      <if test="passPoints != null">
+        pass_points = #{passPoints,jdbcType=INTEGER},
+      </if>
+      <if test="typePoints1 != null">
+        type_points1 = #{typePoints1,jdbcType=INTEGER},
+      </if>
+      <if test="typePoints2 != null">
+        type_points2 = #{typePoints2,jdbcType=INTEGER},
+      </if>
+      <if test="typePoints3 != null">
+        type_points3 = #{typePoints3,jdbcType=INTEGER},
+      </if>
+      <if test="typePoints4 != null">
+        type_points4 = #{typePoints4,jdbcType=INTEGER},
+      </if>
+      <if test="typePoints5 != null">
+        type_points5 = #{typePoints5,jdbcType=INTEGER},
+      </if>
+       <if test="deleted != null">
+        is_deleted = #{deleted,jdbcType=BIT},
+      </if>
+      <if test="modifyUserId != null ">
+        modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUserName != null and modifyUserName !=''">
+        modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortCode != null">
+        sort_code = #{sortCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    where biz_id = #{examPlanModelId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getExamPlanModelById" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from tb_dtms_exam_plan_model 
+  	where is_deleted = 0
+  	and biz_id = #{examPlanModelId}
+  </select>
+  
+  
+  <select id="listExamPlanModelByQuery" parameterType="com.medical.dtms.dto.exam.query.ExamPlanModelQuery"  resultMap="DtoResultMap">
+  	select plan.biz_id, plan.exam_plan_name, plan.use_dept_id, plan.exam_id, 
+  	plan.exam_info, plan.exam_content, plan.is_start, 
+    plan.start_date, plan.end_date, plan.exam_duration, plan.total_points, plan.pass_points,  
+    plan.is_deleted,plan.createdate, plan.create_user_id, plan.create_user_name, 
+    plan.modify_date, plan.modify_user_id, plan.modify_user_name, plan.sort_code,
+    dept.dept_name
+  	from tb_dtms_exam_plan_model plan 
+  	left join tb_dtms_qms_dept dept on plan.use_dept_id = dept.biz_id
+  	where plan.is_deleted = 0
+  	and dept.is_deleted = 0
+  	and  plan.exam_plan_name like concat(concat('%',#{examPlanName}),'%')
+  </select>
+   
+</mapper>

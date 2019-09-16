@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSJobsMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.job.QMSJobsDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="job_name" jdbcType="VARCHAR" property="jobName"/>
+        <result column="allow_query" jdbcType="BIT" property="allowQuery"/>
+        <result column="allow_read" jdbcType="BIT" property="allowRead"/>
+        <result column="allow_edit" jdbcType="BIT" property="allowEdit"/>
+        <result column="allow_enable" jdbcType="BIT" property="allowEnable"/>
+        <result column="allow_freeze" jdbcType="BIT" property="allowFreeze"/>
+        <result column="allow_delete" jdbcType="BIT" property="allowDelete"/>
+        <result column="sort_code" jdbcType="VARCHAR" property="sortCode"/>
+        <result column="dept_id" jdbcType="VARCHAR" property="deptId"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, biz_id, job_name, allow_query, allow_read, allow_edit, allow_enable, allow_freeze,
+    allow_delete, sort_code, dept_id, dept_name, is_deleted, creator, creator_id, gmt_created,
+    modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_jobs
+  </sql>
+    <!-- 主键查询是否存在-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+        and is_deleted = 0
+    </select>
+
+    <!-- 根据职位名称做唯一性校验 -->
+    <select id="getQMSJobByCondition" parameterType="com.medical.dtms.dto.job.query.QMSJobsQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="jobName != null">
+            and job_name = #{jobName,jdbcType=VARCHAR}
+        </if>
+        <if test="bizId != null">
+            and biz_id = #{bizId}
+        </if>
+    </select>
+
+
+    <!-- 岗位设置 列表查询-->
+    <select id="listJobs" parameterType="com.medical.dtms.dto.job.query.QMSJobsQuery" resultType="com.medical.dtms.common.model.job.QMSJobsModel">
+        select
+        biz_id as bizId ,  job_name as jobName , allow_query as allowQuery , allow_read as allowRead ,
+        allow_edit as allowEdit ,  allow_enable as allowEnable , allow_freeze as  allowFreeze ,
+        allow_delete as allowDelete , sort_code as sortCode , dept_id as deptId , dept_name as deptName
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        ORDER BY
+        gmt_created DESC
+    </select>
+
+
+
+    <!-- 根据业务主键删除岗位 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 岗位设置 新增-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.job.QMSJobsDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{jobName,jdbcType=VARCHAR},
+        #{allowQuery,jdbcType=BIT}, #{allowRead,jdbcType=BIT}, #{allowEdit,jdbcType=BIT},
+        #{allowEnable,jdbcType=BIT}, #{allowFreeze,jdbcType=BIT}, #{allowDelete,jdbcType=BIT},
+        #{sortCode,jdbcType=VARCHAR}, #{deptId,jdbcType=VARCHAR}, #{deptName,jdbcType=VARCHAR},
+        0, #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR},
+        NOW(), #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR},
+        NOW())
+    </insert>
+    <!-- 岗位设置 新增-->
+    <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.job.QMSJobsDO">
+        insert into
+        <include refid="table_name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="jobName != null">
+                job_name,
+            </if>
+            <if test="allowQuery != null">
+                allow_query,
+            </if>
+            <if test="allowRead != null">
+                allow_read,
+            </if>
+            <if test="allowEdit != null">
+                allow_edit,
+            </if>
+            <if test="allowEnable != null">
+                allow_enable,
+            </if>
+            <if test="allowFreeze != null">
+                allow_freeze,
+            </if>
+            <if test="allowDelete != null">
+                allow_delete,
+            </if>
+            <if test="sortCode != null">
+                sort_code,
+            </if>
+            <if test="deptId != null">
+                dept_id,
+            </if>
+            <if test="deptName != null">
+                dept_name,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="modifierId != null">
+                modifier_id,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="bizId != null">
+                #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="jobName != null">
+                #{jobName,jdbcType=VARCHAR},
+            </if>
+            <if test="allowQuery != null">
+                #{allowQuery,jdbcType=BIT},
+            </if>
+            <if test="allowRead != null">
+                #{allowRead,jdbcType=BIT},
+            </if>
+            <if test="allowEdit != null">
+                #{allowEdit,jdbcType=BIT},
+            </if>
+            <if test="allowEnable != null">
+                #{allowEnable,jdbcType=BIT},
+            </if>
+            <if test="allowFreeze != null">
+                #{allowFreeze,jdbcType=BIT},
+            </if>
+            <if test="allowDelete != null">
+                #{allowDelete,jdbcType=BIT},
+            </if>
+            <if test="sortCode != null">
+                #{sortCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null">
+                #{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptName != null">
+                #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 岗位设置 更新-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.job.QMSJobsDO">
+        update tb_dtms_qms_jobs
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="jobName != null">
+                job_name = #{jobName,jdbcType=VARCHAR},
+            </if>
+            <if test="allowQuery != null">
+                allow_query = #{allowQuery,jdbcType=BIT},
+            </if>
+            <if test="allowRead != null">
+                allow_read = #{allowRead,jdbcType=BIT},
+            </if>
+            <if test="allowEdit != null">
+                allow_edit = #{allowEdit,jdbcType=BIT},
+            </if>
+            <if test="allowEnable != null">
+                allow_enable = #{allowEnable,jdbcType=BIT},
+            </if>
+            <if test="allowFreeze != null">
+                allow_freeze = #{allowFreeze,jdbcType=BIT},
+            </if>
+            <if test="allowDelete != null">
+                allow_delete = #{allowDelete,jdbcType=BIT},
+            </if>
+            <if test="sortCode != null">
+                sort_code = #{sortCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptName != null">
+                dept_name = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <!-- 岗位设置 更新-->
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.job.QMSJobsDO">
+     update tb_dtms_qms_jobs
+    set biz_id = #{bizId,jdbcType=BIGINT},
+      job_name = #{jobName,jdbcType=VARCHAR},
+      allow_query = #{allowQuery,jdbcType=BIT},
+      allow_read = #{allowRead,jdbcType=BIT},
+      allow_edit = #{allowEdit,jdbcType=BIT},
+      allow_enable = #{allowEnable,jdbcType=BIT},
+      allow_freeze = #{allowFreeze,jdbcType=BIT},
+      allow_delete = #{allowDelete,jdbcType=BIT},
+      sort_code = #{sortCode,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=VARCHAR},
+      dept_name = #{deptName,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      creator = #{creator,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modifier_id = #{modifierId,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where biz_id = #{bizId,jdbcType=BIGINT}
+  </update>
+
+
+</mapper>

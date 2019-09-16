@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.DemoMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.demo.LeaveDO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="biz_id" property="bizId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="approve_id" property="approveId" jdbcType="VARCHAR"/>
+        <result column="definition_id" property="procDefId" jdbcType="VARCHAR"/>
+        <result column="instance_id" property="procInstId" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="creator_id" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+        <result column="modifier_id" property="modifierId" jdbcType="VARCHAR"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, user_id, content, approve_id, definition_id, instance_id, is_deleted, 
+    creator, creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_demo_leave
+  </sql>
+
+    <!--保存数据-->
+    <insert id="startApply" parameterType="com.medical.dtms.service.dataobject.demo.LeaveDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR}, #{approveId,jdbcType=VARCHAR}, #{procDefId,jdbcType=VARCHAR},
+        #{procInstId,jdbcType=VARCHAR}, 0, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, NOW(), #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, NOW())
+    </insert>
+</mapper>

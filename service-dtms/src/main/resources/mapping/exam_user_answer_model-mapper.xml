@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.exam.ExamUserAnswerModelMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="questions_id" jdbcType="BIGINT" property="questionsId"/>
+        <result column="exam_id" jdbcType="BIGINT" property="examId"/>
+        <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId"/>
+        <result column="exam_user_plan_id" jdbcType="BIGINT" property="examUserPlanId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="answer_points" jdbcType="INTEGER" property="answerPoints"/>
+        <result column="sort_code" jdbcType="INTEGER" property="sortCode"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, biz_id, questions_id, exam_id, exam_plan_id, exam_user_plan_id, user_id, answer,answer_points,sort_code, is_deleted,
+    creator, creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+
+    <!-- 批量新增答案 -->
+    <insert id="insertBatchExamUserAnswerModel" parameterType="java.util.List">
+        insert into tb_dtms_exam_user_answer_model
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id,jdbcType=BIGINT}, #{item.bizId,jdbcType=BIGINT}, #{item.questionsId,jdbcType=BIGINT},
+            #{item.examId,jdbcType=BIGINT}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examUserPlanId,jdbcType=BIGINT},
+            #{item.userId,jdbcType=BIGINT}, #{item.answer,jdbcType=VARCHAR}, #{item.answerPoints,jdbcType=INTEGER},
+            #{item.sortCode,jdbcType=INTEGER},0, #{item.creator,jdbcType=VARCHAR},
+            #{item.creatorId,jdbcType=VARCHAR}, NOW(), #{item.modifier,jdbcType=VARCHAR},
+            #{item.modifierId,jdbcType=VARCHAR}, NOW())
+        </foreach>
+    </insert>
+
+    <!-- 通过考试ID删除答案 -->
+    <delete id="deleteByExamUserPlanId" parameterType="java.lang.Long">
+    update tb_dtms_exam_user_answer_model
+    set is_deleted = 1
+    where exam_plan_id = #{examUserPlanId,jdbcType=BIGINT}
+  </delete>
+
+    <!-- 批量更新 -->
+    <update id="updateBatchExamUserAnswerModel" parameterType="java.util.List">
+        update tb_dtms_exam_user_answer_model
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update standard_relation
+            <set>
+                gmt_modified = NOW(),
+                <if test="item.answer != null">
+                    answer = #{answer,jdbcType=VARCHAR},
+                </if>
+                <if test="item.answer_points != null">
+                    answer_points=#{item.answerPoints,jdbcType=INTEGER},
+                </if>
+                <if test="item.isDeleted != null">
+                    is_deleted = #{isDeleted,jdbcType=BIT},
+                </if>
+                <if test="item.modifier != null">
+                    modifier = #{modifier,jdbcType=VARCHAR},
+                </if>
+                <if test="item.modifierId != null">
+                    modifier_id = #{modifierId,jdbcType=VARCHAR},
+                </if>
+            </set>
+            where biz_id = #{item.biz_id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+
+    <!-- 以下均为本菜鸟参考SQL 实际都没用到..... -->
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo">
+        update tb_dtms_exam_user_answer_model
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="questionsId != null">
+                questions_id = #{questionsId,jdbcType=BIGINT},
+            </if>
+            <if test="examId != null">
+                exam_id = #{examId,jdbcType=BIGINT},
+            </if>
+            <if test="examPlanId != null">
+                exam_plan_id = #{examPlanId,jdbcType=BIGINT},
+            </if>
+            <if test="examUserPlanId != null">
+                exam_user_plan_id = #{examUserPlanId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_dtms_exam_user_answer_model
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_dtms_exam_user_answer_model
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo">
+    insert into tb_dtms_exam_user_answer_model (id, biz_id, questions_id, 
+      exam_id, exam_plan_id, exam_user_plan_id, 
+      user_id, answer, is_deleted,creator,
+      creator_id, gmt_created, modifier, 
+      modifier_id, gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{questionsId,jdbcType=BIGINT}, 
+      #{examId,jdbcType=BIGINT}, #{examPlanId,jdbcType=BIGINT}, #{examUserPlanId,jdbcType=BIGINT}, 
+      #{userId,jdbcType=BIGINT}, #{answer,jdbcType=VARCHAR}, 0, #{creator,jdbcType=VARCHAR},
+      #{creatorId,jdbcType=VARCHAR}, NOW(), #{modifier,jdbcType=VARCHAR},
+      #{modifierId,jdbcType=VARCHAR}, NOW())
+  </insert>
+
+    <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo">
+        insert into tb_dtms_exam_user_answer_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="questionsId != null">
+                questions_id,
+            </if>
+            <if test="examId != null">
+                exam_id,
+            </if>
+            <if test="examPlanId != null">
+                exam_plan_id,
+            </if>
+            <if test="examUserPlanId != null">
+                exam_user_plan_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="answer != null">
+                answer,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="modifierId != null">
+                modifier_id,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="bizId != null">
+                #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="questionsId != null">
+                #{questionsId,jdbcType=BIGINT},
+            </if>
+            <if test="examId != null">
+                #{examId,jdbcType=BIGINT},
+            </if>
+            <if test="examPlanId != null">
+                #{examPlanId,jdbcType=BIGINT},
+            </if>
+            <if test="examUserPlanId != null">
+                #{examUserPlanId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="answer != null">
+                #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo">
+    update tb_dtms_exam_user_answer_model
+    set biz_id = #{bizId,jdbcType=BIGINT},
+      questions_id = #{questionsId,jdbcType=BIGINT},
+      exam_id = #{examId,jdbcType=BIGINT},
+      exam_plan_id = #{examPlanId,jdbcType=BIGINT},
+      exam_user_plan_id = #{examUserPlanId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      answer = #{answer,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      creator = #{creator,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modifier_id = #{modifierId,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

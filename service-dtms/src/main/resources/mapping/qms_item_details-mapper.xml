@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSItemDetailsMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.item.QMSItemDetailsDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="items_id" jdbcType="BIGINT" property="itemsId"/>
+        <result column="item_name" jdbcType="VARCHAR" property="itemName"/>
+        <result column="item_code" jdbcType="VARCHAR" property="itemCode"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="enabled" jdbcType="BIT" property="enabled"/>
+        <result column="allow_edit" jdbcType="BIT" property="allowEdit"/>
+        <result column="allow_delete" jdbcType="BIT" property="allowDelete"/>
+        <result column="sort_code" jdbcType="VARCHAR" property="sortCode"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, items_id, item_name, item_code, description, enabled, allow_edit, allow_delete,
+    sort_code, is_deleted, creator, creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+   tb_dtms_qms_item_details
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据业务主键删除明细数据 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 字典明细 新增  -->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.item.QMSItemDetailsDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{itemsId,jdbcType=BIGINT},
+        #{itemName,jdbcType=VARCHAR}, #{itemCode,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+        #{enabled,jdbcType=BIT}, #{allowEdit,jdbcType=BIT}, #{allowDelete,jdbcType=BIT},
+        #{sortCode,jdbcType=VARCHAR}, 0, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, NOW(), #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR},NOW())
+    </insert>
+
+    <!-- 字典明细 更新  -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.item.QMSItemDetailsDO">
+        update tb_dtms_qms_item_details
+        <set>
+            <if test="itemsId != null">
+                items_id = #{itemsId,jdbcType=BIGINT},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=BIT},
+            </if>
+            <if test="allowEdit != null">
+                allow_edit = #{allowEdit,jdbcType=BIT},
+            </if>
+            <if test="allowDelete != null">
+                allow_delete = #{allowDelete,jdbcType=BIT},
+            </if>
+            <if test="sortCode != null">
+                sort_code = #{sortCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <!--  根据数据字典表主键查询关联的 明细表数据-->
+    <select id="listDetailsByItemsId" parameterType="com.medical.dtms.dto.item.query.QMSItemDetailsQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and items_id = #{itemsId}
+        order by gmt_created desc
+    </select>
+
+    <!--  根据数据字典表 id 删除数据-->
+    <delete id="deleteByItemId" parameterType="java.lang.Long">
+        UPDATE
+        <include refid="table_name"/>
+        SET is_deleted = 1
+        where items_id = #{itemsId}
+    </delete>
+
+    <!-- 校验明细是否存在-->
+    <select id="getQMSItemDetailsByCondition" parameterType="com.medical.dtms.dto.item.query.QMSItemDetailsQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="itemsId != null">
+            and items_id = #{itemsId}
+        </if>
+        <if test="itemCode != null and itemCode !=''">
+            and item_code = #{itemCode}
+        </if>
+        <if test="itemName != null and itemName !=''">
+            and item_name = #{itemName}
+        </if>
+        <if test="bizId != null">
+            and biz_id = #{bizId}
+        </if>
+    </select>
+
+    <!--  文件类别/申请原因下拉-->
+    <select id="listAllFileTypes" parameterType="com.medical.dtms.common.model.dropdown.query.DropDownQuery"
+            resultType="com.medical.dtms.common.model.dropdown.DropDownModel">
+        select biz_id AS fileTypeId,item_name AS fileTypeIdName
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="itemsId != null">
+            and items_id = #{itemsId}
+        </if>
+        order by gmt_created desc
+    </select>
+
+    <!-- 各类别名称下拉框 -->
+    <select id="listTypeDetailsName" parameterType="java.lang.Long"
+            resultType="com.medical.dtms.common.model.dropdown.DropDownDetailsModel">
+        select detials.biz_id AS bizId,detials.item_name AS itemName
+        from
+        tb_dtms_qms_item_details detials
+        left join tb_dtms_qms_items items on detials.items_id = items.biz_id
+        where detials.is_deleted = 0
+        and items.is_deleted = 0
+        and detials.items_id = #{itemsId}
+        order by detials.gmt_created desc
+    </select>
+
+    <select id="listDetailsByItemsIdForQuestion" resultType="com.medical.dtms.common.model.question.QuestionItemModel">
+    	select biz_id as itemId ,item_name as itemName
+    	 from
+        <include refid="table_name"/>
+        where is_deleted = 0
+            and items_id = #{itemsId,jdbcType=BIGINT}
+    </select>
+
+
+    <!-- 我的培训 - 问题类型id转name -->
+    <select id="queryDetailsList" resultType="com.medical.dtms.common.model.question.QuestionItemModel">
+        select biz_id as itemId ,item_name as itemName
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+        </foreach>
+
+    </select>
+
+
+</mapper>

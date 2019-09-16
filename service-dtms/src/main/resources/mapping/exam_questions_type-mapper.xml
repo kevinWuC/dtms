@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.exam.ExamQuestionsTypeMapper">
+  <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamQuestionsTypeDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="BIGINT" property="examQuestionTypeId" />
+    <result column="exam_id" jdbcType="BIGINT" property="examId" />
+    <result column="questions_type_id" jdbcType="BIGINT" property="questionsTypeId" />
+    <result column="questions_points" jdbcType="INTEGER" property="questionsPoints" />
+    <result column="total_points" jdbcType="INTEGER" property="totalPoints" />
+    <result column="question_sum" jdbcType="INTEGER" property="questionSum" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+      biz_id, exam_id, questions_type_id, questions_points, total_points, question_sum, 
+    create_date, create_user_id, create_user_name
+  </sql>
+  
+  <insert id="insertExamQuestionType" parameterType="com.medical.dtms.service.dataobject.exam.ExamQuestionsTypeDO">
+    insert into tb_dtms_exam_questions_type (<include refid="Base_Column_List"/>)
+    values (  #{examQuestionTypeId,jdbcType=BIGINT}, #{examId,jdbcType=BIGINT}, 
+      #{questionsTypeId,jdbcType=BIGINT}, #{questionsPoints,jdbcType=INTEGER}, #{totalPoints,jdbcType=INTEGER}, 
+      #{questionSum,jdbcType=INTEGER}, NOW(), #{createUserId,jdbcType=BIGINT}, 
+      #{createUserName,jdbcType=VARCHAR})
+  </insert>
+  
+   <insert id="insertBatchExamQuestionType" parameterType="java.util.List">
+    insert into tb_dtms_exam_questions_type (<include refid="Base_Column_List"/>)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+		(  #{item.examQuestionTypeId,jdbcType=BIGINT}, #{item.examId,jdbcType=BIGINT}, 
+      #{item.questionsTypeId,jdbcType=BIGINT}, #{item.questionsPoints,jdbcType=INTEGER}, #{item.totalPoints,jdbcType=INTEGER}, 
+      #{item.questionSum,jdbcType=INTEGER}, NOW(), #{item.createUserId,jdbcType=BIGINT}, 
+      #{item.createUserName,jdbcType=VARCHAR})   
+    </foreach>
+    
+  </insert>
+   
+   <select id="listQuestionTypeByExamId" resultType="com.medical.dtms.common.model.exam.ExamQuestionsTypeModel">
+   	select type.biz_id as examQuestionTypeId,type.exam_id as examId,type.questions_type_id as questionsTypeId,
+   	type.questions_points  as questionsPoints,type.total_points as totalPoints,type.question_sum as questionSum,
+   	group_concat(question.questions_id) as examQuestionString,item.item_name as questionTypeName
+   	from tb_dtms_exam_questions_type type 
+   	left join tb_dtms_exam_questions question on type.biz_id = question.exam_question_type_id
+	left join tb_dtms_qms_item_details item on item.biz_id = type.questions_type_id
+   	where type.exam_id = #{examId}
+   	group by type.biz_id
+   </select>
+   
+   <delete id="deleteByExamId">
+   	delete from tb_dtms_exam_questions_type
+   	where exam_id = #{examId}
+   </delete>
+   
+  <!-- <update id="updateByPrimaryKeySelective" parameterType="model.ExamQuestionSTypeDO">
+    update tb_dtms_exam_questions_type
+    <set>
+      <if test="bizId != null">
+        biz_id = #{bizId,jdbcType=BIGINT},
+      </if>
+      <if test="examId != null">
+        exam_id = #{examId,jdbcType=BIGINT},
+      </if>
+      <if test="questionsTypeId != null">
+        questions_type_id = #{questionsTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="questionsPoints != null">
+        questions_points = #{questionsPoints,jdbcType=INTEGER},
+      </if>
+      <if test="totalPoints != null">
+        total_points = #{totalPoints,jdbcType=INTEGER},
+      </if>
+      <if test="questionSum != null">
+        question_sum = #{questionSum,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update> -->
+   
+</mapper>

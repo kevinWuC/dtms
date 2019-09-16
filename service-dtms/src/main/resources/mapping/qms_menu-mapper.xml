@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSMenuMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.menu.QMSMenuDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="img" jdbcType="VARCHAR" property="img"/>
+        <result column="category" jdbcType="VARCHAR" property="category"/>
+        <result column="navigate_url" jdbcType="VARCHAR" property="navigateUrl"/>
+        <result column="target" jdbcType="VARCHAR" property="target"/>
+        <result column="is_unfold" jdbcType="BIT" property="isUnfold"/>
+        <result column="allow_edit" jdbcType="BIT" property="allowEdit"/>
+        <result column="allow_delete" jdbcType="BIT" property="allowDelete"/>
+        <result column="enabled" jdbcType="BIT" property="enabled"/>
+        <result column="sort_code" jdbcType="VARCHAR" property="sortCode"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, parent_id, code, full_name, description, img, category, navigate_url,
+    target, is_unfold, allow_edit, allow_delete, enabled, sort_code, is_deleted, creator,
+    creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_menu
+  </sql>
+
+    <!-- 删除菜单 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 根据父级id，删除子菜单-->
+    <delete id="deleteByPatentId" parameterType="java.lang.Long">
+        UPDATE
+        <include refid="table_name"/>
+        SET is_deleted = 1
+        where parent_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 新增菜单-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.menu.QMSMenuDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT},
+        #{code,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+        #{img,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{navigateUrl,jdbcType=VARCHAR},
+        #{target,jdbcType=VARCHAR}, #{isUnfold,jdbcType=BIT}, #{allowEdit,jdbcType=BIT},
+        #{allowDelete,jdbcType=BIT}, #{enabled,jdbcType=BIT}, #{sortCode,jdbcType=VARCHAR},
+        0, #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR},
+        NOW(), #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR},
+        NOW())
+    </insert>
+
+    <!-- 更新菜单-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.menu.QMSMenuDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="fullName != null">
+                full_name = #{fullName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                category = #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="navigateUrl != null">
+                navigate_url = #{navigateUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null">
+                target = #{target,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnfold != null">
+                is_unfold = #{isUnfold,jdbcType=BIT},
+            </if>
+            <if test="allowEdit != null">
+                allow_edit = #{allowEdit,jdbcType=BIT},
+            </if>
+            <if test="allowDelete != null">
+                allow_delete = #{allowDelete,jdbcType=BIT},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=BIT},
+            </if>
+            <if test="sortCode != null">
+                sort_code = #{sortCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <!-- 条件查询菜单是否存在-->
+    <select id="getQMSMenuByCondition" parameterType="com.medical.dtms.dto.menu.query.QMSMenuQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="bizId != null">
+            and biz_id = #{bizId,jdbcType=BIGINT}
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId,jdbcType=BIGINT}
+        </if>
+        <if test="code != null and code !=''">
+            and code = #{code,jdbcType=VARCHAR}
+        </if>
+        <if test="fullName != null and fullName !=''">
+            and full_name = #{fullName,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!-- 菜单列表查询-->
+    <select id="listQMSMenus" parameterType="com.medical.dtms.dto.menu.query.QMSMenuQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and enabled = 1
+        <if test="parentId != null">
+            and parent_id = #{parentId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 根据 id 查询数据-->
+    <select id="listParentInfos" parameterType="java.util.List"
+            resultType="com.medical.dtms.common.model.menu.QMSMenuModel">
+        select
+        biz_id AS parentId,full_name AS parentName
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        AND biz_id IN
+        <foreach collection="list" item="bizId" open="(" close=")" index="index" separator=",">
+            #{bizId}
+        </foreach>
+    </select>
+</mapper>

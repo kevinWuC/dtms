@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.train.TrainFilesMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.train.TrainFilesDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="train_id" jdbcType="BIGINT" property="trainId"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, biz_id, train_id, file_id, is_deleted, creator, creator_id, gmt_created, modifier,
+    modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_train_files
+  </sql>
+
+    <!-- 主键查询是否存在 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+        and
+        is_deleted = 0
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update
+        <include refid="table_name"/>
+        set
+        is_deleted = 1
+        where
+        biz_id = #{bizId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeyList" parameterType="java.util.List">
+        update
+        <include refid="table_name"/>
+        set
+        is_deleted = 1
+        where
+        biz_id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+
+    </delete>
+
+    <!-- 新增培训与文件的关联 -->
+    <insert id="insert" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="rel" separator=",">
+            (
+            #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.trainId,jdbcType=BIGINT},
+            #{rel.fileId,jdbcType=BIGINT}, 0, #{rel.creator,jdbcType=VARCHAR},
+            #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
+            #{rel.modifierId,jdbcType=VARCHAR}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.train.TrainFilesDO">
+        insert into tb_dtms_train_files
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="trainId != null">
+                train_id,
+            </if>
+            <if test="fileId != null">
+                file_id,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="modifierId != null">
+                modifier_id,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="bizId != null">
+                #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="trainId != null">
+                #{trainId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.train.TrainFilesDO">
+        update tb_dtms_train_files
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="trainId != null">
+                train_id = #{trainId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.train.TrainFilesDO">
+    update tb_dtms_train_files
+    set biz_id = #{bizId,jdbcType=BIGINT},
+      train_id = #{trainId,jdbcType=BIGINT},
+      file_id = #{fileId,jdbcType=BIGINT},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      creator = #{creator,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modifier_id = #{modifierId,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <!-- 根据 培训id/文件id 删除数据 -->
+    <delete id="deleteByCondition" parameterType="com.medical.dtms.service.dataobject.train.TrainFilesDO">
+        update
+        <include refid="table_name"/>
+        set
+        is_deleted = 1
+        <where>
+            <if test="trainId != null">
+                and train_id = #{trainId,jdbcType=BIGINT}
+            </if>
+            <if test="fileId != null">
+                and file_id = #{fileId,jdbcType=BIGINT}
+            </if>
+        </where>
+
+    </delete>
+
+    <!-- 查询培训管理的培训/文件关联数据-->
+    <select id="listTrainFiles" parameterType="com.medical.dtms.dto.train.query.TrainFileQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="trainId != null">
+            and train_id = #{trainId,jdbcType=BIGINT}
+        </if>
+        <if test="fileId != null">
+            and file_id = #{fileId,jdbcType=BIGINT}
+        </if>
+
+    </select>
+
+    <!-- 通过 培训ids 查询培训文件信息-->
+    <select id="listFileInfoByTrainIds" resultType="com.medical.dtms.common.model.train.SimpleTrainFileModel"
+            parameterType="java.util.List">
+        select tf.train_id AS trainId,file.file_name AS fileName
+        from tb_dtms_train_files tf
+        left join tb_dtms_file_model file on tf.file_id = file.biz_id
+        where tf.is_deleted = 0
+        and file.is_deleted = 0
+        and tf.train_id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

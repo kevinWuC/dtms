@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.train.TrainUserMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.train.TrainUserDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="train_id" jdbcType="BIGINT" property="trainId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="is_finish_file" jdbcType="BIT" property="isFinishFile"/>
+        <result column="read_time" jdbcType="TIMESTAMP" property="readTime"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="des" jdbcType="VARCHAR" property="des"/>
+        <result column="start_date" jdbcType="TIMESTAMP" property="startDate"/>
+        <result column="end_date" jdbcType="TIMESTAMP" property="endDate"/>
+        <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
+        <result column="is_finish_questions" jdbcType="BIT" property="isFinishQuestions"/>
+        <result column="train_name" jdbcType="VARCHAR" property="trainName"/>
+        <result column="type_id" jdbcType="BIGINT" property="typeId"/>
+        <result column="user_exam_total" jdbcType="INTEGER" property="userExamTotal"/>
+        <result column="point_str" jdbcType="VARCHAR" property="pointStr"/>
+        <result column="start_read_time" jdbcType="TIMESTAMP" property="startReadTime"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, train_id, user_id, is_finish_file, read_time, state, begin_time, answer, 
+    des, start_date, end_date, finish_time, is_finish_questions, train_name, type_id, 
+    user_exam_total, point_str, start_read_time, is_deleted, creator, creator_id, gmt_created, 
+    modifier, modifier_id, gmt_modified
+  </sql>
+
+
+    <sql id="table_name">
+  	tb_dtms_train_user
+  </sql>
+
+
+    <!--校验培训用户数据是否存在-->
+    <select id="getTrainUserByCondition" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="dept_id != null and dept_id !=''">
+            and dept_id = #{dept_id,jdbcType=VARCHAR}
+        </if>
+        <if test="trainName != null and trainName !=''">
+            and train_name = #{trainName,jdbcType=VARCHAR}
+        </if>
+        <if test="userExamTotal != null and userExamTotal !=''">
+            and user_exam_total = #{userExamTotal,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 分页展示培训用户数据-->
+    <!--    <select id="pageListTrainUser" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"-->
+    <!--            resultType="com.medical.dtms.common.model.train.TrainUserModel">-->
+    <!--        select-->
+    <!--        tusr.biz_id AS bizId,-->
+    <!--        qmsuser.dsp_name AS dspName,-->
+    <!--        dept.dept_name AS deptName,-->
+    <!--        tusr.train_name AS trainName,-->
+    <!--        file.file_id AS fileId,-->
+    <!--        tusr.point_str AS pointStr,-->
+    <!--        tusr.finish_time AS finishTime,-->
+    <!--        config.pass_point AS passPoint,-->
+    <!--        config.total_point AS total_point-->
+    <!--        from-->
+    <!--        tb_dtms_train_user tusr-->
+    <!--        LEFT JOIN tb_dtms_qms_user qmsuser ON tusr.user_id = qmsuser.biz_id-->
+    <!--        LEFT JOIN tb_dtms_qms_dept dept ON tusr.dept_id = dept.biz_id-->
+    <!--        LEFT JOIN tb_dtms_train_files file ON tusr.file_id = file.biz_id-->
+    <!--        LEFT JOIN tb_dtms_train_config config ON tusr.train_id = config.biz_id-->
+    <!--        WHERE-->
+    <!--        is_finish_questions = 1-->
+    <!--        and tusr.is_deleted = 0-->
+    <!--        AND qmsuser.is_deleted = 0-->
+    <!--        AND dept.is_deleted = 0-->
+    <!--        and config.is_deleted = 0-->
+    <!--        and file.is_deleted = 0-->
+    <!--        <if test="userId != null and userId != ''">-->
+    <!--            AND (-->
+    <!--            tusr.userId = #{userId,jdbcType=VARCHAR}-->
+    <!--            or tusr.dsp_name = #{userId,jdbcType=VARCHAR}-->
+    <!--            )-->
+    <!--        </if>-->
+
+    <!--        order by tusr.gmt_created desc-->
+    <!--    </select>-->
+
+    <!-- 培训统计 - 分页展示培训用户数据  -->
+    <select id="pageListTrainUser" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultType="com.medical.dtms.common.model.train.TrainUserModel">
+        select usr.dsp_name AS dspName,tusr.user_id AS userId,file.file_id AS fileId,
+        tusr.train_name AS trainName,tusr.train_id AS trainId,config.pass_point AS passPoint,
+        tusr.point_str AS pointStr,config.total_point AS totalPoint,tusr.finish_time AS finishTime
+        from tb_dtms_train_user tusr
+        left join tb_dtms_qms_user usr on tusr.user_id = usr.biz_id
+        LEFT JOIN tb_dtms_train_config config ON tusr.train_id = config.biz_Id
+        left join tb_dtms_train_files file on tusr.train_id = file.biz_Id
+        WHERE tusr.is_deleted = 0
+        and usr.is_deleted = 0
+        and config.is_deleted = 0
+        and file.is_deleted = 0
+        <if test="dspName != null and dspName !=''">
+            and any_value(usr.dsp_name) concat('%',#{dspName},'%')
+            or any_value(usr.account) concat('%',#{dspName},'%')
+        </if>
+        <if test="trainName != null and trainName !=''">
+            and any_value(tusr.train_name) concat('%',#{trainName},'%')
+        </if>
+        <if test="pass != null and pass == true">
+            and any_value(tusr.user_exam_total) &gt;= config.pass_point
+        </if>
+        <if test="pass != null and pass == false">
+            and any_value(tusr.user_exam_total) &lt; config.pass_point
+        </if>
+        <if test="userIds != null and userIds.size >0">
+            and any_value(tusr.user_id) in
+            <foreach collection="userIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="bizId != null">
+            and tusr.biz_id = #{bizId}
+        </if>
+        order by any_value(tusr.gmt_created) desc
+    </select>
+
+
+    <!-- 展示培训及时率数据-->
+    <select id="listTrainTimely" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultType="com.medical.dtms.common.model.train.TrainUserModel">
+        select user_id AS userId,end_date AS endDate,finish_time AS finishTime
+        from tb_dtms_train_user
+        WHERE begin_time IS NOT NULL
+        and is_deleted = 0
+        <if test="beginTime != null  and finishTime != null ">
+            and
+            <![CDATA[ gmt_created >=  #{beginTime,jdbcType=TIMESTAMP} ]]>
+            AND
+            <![CDATA[ gmt_created <  #{finishTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        ORDER BY gmt_created desc
+    </select>
+
+
+    <!-- 查看我的培训相关信息-->
+    <select id="viewMyTrain" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultType="com.medical.dtms.common.model.train.TrainUserModel">
+        select
+        train.biz_id AS bizId,
+        usr.dsp_name AS dspName,
+        exam.exam_id AS examId,
+        exam.exam_duration AS examDuration,
+        config.total_point AS totalPoint,
+        config.pass_point AS passPoint,
+        train.point_str AS pointStr,
+        train.answer AS answer,
+        questions.questions_type_id AS questionsTypeId,
+        questions.question_title AS questionTitle,
+        questions.question_content AS questionContent,
+        questions.question_a AS questionA,
+        questions.question_b AS questionB,
+        questions.question_c AS questionC,
+        questions.question_d AS questionD,
+        questions.question_e AS questionE,
+        questions.question_f AS questionF
+        from
+        tb_dtms_train_user train
+        LEFT JOIN tb_dtms_qms_user usr ON train.user_id = usr.biz_id
+        LEFT JOIN tb_dtms_exam_user_plan_model exam ON train.user_id = exam.user_id
+        LEFT JOIN tb_dtms_train_config config ON train.train_id = config.biz_id
+        LEFT JOIN tb_dtms_questions questions ON train.type_id = questions.exam_type_id
+        WHERE
+        train.is_finish_questions = 1
+        <if test="trainId != null">
+            and train.train_id = #{trainId}
+        </if>
+        and train.is_deleted = 0
+        and usr.is_deleted = 0
+        and config.is_deleted = 0
+        and questions.is_deleted = 0
+        order by
+        any_value(train.gmt_created) desc
+    </select>
+
+
+    <!-- 我的培训 - 开始考试-->
+    <select id="beginTrainExam" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultType="com.medical.dtms.common.model.train.TrainUserModel">
+        select
+        train.biz_id AS bizId,
+        usr.dsp_name AS dspName,
+        exam.exam_id AS examId,
+        exam.exam_duration AS examDuration,
+        config.total_point AS totalPoint,
+        config.pass_point AS passPoint,
+        train.point_str AS pointStr,
+        train.answer AS answer,
+        train.des AS des,
+        questions.questions_type_id AS questionsTypeId,
+        questions.question_title AS questionTitle,
+        questions.question_content AS questionContent,
+        questions.question_a AS questionA,
+        questions.question_b AS questionB,
+        questions.question_c AS questionC,
+        questions.question_d AS questionD,
+        questions.question_e AS questionE,
+        questions.question_f AS questionF
+        from
+        tb_dtms_train_user train
+        LEFT JOIN tb_dtms_qms_user usr ON train.user_id = usr.biz_id
+        LEFT JOIN tb_dtms_exam_user_plan_model exam ON train.user_id = exam.user_id
+        LEFT JOIN tb_dtms_train_config config ON train.train_id = config.biz_id
+        LEFT JOIN tb_dtms_questions questions ON train.type_id = questions.exam_type_id
+        WHERE
+        is_finish_questions = 0
+        and train.is_deleted = 0
+        and usr.is_deleted = 0
+        and config.is_deleted = 0
+        and questions.is_deleted = 0
+        order by
+       any_value(train.gmt_created) desc
+    </select>
+
+
+    <!-- 我的培训 - 查看培训考试相关信息-->
+    <select id="listTrainExam" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultType="com.medical.dtms.common.model.train.TrainUserQueryModel">
+        select
+        tusr.biz_id AS bizId,
+        tusr.type_id AS typeId,
+        tusr.is_finish_file AS isFinishFile,
+        tusr.read_time AS readTime,
+        tusr.is_finish_questions AS isFinishQuestions,
+        tusr.finish_time AS finishTime,
+        tusr.point_str AS pointStr,
+        tusr.state AS state,
+        tusr.begin_time AS beginTime,
+        tusr.end_date AS endDate,
+        config.pass_point AS passPoint,
+        config.train_name AS trainName
+        from
+        tb_dtms_train_user tusr
+        LEFT JOIN tb_dtms_train_config config ON tusr.train_id = config.biz_id
+        WHERE
+        tusr.is_deleted = 0
+        and
+        config.is_deleted = 0
+        order by
+        tusr.gmt_created desc
+    </select>
+
+
+    <!-- 培训与用户的关联 新增 -->
+    <insert id="insert" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="rel" separator=",">
+            (
+            #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.trainId,jdbcType=BIGINT},
+            #{rel.userId,jdbcType=BIGINT}, #{rel.isFinishFile,jdbcType=BIT}, #{rel.readTime,jdbcType=TIMESTAMP},
+            #{rel.state,jdbcType=INTEGER}, #{rel.beginTime,jdbcType=TIMESTAMP}, #{rel.answer,jdbcType=VARCHAR},
+            #{rel.des,jdbcType=VARCHAR}, #{rel.startDate,jdbcType=TIMESTAMP}, #{rel.endDate,jdbcType=TIMESTAMP},
+            #{rel.finishTime,jdbcType=TIMESTAMP}, #{rel.isFinishQuestions,jdbcType=BIT},
+            #{rel.trainName,jdbcType=VARCHAR},
+            #{rel.typeId,jdbcType=BIGINT}, #{rel.userExamTotal,jdbcType=INTEGER}, #{rel.pointStr,jdbcType=VARCHAR},
+            #{rel.startReadTime,jdbcType=TIMESTAMP}, 0, #{rel.creator,jdbcType=VARCHAR},
+            #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
+            #{rel.modifierId,jdbcType=VARCHAR}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据 培训id/用户id 删除关联 -->
+    <delete id="deleteTrainUserByCondition" parameterType="com.medical.dtms.service.dataobject.train.TrainUserDO">
+        update
+        <include refid="table_name"/>
+        set
+        is_deleted = 1
+        <where>
+            <if test="trainId != null">
+                and train_id = #{trainId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 查询培训管理的 培训/用户 的关联数据 -->
+    <select id="listTrainUserByCondition" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="trainId != null">
+            and train_id = #{trainId,jdbcType=BIGINT}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+<!-- 新增交卷记录-->
+    <insert id="addTrainUser" parameterType="com.medical.dtms.service.dataobject.train.TrainUserDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (
+        #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.trainId,jdbcType=BIGINT},
+        #{rel.userId,jdbcType=BIGINT}, #{rel.isFinishFile,jdbcType=BIT}, #{rel.readTime,jdbcType=TIMESTAMP},
+        #{rel.state,jdbcType=INTEGER}, #{rel.beginTime,jdbcType=TIMESTAMP}, #{rel.answer,jdbcType=VARCHAR},
+        #{rel.des,jdbcType=VARCHAR}, #{rel.startDate,jdbcType=TIMESTAMP}, #{rel.endDate,jdbcType=TIMESTAMP},
+        #{rel.finishTime,jdbcType=TIMESTAMP}, #{rel.isFinishQuestions,jdbcType=BIT},
+        #{rel.trainName,jdbcType=VARCHAR},
+        #{rel.typeId,jdbcType=BIGINT}, #{rel.userExamTotal,jdbcType=INTEGER}, #{rel.pointStr,jdbcType=VARCHAR},
+        #{rel.startReadTime,jdbcType=TIMESTAMP}, 0, #{rel.creator,jdbcType=VARCHAR},
+        #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
+        #{rel.modifierId,jdbcType=VARCHAR}, NOW()
+        )
+    </insert>
+
+
+
+
+
+    <!-- 考试统计 - 分页展示查询查看  -->
+    <select id="pageListExamTotal" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+            resultType="com.medical.dtms.common.model.train.TrainUserModel">
+        select usr.dsp_name AS dspName,tusr.user_id AS userId,
+        tusr.train_name AS trainName,tusr.train_id AS trainId,config.pass_point AS passPoint,
+        tusr.point_str AS pointStr,config.total_point AS totalPoint,tusr.finish_time AS finishTime
+        from tb_dtms_train_user tusr
+        left join tb_dtms_qms_user usr on tusr.user_id = usr.biz_id
+        LEFT JOIN tb_dtms_train_config config ON tusr.train_id = config.biz_Id
+        WHERE tusr.is_deleted = 0
+        and usr.is_deleted = 0
+        and config.is_deleted = 0
+        <if test="dspName != null and dspName !=''">
+            and any_value(usr.dsp_name) concat('%',#{dspName},'%')
+            or any_value(usr.account) concat('%',#{dspName},'%')
+        </if>
+        <if test="trainName != null and trainName !=''">
+            and any_value(tusr.train_name) concat('%',#{trainName},'%')
+        </if>
+        <if test="pass != null and pass == true">
+            and any_value(tusr.user_exam_total) &gt;= config.pass_point
+        </if>
+        <if test="pass != null and pass == false">
+            and any_value(tusr.user_exam_total) &lt; config.pass_point
+        </if>
+        <if test="userIds != null and userIds.size >0">
+            and any_value(tusr.user_id) in
+            <foreach collection="userIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="bizId != null">
+            and tusr.biz_id = #{bizId}
+        </if>
+        order by any_value(tusr.gmt_created) desc
+    </select>
+
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.file.FileQueryMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.file.FileInDeptRoleDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <result column="dept_id" jdbcType="BIGINT" property="deptId"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, file_id, role_id, dept_id, is_deleted, creator, creator_id, gmt_created,
+    modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="insert_list">
+    biz_id, file_id, role_id, dept_id, is_deleted, creator, creator_id, gmt_created,
+    modifier, modifier_id, gmt_modified
+    </sql>
+
+    <sql id="table_name">
+    tb_dtms_file_dept_role
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.file.FileInDeptRoleDO">
+        insert into
+        <include refid="table_name"/>
+        (id, biz_id, file_id,
+        role_id, dept_id, is_deleted,
+        creator, creator_id, gmt_created,
+        modifier, modifier_id, gmt_modified
+        )
+        values (
+        #{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fileId,jdbcType=BIGINT},
+        #{roleId,jdbcType=BIGINT}, #{deptId,jdbcType=BIGINT}, #{isDeleted,jdbcType=BIT},
+        #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP},
+        #{modifier,jdbcType=VARCHAR}, #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.file.FileInDeptRoleDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=BIGINT},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=BIGINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 校验文件 与部门、角色是否关联-->
+    <select id="listFileInDeptRole" parameterType="com.medical.dtms.dto.file.query.FileInDeptRoleQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="roleIdList != null and roleIdList.size >0">
+            and role_id in
+            <foreach collection="roleIdList" item="roleId" separator="," index="index" open="(" close=")">
+                #{roleId}
+            </foreach>
+        </if>
+        <if test="deptIdList != null and deptIdList.size >0">
+            and dept_id in
+            <foreach collection="deptIdList" item="deptId" separator="," index="index" open="(" close=")">
+                #{deptId}
+            </foreach>
+        </if>
+    </select>
+
+    <!--  根据id 删除数据-->
+    <delete id="deleteByIds" parameterType="java.util.List">
+        update
+        <include refid="table_name"/>
+        set is_deleted =1
+        where biz_id in
+        <foreach collection="list" index="index" item="bizId" separator="," open="(" close=")">
+            #{bizId}
+        </foreach>
+    </delete>
+
+    <!-- 批量保存数据-->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="insert_list"/>
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.bizId,jdbcType=BIGINT}, #{item.fileId,jdbcType=BIGINT},
+            #{item.roleId,jdbcType=BIGINT}, #{item.deptId,jdbcType=BIGINT}, 0,
+            #{item.creator,jdbcType=VARCHAR}, #{item.creatorId,jdbcType=VARCHAR}, NOW(),
+            #{item.modifier,jdbcType=VARCHAR}, #{item.modifierId,jdbcType=VARCHAR}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!--  部门下拉-->
+    <select id="listReceiveDept" parameterType="com.medical.dtms.common.model.dropdown.query.DropDownQuery"
+            resultType="com.medical.dtms.common.model.dropdown.DropDownModel">
+        select distinct(role.dept_id) AS receiveDeptId,dept.dept_name AS receiveDeptName
+        FROM tb_dtms_file_dept_role role
+        left join tb_dtms_qms_dept dept on role.dept_id = dept.biz_id
+        where dept.is_deleted = 0
+        and role.is_deleted = 0
+        order by any_value(role.gmt_created) desc
+    </select>
+
+    <!--    角色下拉-->
+    <select id="listRolesInFileModel" parameterType="com.medical.dtms.common.model.dropdown.query.DropDownQuery"
+            resultType="com.medical.dtms.common.model.dropdown.DropDownModel">
+        select distinct(deptRole.role_id) AS roleId,role.role_name AS roleName
+        FROM tb_dtms_file_dept_role deptRole
+        left join tb_dtms_qms_role role on deptRole.role_id = role.biz_id
+        where deptRole.is_deleted = 0
+        and role.is_deleted = 0
+        order by any_value(deptRole.gmt_created) desc
+    </select>
+</mapper>

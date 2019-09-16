@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.medical.dtms.service.mapper.qms.QMSUserInDeptMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.user.QMSUserInDeptDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="dept_id" jdbcType="BIGINT" property="deptId"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, user_id, dept_id, is_deleted, creator, creator_id, gmt_created, modifier,
+    modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+     tb_dtms_qms_user_in_dept
+  </sql>
+
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.user.QMSUserInDeptDO">
+        insert into
+        <include refid="table_name"/>
+        (id, biz_id, user_id,
+        dept_id, is_deleted, creator,
+        creator_id, gmt_created, modifier,
+        modifier_id, gmt_modified)
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+        #{deptId,jdbcType=BIGINT}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.role.QMSRoleInMenuDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=BIGINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.user.QMSUserInDeptDO">
+        update
+        <include refid="table_name"/>
+        set biz_id = #{bizId,jdbcType=BIGINT},
+        user_id = #{userId,jdbcType=BIGINT},
+        dept_id = #{deptId,jdbcType=BIGINT},
+        is_deleted = #{isDeleted,jdbcType=BIT},
+        creator = #{creator,jdbcType=VARCHAR},
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+        gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+        modifier = #{modifier,jdbcType=VARCHAR},
+        modifier_id = #{modifierId,jdbcType=VARCHAR},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <!-- 新增用户与部门关联-->
+    <insert id="addQMSUserInDept" parameterType="com.medical.dtms.service.dataobject.user.QMSUserInDeptDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="rel" separator=",">
+            (
+            #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.userId,jdbcType=BIGINT},
+            #{rel.deptId,jdbcType=BIGINT}, 0, #{rel.creator,jdbcType=VARCHAR},
+            #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
+            #{rel.modifierId,jdbcType=VARCHAR},NOW()
+            )
+        </foreach>
+    </insert>
+
+
+    <!-- 查询用户管理的部门/用户数据-->
+    <select id="listUserInDept" parameterType="com.medical.dtms.dto.user.query.BaseUserQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="userId != null">
+            and user_id = #{userId,jdbcType=BIGINT}
+        </if>
+        <if test="deptId != null">
+            and dept_id = #{deptId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+
+    <!-- 根据用户 id/部门id 删除数据-->
+    <delete id="deleteByCondition"
+            parameterType="com.medical.dtms.service.dataobject.user.QMSUserInDeptDO">
+        UPDATE
+        <include refid="table_name"/>
+        SET is_deleted = 1
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="deptId != null">
+                and dept_id = #{deptId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 根据用户 ids 查询部门 ids-->
+    <select id="listDeptIdsByUserIds" parameterType="java.util.List"
+            resultType="com.medical.dtms.common.model.syslog.BaseSimpleUserModel">
+        select user_id AS userId,dept_id AS deptId
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and user_id in
+        <foreach collection="list" index="index" separator="," open="(" close=")" item="userId">
+            #{userId}
+        </foreach>
+    </select>
+
+    <!-- 根据用户id 查询部门数据-->
+    <select id="listDeptByUserIdsAndDept" resultType="com.medical.dtms.common.model.dept.QMSUserInDeptModel"
+            parameterType="com.medical.dtms.dto.user.query.QMSUserInDeptQuery">
+        select dept.dept_name AS deptName,dept.biz_id AS deptId,usr.user_id AS userId
+        FROM tb_dtms_qms_user_in_dept usr
+        left join tb_dtms_qms_dept dept on usr.dept_id = dept.biz_id
+        where usr.is_deleted = 0
+        and dept.is_deleted = 0
+        <if test="userIds != null and userIds.size >0">
+            and usr.user_id in
+            <foreach collection="userIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptId != null">
+            and any_value(usr.dept_id) = #{deptId}
+        </if>
+        <if test="userOrDept != null and userOrDept ==1">
+            group by any_value(usr.user_id)
+        </if>
+        <if test="userOrDept != null and userOrDept ==2">
+            group by any_value(usr.dept_id)
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.file.FileApproveLogMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.file.FileApproveLogDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="file_no" jdbcType="VARCHAR" property="fileNo"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_version" jdbcType="VARCHAR" property="fileVersion"/>
+        <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate"/>
+        <result column="finshed_date" jdbcType="TIMESTAMP" property="finshedDate"/>
+        <result column="approve_user_id" jdbcType="VARCHAR" property="approveUserId"/>
+        <result column="approve_user_name" jdbcType="VARCHAR" property="approveUserName"/>
+        <result column="result" jdbcType="INTEGER" property="result"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="operator_type" jdbcType="INTEGER" property="operatorType"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, file_id, file_no, file_name, file_version, begin_date, finshed_date, 
+    approve_user_id, approve_user_name, result, remark, operator_type, is_deleted, creator, 
+    creator_id, gmt_created, modifier, modifier_id, gmt_modified
+  </sql>
+
+    <sql id="table_name">
+        tb_dtms_file_approve_log
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!--  更新-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.file.FileApproveLogDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            gmt_modified = NOW(),
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="fileNo != null">
+                file_no = #{fileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileVersion != null">
+                file_version = #{fileVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="beginDate != null">
+                begin_date = #{beginDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finshedDate != null">
+                finshed_date = #{finshedDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="approveUserId != null">
+                approve_user_id = #{approveUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="approveUserName != null">
+                approve_user_name = #{approveUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="result != null">
+                result = #{result,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorType != null">
+                operator_type = #{operatorType,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <!-- 批量添加日志记录-->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="log" separator=",">
+            (
+            #{log.id,jdbcType=BIGINT}, #{log.bizId,jdbcType=BIGINT}, #{log.fileId,jdbcType=BIGINT},
+            #{log.fileNo,jdbcType=VARCHAR}, #{log.fileName,jdbcType=VARCHAR}, #{log.fileVersion,jdbcType=VARCHAR},
+            #{log.beginDate,jdbcType=TIMESTAMP}, #{log.finshedDate,jdbcType=TIMESTAMP},
+            #{log.approveUserId,jdbcType=VARCHAR},
+            #{log.approveUserName,jdbcType=VARCHAR}, #{log.result,jdbcType=INTEGER}, #{log.remark,jdbcType=VARCHAR},
+            #{log.operatorType,jdbcType=INTEGER}, 0, #{log.creator,jdbcType=VARCHAR},
+            #{log.creatorId,jdbcType=VARCHAR}, NOW(), #{log.modifier,jdbcType=VARCHAR},
+            #{log.modifierId,jdbcType=VARCHAR}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 分页展示流程记录-->
+    <select id="pageListLogInfo" resultType="com.medical.dtms.common.model.file.FileApproveLogModel"
+            parameterType="com.medical.dtms.dto.file.query.FileApproveLogQuery">
+        select biz_id AS bizId,file_id AS fileId,file_no AS fileNo,file_name AS fileName,file_version AS
+        fileVersion,begin_date AS
+        beginDate,finshed_date AS finshedDate,approve_user_name AS approveUserName,result AS result,remark AS remark
+        FROM
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="fileId != null">
+            and file_id = #{fileId,jdbcType=BIGINT}
+        </if>
+        <if test="operatorType != null">
+            and operator_type = #{operatorType}
+        </if>
+        order by gmt_created desc
+    </select>
+
+    <!-- 根据文件id 删除流程记录-->
+    <delete id="deleteByFileId" parameterType="java.lang.Long">
+        update
+        <include refid="table_name"/>
+        set is_deleted = 1,
+        gmt_modified = NOW()
+        where file_id = #{fileId,jdbcType=BIGINT}
+    </delete>
+
+    <!-- 查询操作记录列表-->
+    <select id="listLogs" parameterType="com.medical.dtms.dto.file.query.FileApproveLogQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="fileId != null">
+            and file_id = #{fileId,jdbcType=BIGINT}
+        </if>
+        <if test="empty != null and empty == true ">
+            and result = 3
+        </if>
+        order by gmt_created desc
+    </select>
+
+    <!-- 添加流程记录-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.file.FileApproveLogDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        (
+        #{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fileId,jdbcType=BIGINT},
+        #{fileNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileVersion,jdbcType=VARCHAR},
+        #{beginDate,jdbcType=TIMESTAMP}, #{finshedDate,jdbcType=TIMESTAMP},
+        #{approveUserId,jdbcType=VARCHAR},
+        #{approveUserName,jdbcType=VARCHAR}, #{result,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},
+        #{operatorType,jdbcType=INTEGER}, 0, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, NOW(), #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, NOW()
+        )
+    </insert>
+
+    <!-- 查询当前操作人最近的两条流程记录-->
+    <select id="queryLastTwoLog" parameterType="com.medical.dtms.dto.file.query.FileApproveLogQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and file_id = #{fileId,jdbcType=BIGINT}
+        and approve_user_id = #{approveUserId,jdbcType=VARCHAR}
+        ORDER BY gmt_modified DESC
+        LIMIT 0,2
+    </select>
+
+    <!-- 批量更新-->
+    <update id="batchUpdate" parameterType="com.medical.dtms.service.dataobject.file.FileApproveLogDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            gmt_modified = NOW(),
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="fileNo != null">
+                file_no = #{fileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileVersion != null">
+                file_version = #{fileVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="beginDate != null">
+                begin_date = #{beginDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finshedDate != null">
+                finshed_date = #{finshedDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="approveUserId != null">
+                approve_user_id = #{approveUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="approveUserName != null">
+                approve_user_name = #{approveUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="result != null">
+                result = #{result,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorType != null">
+                operator_type = #{operatorType,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where biz_id in
+        <foreach collection="bizIdList" open="(" close=")" index="index" item="bizId" separator=",">
+            #{bizId}
+        </foreach>
+    </update>
+</mapper>
