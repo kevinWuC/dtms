@@ -10,7 +10,6 @@ import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.resp.Result;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
 import com.medical.dtms.dto.datasource.query.QMSBackUpQuery;
-import com.medical.dtms.dto.file.query.FileModelQuery;
 import com.medical.dtms.feignservice.databaseresource.DataBaseResourceService;
 import com.medical.dtms.common.model.table.DataBaseTableModel;
 import com.medical.dtms.common.model.table.TableDetailModel;
