@@ -23,6 +23,12 @@ public class TrainConfigQueryModel {
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long bizId;
     /**
+     * 培训类型ID
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long trainTypeId;
+    /**
      * 培训类型名称
      **/
     private String trainTypeName;
@@ -57,4 +63,12 @@ public class TrainConfigQueryModel {
      * 考试名称
      **/
     private String examName;
+    /**
+     * 及格分数
+     **/
+    private Integer passPoint;
+    /**
+     * 应培训时数
+     **/
+    private Integer readFen;
 }
