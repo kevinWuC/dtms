@@ -3,17 +3,25 @@ package com.medical.dtms.service.manager.table;
 import com.medical.dtms.common.constants.Constants;
 import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
+import com.medical.dtms.common.model.datasource.BackUpInfoModel;
 import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.model.table.TableDetailModel;
+import com.medical.dtms.dto.datasource.QMSBackUpDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Table;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version： OperateManager.java v 1.0, 2019年08月19日 12:26 wuxuelin Exp$
@@ -32,6 +40,10 @@ public class OperateManager {
     @Value("${spring.datasource.password}")
     private String password;
 
+    @Value("${sqlbackup.path}")
+    private String sqlPath;
+    @Value("${sqlbackup.staticPath}")
+    private String sqlStaticPath;
 
     /**
      * 获取实体类对应的表名，由于实体类命名与表名未完全对应，所以 实体类上需要加上 @Table 注解
@@ -248,9 +260,58 @@ public class OperateManager {
     }
 
     /**
-     * 导出 sql
+     * 导出 sql 并返回相关信息
      */
-    public void exportSql() {
-        Runtime runtime = Runtime.getRuntime();
+    public QMSBackUpDTO exportSql(QMSBackUpDTO dto) {
+        // 指定导出的 sql 存放的文件夹
+        File saveFile = new File(sqlPath);
+        if (!saveFile.exists()) {
+            saveFile.mkdirs();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        String host = getHost();
+        String dataBaseName = getDataBaseName();
+        String fileName = System.currentTimeMillis() + "_" + "dtms.sql";
+
+        sb.append("mysqldump").append(" --opt ").append(" -h ").append(host).append(" --user=").append(userName).append(" --password=").append(password).append(" --databases ").append(dataBaseName);
+        sb.append(" --result-file=").append(sqlPath + fileName).append(" --default-character-set=utf8 ");
+        String sqlUrl = "";
+        try {
+            Process exec = Runtime.getRuntime().exec(sb.toString());
+            if (exec.waitFor() == 0) {
+                log.error("数据库备份成功，保存路径：" + sqlPath);
+                sqlUrl = dto.getUrlPath() + sqlStaticPath.replaceAll("\\*", "") + fileName;
+
+                dto.setBackUpDate(new Date());
+                dto.setSqlFileName(fileName);
+                dto.setSqlUrl(sqlUrl);
+
+                File sqlFile = new File(sqlPath, fileName);
+                Double size = Double.valueOf(sqlFile.length() / 1024 / 1024);
+                dto.setSqlFileSize(String.format("%.2f", size) + "MB");
+            } else {
+                System.out.println("process.waitFor()=" + exec.waitFor());
+            }
+        } catch (IOException e) {
+            log.error("备份 数据库 出现 IO异常 ", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        } catch (InterruptedException e) {
+            log.error("备份 数据库 出现 线程中断异常 ", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        } catch (Exception e) {
+            log.error("备份 数据库 出现 其他异常 ", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        }
+        return dto;
     }
+
+    /**
+     * 获取主机地址
+     */
+    private String getHost() {
+        return url.substring(url.indexOf("mysql"), url.indexOf("3306")).replace(":", "").replace("//", "").replace("mysql", "");
+    }
+
+
 }
