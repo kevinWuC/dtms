@@ -59,7 +59,7 @@ public class IpAddressManager {
 //            while (interfaces.hasMoreElements()) {
 //                NetworkInterface anInterface = interfaces.nextElement();
 //
-//                // 便利所有接口下的网络 ip
+//                // 遍历所有接口下的网络 ip
 //                Enumeration<InetAddress> inetAddresses = anInterface.getInetAddresses();
 //                while (inetAddresses.hasMoreElements()) {
 //                    InetAddress address = inetAddresses.nextElement();

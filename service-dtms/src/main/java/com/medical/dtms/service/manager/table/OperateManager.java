@@ -238,9 +238,19 @@ public class OperateManager {
                 list.add(model);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("sql 语法错误");
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        } catch (Exception e) {
+            log.error("查询表空间使用情况失败", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
         }
-
         return list;
+    }
+
+    /**
+     * 导出 sql
+     */
+    public void exportSql() {
+        Runtime runtime = Runtime.getRuntime();
     }
 }
