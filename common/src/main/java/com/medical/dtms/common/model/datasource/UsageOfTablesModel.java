@@ -18,7 +18,7 @@ public class UsageOfTablesModel {
     /** 索引所使用大小*/
     private String indexUsageSum;
     /**未用的空间量*/
-    private Integer emptySum;
+    private String emptySum;
     /** 表说明*/
     private String  tableContent;
 }

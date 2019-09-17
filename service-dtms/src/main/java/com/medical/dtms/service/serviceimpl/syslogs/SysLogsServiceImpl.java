@@ -34,7 +34,7 @@ public class SysLogsServiceImpl implements SysLogsService {
     @Override
     public PageInfo<QMSSysLogsModel> pageListSysLogs(@RequestBody QMSSysLogsQuery query) {
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-        logsManager.getLogsTable(query);
+//        logsManager.getLogsTable(query);
 
         return null;
     }

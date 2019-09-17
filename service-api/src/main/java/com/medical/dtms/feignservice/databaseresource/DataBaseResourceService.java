@@ -7,6 +7,7 @@ import com.medical.dtms.common.model.table.DataBaseTableModel;
 import com.medical.dtms.common.model.table.TableDetailModel;
 import com.medical.dtms.common.model.table.query.DataBaseTableQuery;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
+import com.medical.dtms.dto.datasource.QMSTaskDTO;
 import com.medical.dtms.dto.datasource.query.QMSBackUpQuery;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,4 +47,7 @@ public interface DataBaseResourceService {
 
     @RequestMapping(value = "/table/pageListBackUpInfo", method = RequestMethod.POST)
     PageInfo<BackUpInfoModel> pageListBackUpInfo(@RequestBody QMSBackUpQuery query);
+
+    @RequestMapping(value = "/table/timingBackUpDataBase", method = RequestMethod.POST)
+    Boolean timingBackUpDataBase(@RequestBody QMSTaskDTO dto);
 }

@@ -18,7 +18,7 @@ public class QMSBackUpDTO {
     /**
      * 业务主键
      */
-    private Long bizId;
+    private String bizId;
     /**
      * 备份文件文件名
      */
@@ -65,5 +65,6 @@ public class QMSBackUpDTO {
     private Date gmtModified;
 
     private String urlPath;
+
 
 }

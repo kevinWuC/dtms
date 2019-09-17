@@ -16,13 +16,9 @@ public interface QMSSysLoginLogMapper {
 
     int insert(QMSSysLoginLogDO record);
 
-    int insertSelective(QMSSysLoginLogDO record);
-
     QMSSysLoginLogDO selectByPrimaryKey(@Param("bizId") Long bizId);
 
     int updateByPrimaryKeySelective(QMSSysLoginLogDO record);
-
-    int updateByPrimaryKey(QMSSysLoginLogDO record);
 
     List<SysLoginLogModel> listLoginLogs(QMSSysLoginLogQuery Query);
 

@@ -41,14 +41,6 @@ public class SysLoginLogManager {
     }
 
     /**
-     * 登陆日志 - 新增
-     */
-    public Integer insertSelective(QMSSysLoginLogDTO loginLogDTO) {
-        QMSSysLoginLogDO aDo = BeanConvertUtils.convert(loginLogDTO, QMSSysLoginLogDO.class);
-        return qmsSysLoginLogMapper.insertSelective(aDo);
-    }
-
-    /**
      * 登陆日志 - 主键查询是否存在
      */
     public QMSSysLoginLogDTO selectByPrimaryKey(Long bizId) {
@@ -64,14 +56,6 @@ public class SysLoginLogManager {
      */
     public Integer deleteByPrimaryKey(Long loginLogId) {
         return qmsSysLoginLogMapper.deleteByPrimaryKey(loginLogId);
-    }
-
-    /**
-     * 登陆日志 - 更新
-     */
-    public Integer updateByPrimaryKey(QMSSysLoginLogDTO loginLogDTO) {
-        QMSSysLoginLogDO aDo = BeanConvertUtils.convert(loginLogDTO, QMSSysLoginLogDO.class);
-        return qmsSysLoginLogMapper.updateByPrimaryKey(aDo);
     }
 
     /**

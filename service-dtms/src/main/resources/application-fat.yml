@@ -37,4 +37,6 @@ snowflake:
   datacenter:
     id: 1
 
-
+sqlbackup:
+  path: /home/dtms/sql/
+  staticPath: /dtms/sql/**

@@ -6,8 +6,8 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Data
-@Table(name = "tb_dtms_qms_back_up")
-public class QMSBackUpDO {
+@Table(name = "tb_dtms_qms_task")
+public class QMSTaskDO {
     /**
      * 自增id
      */
@@ -15,23 +15,23 @@ public class QMSBackUpDO {
     /**
      * 业务主键
      */
-    private String bizId;
+    private Long bizId;
     /**
-     * 备份文件文件名
+     * 任务名称
      */
-    private String sqlFileName;
+    private String taskName;
     /**
-     * 文件大小
+     * 定时自动备份执行时间
      */
-    private String sqlFileSize;
+    private Integer excDate;
     /**
-     * 备份日期
+     * 是否有效 1有效  0无效
      */
-    private Date backUpDate;
+    private Boolean effective;
     /**
-     * 文件url
+     * 路径
      */
-    private String sqlUrl;
+    private String urlPath;
     /**
      * 删除标记:0-正常，1-删除
      */
@@ -48,16 +48,4 @@ public class QMSBackUpDO {
      * 创建时间
      */
     private Date gmtCreated;
-    /**
-     * 修改用户
-     */
-    private String modifier;
-    /**
-     * 修改用户主键
-     */
-    private String modifierId;
-    /**
-     * 修改时间
-     */
-    private Date gmtModified;
 }

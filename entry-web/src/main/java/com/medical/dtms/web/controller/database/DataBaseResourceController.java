@@ -9,6 +9,7 @@ import com.medical.dtms.common.model.datasource.BackUpInfoModel;
 import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.resp.Result;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
+import com.medical.dtms.dto.datasource.QMSTaskDTO;
 import com.medical.dtms.dto.datasource.query.QMSBackUpQuery;
 import com.medical.dtms.feignservice.databaseresource.DataBaseResourceService;
 import com.medical.dtms.common.model.table.DataBaseTableModel;
@@ -119,7 +120,7 @@ public class DataBaseResourceController {
         }
         dataBaseResourceService.deleteSqlBackUp(dto);
 
-        return Result.buildSuccess();
+        return Result.buildSuccess(true);
     }
 
     /**
@@ -132,6 +133,28 @@ public class DataBaseResourceController {
         checkParams(query);
         PageInfo<BackUpInfoModel> pageInfo = dataBaseResourceService.pageListBackUpInfo(query);
         return Result.buildSuccess(pageInfo);
+    }
+
+    /**
+     * @param [dto]
+     * @return com.medical.dtms.common.resp.Result<java.lang.Boolean>
+     * @description 定时自动备份数据库
+     **/
+    @RequestMapping(value = "/table/timingBackUpDataBase", method = RequestMethod.POST)
+    public Result<Boolean> timingBackUpDataBase(@RequestBody QMSTaskDTO dto, HttpServletRequest request) {
+        if (null == dto || null == dto.getExcDate() || null == dto.getEffective()) {
+            return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), ErrorCodeEnum.PARAM_IS_EMPTY.getErrorMessage());
+        }
+        OperatorInfo info = SessionTools.getOperator();
+
+        dto.setCreator(info.getDspName());
+        dto.setCreatorId(info.getUserId());
+
+        String urlPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        dto.setUrlPath(urlPath);
+
+        dataBaseResourceService.timingBackUpDataBase(dto);
+        return Result.buildSuccess(true);
     }
 
     /**

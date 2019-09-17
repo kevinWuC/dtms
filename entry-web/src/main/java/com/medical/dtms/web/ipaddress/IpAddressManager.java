@@ -37,9 +37,6 @@ public class IpAddressManager {
 
     @Autowired
     private Environment ev;
-    @Autowired
-    private SysLoginLogService logService;
-
 
     /**
      * 初始化服务
@@ -111,18 +108,6 @@ public class IpAddressManager {
             log.error("GeoIp2 异常", e);
         }
         return null;
-    }
-
-    /**
-     * 根据用户 id 获取 ip
-     */
-    public String getIpByUserId(String userId) {
-        if (StringUtils.isBlank(userId)) {
-            throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "用户id 为空");
-        }
-        long user = Long.parseLong(userId);
-        SysLoginLogModel model = logService.getIpByUserId(user);
-        return model == null ? null : StringUtils.isBlank(model.getIpAddress()) == true ? null : model.getIpAddress();
     }
 
 }

@@ -8,12 +8,15 @@ import com.medical.dtms.common.model.datasource.BackUpInfoModel;
 import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
+import com.medical.dtms.dto.datasource.QMSTaskDTO;
 import com.medical.dtms.dto.datasource.query.QMSBackUpQuery;
+import com.medical.dtms.dto.datasource.query.QMSTaskQuery;
 import com.medical.dtms.feignservice.databaseresource.DataBaseResourceService;
 import com.medical.dtms.common.model.table.DataBaseTableModel;
 import com.medical.dtms.common.model.table.TableDetailModel;
 import com.medical.dtms.common.model.table.query.DataBaseTableQuery;
 import com.medical.dtms.service.manager.database.DataBaseManager;
+import com.medical.dtms.service.manager.database.QMSTaskManager;
 import com.medical.dtms.service.manager.table.OperateManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @version： DataBaseServiceImpl.java v 1.0, 2019年08月21日 17:47 wuxuelin Exp$
@@ -39,6 +43,8 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
     private DataBaseManager dataBaseManager;
     @Autowired
     private IdGenerator idGenerator;
+    @Autowired
+    private QMSTaskManager taskManager;
 
     /**
      * @param [query]
@@ -120,6 +126,24 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
         if (CollectionUtils.isEmpty(list)) {
             return new PageInfo<>(new ArrayList<>());
         }
+        for (UsageOfTablesModel model : list) {
+            if (StringUtils.isBlank(model.getIndexUsageSum()) && StringUtils.isNotBlank(model.getUsageSum())) {
+                model.setEmptySum(Double.valueOf(model.getUsageSum().replace("MB", "")) + "MB");
+            }
+            if (StringUtils.isBlank(model.getUsageSum())) {
+                model.setEmptySum(0.00 + "MB");
+            }
+            if (StringUtils.isNotBlank(model.getIndexUsageSum()) && StringUtils.isNotBlank(model.getUsageSum())) {
+                Double used = Double.valueOf(model.getIndexUsageSum().replace("MB", ""));
+                Double sum = Double.valueOf(model.getUsageSum().replace("MB", ""));
+                if (sum.compareTo(used) == -1 || sum.compareTo(used) == 0) {
+                    model.setEmptySum(0.00 + "MB");
+                } else {
+                    double v = sum - used;
+                    model.setEmptySum(v + "MB");
+                }
+            }
+        }
         return new PageInfo<>(list);
     }
 
@@ -132,7 +156,7 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
     public Boolean exportSql(@RequestBody QMSBackUpDTO dto) {
         try {
             operateManager.exportSql(dto);
-            dto.setBizId(idGenerator.nextId());
+            dto.setBizId(UUID.randomUUID().toString().replaceAll("-", ""));
             dataBaseManager.insertSqlInfo(dto);
         } catch (Exception e) {
             log.error("数据库备份失败", e);
@@ -164,11 +188,10 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
     }
 
     /**
-    *
-    * @description  分页展示记录
-    * @param  [query]
-    * @return com.github.pagehelper.PageInfo<com.medical.dtms.common.model.datasource.BackUpInfoModel>
-    **/
+     * @param [query]
+     * @return com.github.pagehelper.PageInfo<com.medical.dtms.common.model.datasource.BackUpInfoModel>
+     * @description 分页展示记录
+     **/
     @Override
     public PageInfo<BackUpInfoModel> pageListBackUpInfo(@RequestBody QMSBackUpQuery query) {
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
@@ -177,5 +200,33 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
             return new PageInfo<>(new ArrayList<>());
         }
         return new PageInfo<>(models);
+    }
+
+    /**
+     * @param [dto]
+     * @return java.lang.Boolean
+     * @description 定时自动备份数据库
+     **/
+    @Override
+    public Boolean timingBackUpDataBase(@RequestBody QMSTaskDTO dto) {
+
+        try {
+            // 校验该种定时任务是否存在，如果存在，先删除再重新添加
+            QMSTaskQuery query = new QMSTaskQuery();
+            query.setExcDate(dto.getExcDate());
+            query.setEffective(dto.getEffective());
+            QMSTaskDTO taskDTO = taskManager.queryTaskExistOrNot(query);
+            if (null != taskDTO) {
+                taskDTO.setIsDeleted(true);
+                taskManager.deleteTask(taskDTO);
+            }
+            dto.setTaskName("定时备份任务");
+            dto.setBizId(idGenerator.nextId());
+            taskManager.insert(dto);
+            return true;
+        } catch (Exception e) {
+            log.error("定时任务添加失败", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        }
     }
 }

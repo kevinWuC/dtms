@@ -14,7 +14,7 @@ public class BackUpInfoModel {
     /**
      * 业务主键
      */
-    private Long bizId;
+    private String bizId;
     /**
      * 备份文件文件名
      */

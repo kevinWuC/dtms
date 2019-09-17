@@ -8,12 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface QMSBackUpDOMapper {
-    int deleteByPrimaryKey(Long id);
+public interface QMSBackUpMapper {
 
     int insert(QMSBackUpDO record);
 
-    QMSBackUpDO selectByPrimaryKey(Long id);
+    QMSBackUpDO selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(QMSBackUpDO record);
 
