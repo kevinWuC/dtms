@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="biz_id" jdbcType="BIGINT" property="examUserPlanModelId" />
     <result column="is_finish" jdbcType="BIT" property="isFinish" />
-    <result column="exam_time" jdbcType="TIMESTAMP" property="examTime" />
+    <result column="exam_time" jdbcType="INTEGER" property="examTime" />
     <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId" />
     <result column="exam_id" jdbcType="BIGINT" property="examId" />
     <result column="is_start" jdbcType="BIT" property="isStart" />
@@ -29,7 +29,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="biz_id" jdbcType="BIGINT" property="examUserPlanModelId" />
     <result column="is_finish" jdbcType="BIT" property="isFinish" />
-    <result column="exam_time" jdbcType="TIMESTAMP" property="examTime" />
+    <result column="is_begin" jdbcType="BIT" property="isBegin" />
+    <result column="exam_time" jdbcType="INTEGER" property="examTime" />
     <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId" />
     <result column="exam_id" jdbcType="BIGINT" property="examId" />
     <result column="exam_plan_name" jdbcType="VARCHAR" property="examPlanName" />
@@ -51,13 +52,13 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-      biz_id, is_finish, exam_time, exam_plan_id, exam_id, is_start, start_date, end_date, 
+      biz_id, is_finish,is_begin, exam_time, exam_plan_id, exam_id, is_start, start_date, end_date,
     exam_duration, total_points, pass_points, user_id, base_total_points, is_mark, create_date, 
     create_user_id, create_user_name, modify_date, modify_user_id, modify_user_name
   </sql>
   
   <insert id="insertExamUserPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO">
-    insert into tb_dtms_exam_user_plan_model (  biz_id, is_finish, 
+    insert into tb_dtms_exam_user_plan_model (  biz_id, is_finish,
       exam_time, exam_plan_id, exam_id, 
       is_start, start_date, end_date, 
       exam_duration, total_points, pass_points, 
@@ -77,7 +78,7 @@
   
   
   <insert id="insertBatchExamUserPlanModel" parameterType="java.util.List">
-    insert into tb_dtms_exam_user_plan_model (  biz_id, is_finish, 
+    insert into tb_dtms_exam_user_plan_model (  biz_id, is_finish, is_begin,
       exam_time, exam_plan_id, exam_id, 
       is_start, start_date, end_date, 
       exam_duration, total_points, pass_points, 
@@ -87,7 +88,7 @@
       )
     values 
     <foreach collection="list" item="item" index="index" separator=",">
-    	(  #{item.examUserPlanModelId,jdbcType=BIGINT}, 0, 
+    	(  #{item.examUserPlanModelId,jdbcType=BIGINT}, 0, 0,
       #{item.examTime,jdbcType=TIMESTAMP}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examId,jdbcType=BIGINT}, 
       0, #{item.startDate,jdbcType=TIMESTAMP}, #{item.endDate,jdbcType=TIMESTAMP}, 
       #{item.examDuration,jdbcType=INTEGER}, #{item.totalPoints,jdbcType=INTEGER}, #{item.passPoints,jdbcType=INTEGER}, 
@@ -104,6 +105,9 @@
    		 modify_date = NOW(),
       <if test="isFinish != null">
         is_finish = #{isFinish,jdbcType=BIT},
+      </if>
+      <if test="isBegin != null">
+        is_begin = #{isBegin,jdbcType=BIT},
       </if>
       <if test="examTime != null">
         exam_time = #{examTime,jdbcType=TIMESTAMP},
@@ -183,7 +187,7 @@
   </select>
 
   <select id="selectExamUserPlanModelByBizId" parameterType="java.lang.Long"  resultMap="DtoResultMap">
-    select  userPlan.biz_id, userPlan.is_finish, userPlan.exam_time, userPlan.exam_plan_id,
+    select  userPlan.biz_id, userPlan.is_finish,userPlan.is_begin , userPlan.exam_time, userPlan.exam_plan_id,
     userPlan.exam_id, userPlan.is_start, userPlan.start_date, userPlan.end_date,
     userPlan.exam_duration, userPlan.total_points, userPlan.pass_points, userPlan.user_id,
     userPlan.base_total_points, userPlan.is_mark,

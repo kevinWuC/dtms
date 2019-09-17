@@ -26,7 +26,7 @@ public class ExamUserAnswerModelDo {
      **/
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
-    private Long bizId;
+    private Long examUserAnswerModeId;
     /**
      * 试题ID
      **/

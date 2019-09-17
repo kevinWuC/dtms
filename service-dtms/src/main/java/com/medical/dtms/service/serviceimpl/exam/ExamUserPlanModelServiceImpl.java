@@ -85,7 +85,7 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
      */
     @Override
     @Transactional
-    public ExamStartModel startExam(@RequestBody ExamUserPlanModelDTO userPlanModelDTO)  {
+    public ExamStartModel startExam(@RequestBody ExamUserPlanModelDTO userPlanModelDTO) {
         ExamStartModel model = new ExamStartModel();
         //获取用户考试信息
         ExamUserPlanModelDTO examUserPlanModelDTO = examUserPlanModelManager.selectExamUserPlanModelByBizId(userPlanModelDTO.getExamUserPlanModelId());
@@ -93,7 +93,7 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
             log.error("本场考试不存在");
             throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "本场考试不存在");
         }
-        if( null!=examUserPlanModelDTO.getIsFinish() && !examUserPlanModelDTO.getIsFinish()){
+        if (null != examUserPlanModelDTO.getIsFinish() && examUserPlanModelDTO.getIsFinish()) {
             log.error("考试已结束,不能重复考试");
             throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "考试已结束,不能重复考试");
         }
@@ -128,42 +128,50 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
             }
             model.setExamQuestionTypes(typeModels);
 
-            //新增提交的试卷....
-            ExamUserAnswerModelDTO userAnswerModelDTO = new ExamUserAnswerModelDTO();
-            userAnswerModelDTO.setExamId(examUserPlanModelDTO.getExamId());
-            userAnswerModelDTO.setExamPlanId(examUserPlanModelDTO.getExamPlanId());
-            userAnswerModelDTO.setExamUserPlanId(examUserPlanModelDTO.getExamUserPlanModelId());
-            userAnswerModelDTO.setUserId(examUserPlanModelDTO.getUserId());
-            userAnswerModelDTO.setCreator(userPlanModelDTO.getCreateUserName());
-            userAnswerModelDTO.setCreatorId(userPlanModelDTO.getCreateUserId().toString());
-            //添加试题
-            List<ExamUserAnswerModelDTO> dtos = new ArrayList<>();
-            for (ExamQuestionsTypeModel typeModel : typeModels) {
-                if (StringUtils.isNotBlank(typeModel.getExamQuestionString())) {
-                    query.setQuestionIds(Arrays.asList(typeModel.getExamQuestionString().split(",")));
-                    //查询试题
-                    List<DtmsQuestionsDTO> listQuestionsForPreview = dtmsQuestionManager
-                            .listQuestionsForPreview(query);
-                    ExamUserAnswerModelDTO dto;
-                    for (DtmsQuestionsDTO question : listQuestionsForPreview) {
-                        dto = userAnswerModelDTO;
-                        dto.setBizId(idGenerator.nextId());
-                        dto.setQuestionsId(question.getBizId());
-                        dto.setAnswer(question.getAnswer());
-                        dtos.add(dto);
+            //通过是否存在开始考试时间判断是否存在已经提交的试卷
+            if (null != examUserPlanModelDTO.getIsBegin() && !examUserPlanModelDTO.getIsBegin()) {
+                //新增提交的试卷....
+                ExamUserAnswerModelDTO userAnswerModelDTO = new ExamUserAnswerModelDTO();
+                userAnswerModelDTO.setExamId(examUserPlanModelDTO.getExamId());
+                userAnswerModelDTO.setExamPlanId(examUserPlanModelDTO.getExamPlanId());
+                userAnswerModelDTO.setExamUserPlanId(examUserPlanModelDTO.getExamUserPlanModelId());
+                userAnswerModelDTO.setUserId(examUserPlanModelDTO.getUserId());
+                userAnswerModelDTO.setCreator(userPlanModelDTO.getCreateUserName());
+                userAnswerModelDTO.setCreatorId(userPlanModelDTO.getCreateUserId().toString());
+                //添加试题
+                if (CollectionUtils.isNotEmpty(typeModels)) {
+                    List<ExamUserAnswerModelDTO> dtos = new ArrayList<>();
+                    for (int lenType = typeModels.size(), i = 0; i < lenType; i++) {
+                        ExamQuestionsTypeModel typeModel = typeModels.get(i);
+                        ExamUserAnswerModelDTO dto;
+                        for (int lenQ = typeModel.getQuestionForPreview().size(), j = 0; j < lenQ; j++) {
+                            dto = new ExamUserAnswerModelDTO();
+                            dto.setExamId(userAnswerModelDTO.getExamId());
+                            dto.setExamPlanId(userAnswerModelDTO.getExamPlanId());
+                            dto.setExamUserPlanId(userAnswerModelDTO.getExamUserPlanId());
+                            dto.setUserId(userAnswerModelDTO.getUserId());
+                            dto.setCreator(userAnswerModelDTO.getCreator());
+                            dto.setCreatorId(userAnswerModelDTO.getCreatorId());
+                            dto.setExamUserAnswerModeId(idGenerator.nextId());
+                            dto.setQuestionsId(typeModel.getQuestionForPreview().get(j).getBizId());
+                            dtos.add(dto);
+                        }
                     }
+                    userAnswerModelManager.insertBatchExamUserAnswerModel(dtos);
                 }
+
             }
-            userAnswerModelManager.insertBatchExamUserAnswerModel(dtos);
+            //开始考试
+            ExamUserPlanModelDTO startExamUserPlan = new ExamUserPlanModelDTO();
+            startExamUserPlan.setExamUserPlanModelId(examUserPlanModelDTO.getExamUserPlanModelId());
+            startExamUserPlan.setModifyUserName(examUserPlanModelDTO.getModifyUserName());
+            startExamUserPlan.setModifyUserId(examUserPlanModelDTO.getModifyUserId());
+            //startExamUserPlan.setStartDate(new Date());
+            startExamUserPlan.setIsBegin(true);
+            examUserPlanModelManager.updateExamUserPlanModel(startExamUserPlan);
         }
 
-        //更新考试开始时间
-        ExamUserPlanModelDTO startExamUserPlan = new ExamUserPlanModelDTO();
-        startExamUserPlan.setExamUserPlanModelId(examUserPlanModelDTO.getExamUserPlanModelId());
-        startExamUserPlan.setModifyUserName(examUserPlanModelDTO.getModifyUserName());
-        startExamUserPlan.setModifyUserId(examUserPlanModelDTO.getModifyUserId());
-        startExamUserPlan.setStartDate(new Date());
-        examUserPlanModelManager.updateExamUserPlanModel(startExamUserPlan);
+
         return model;
     }
 
@@ -180,15 +188,13 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
             log.error("参数为空");
             throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "参数为空");
         }
+
         //创建要修改的试卷内容(更新考试结束时间,考试得分,考试结束时间)
         ExamUserPlanModelDTO examUserPlanModelDTO = new ExamUserPlanModelDTO();
         examUserPlanModelDTO.setModifyUserId(Long.parseLong(query.getModifierId()));
         examUserPlanModelDTO.setModifyUserName(query.getModifier());
         examUserPlanModelDTO.setExamUserPlanModelId(query.getExamUserPlanId());
         //准备提交更新的题目信息
-        ExamUserAnswerModelDTO userAnswerModelDTO = new ExamUserAnswerModelDTO();
-        userAnswerModelDTO.setModifier(query.getModifier());
-        userAnswerModelDTO.setModifierId(query.getModifierId());
         List<ExamUserAnswerModelDTO> dtos = new ArrayList<>();
         List<ExamSubmintQuestionQuery> submitQuestions = query.getQuestions();
         int total_points = 0;
@@ -196,27 +202,31 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
             ExamUserAnswerModelDTO dto;
             DtmsQuestionsDTO dtmsQuestionsDTO;
             for (ExamSubmintQuestionQuery submitQuestion : submitQuestions) {
-                dto = userAnswerModelDTO;
+                dto = new ExamUserAnswerModelDTO();
+                dto.setModifier(query.getModifier());
+                dto.setModifierId(query.getModifierId());
+                dto.setUserId(query.getUserId());
+                dto.setExamId(query.getExamId());
+                dto.setExamPlanId(query.getExamPlanId());
+                dto.setExamUserPlanId(query.getExamUserPlanId());
                 String submitAnswer = submitQuestion.getAnswer();
-                if (null != submitAnswer && !"".equals(submitAnswer)){
+                if (null != submitAnswer && !"".equals(submitAnswer)) {
                     dtmsQuestionsDTO = questionManager.getQuestionById(submitQuestion.getQuestionsId());
                     String answer = dtmsQuestionsDTO.getAnswer();
-                    if (answer.equals(submitAnswer)){
+                    if (answer.equals(submitAnswer)) {
                         Integer questionsPoints = submitQuestion.getQuestionsPoints();
                         dto.setAnswerPoints(questionsPoints);
-                        total_points+=questionsPoints;
+                        total_points += questionsPoints;
                     }
                     dto.setAnswer(submitAnswer);
                 }
-                dto.setBizId(submitQuestion.getBizId());
                 dtos.add(dto);
             }
         }
         examUserPlanModelDTO.setBaseTotalPoints(total_points);
         examUserPlanModelDTO.setIsFinish(true);
-        examUserPlanModelDTO.setEndDate(new Date());
         userAnswerModelManager.updateBatchExamUserAnswerModel(dtos);
-
+        examUserPlanModelManager.updateExamUserPlanModel(examUserPlanModelDTO);
         return true;
     }
 

@@ -167,7 +167,9 @@
   	left join tb_dtms_qms_dept dept on plan.use_dept_id = dept.biz_id
   	where plan.is_deleted = 0
   	and dept.is_deleted = 0
+  	<if test="examPlanName != null">
   	and  plan.exam_plan_name like concat(concat('%',#{examPlanName}),'%')
+    </if>
   </select>
    
 </mapper>

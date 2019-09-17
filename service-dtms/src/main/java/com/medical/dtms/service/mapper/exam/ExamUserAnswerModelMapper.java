@@ -1,5 +1,6 @@
 package com.medical.dtms.service.mapper.exam;
 
+import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
 import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
