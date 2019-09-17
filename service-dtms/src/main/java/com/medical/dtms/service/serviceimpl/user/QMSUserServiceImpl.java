@@ -247,7 +247,7 @@ public class QMSUserServiceImpl implements QMSUserService {
             users.removeAll(Collections.singleton(null));
             List<SimpleLogInLogModel> collect = new ArrayList<>();
             for (QMSUserModel model : list) {
-                if (CollectionUtils.isNotEmpty(users)){
+                if (CollectionUtils.isNotEmpty(users)) {
                     collect = logModels.stream().filter(simpleLogInLogModel -> simpleLogInLogModel.getUserId().equals(model.getBizId())).distinct().collect(Collectors.toList());
                 }
                 model.setLogOnCount(CollectionUtils.isEmpty(collect) == true ? 0 : collect.get(0).getLogOnCount() == null ? 0 : collect.get(0).getLogOnCount());
@@ -255,24 +255,24 @@ public class QMSUserServiceImpl implements QMSUserService {
                 model.setPreviousVisit(CollectionUtils.isEmpty(collect) == true ? null : collect.get(0).getLastVisit() == null ? null : collect.get(0).getLastVisit());
 
                 if (CollectionUtils.isEmpty(roleIds)) {
-                    model.setRoleIdList(new ArrayList<>());
+                    model.setRoleIdListStr(null);
                 } else {
-                    model.setRoleIdList(CollectionUtils.isEmpty(roleIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) == true ?
-                            new ArrayList<>() : roleIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getRoleId).distinct().collect(Collectors.toList()));
+                    model.setRoleIdListStr(CollectionUtils.isEmpty(roleIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) == true ?
+                            null : StringUtils.join(roleIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getRoleId).distinct().collect(Collectors.toList()), ","));
                 }
 
                 if (CollectionUtils.isEmpty(deptIds)) {
-                    model.setDeptIdList(new ArrayList<>());
+                    model.setDeptIdListStr(null);
                 } else {
-                    model.setDeptIdList(CollectionUtils.isEmpty(deptIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) == true ?
-                            new ArrayList<>() : deptIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getDeptId).distinct().collect(Collectors.toList()));
+                    model.setDeptIdListStr(CollectionUtils.isEmpty(deptIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) == true ?
+                            null : StringUtils.join(deptIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getDeptId).distinct().collect(Collectors.toList()), ","));
                 }
 
                 if (CollectionUtils.isEmpty(jobIds)) {
-                    model.setJobIdList(new ArrayList<>());
+                    model.setJobIdListStr(null);
                 } else {
-                    model.setJobIdList(CollectionUtils.isEmpty(jobIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) == true ?
-                            new ArrayList<>() : jobIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getJobId).distinct().collect(Collectors.toList()));
+                    model.setJobIdListStr(CollectionUtils.isEmpty(jobIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) == true ?
+                            null : StringUtils.join(jobIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getJobId).distinct().collect(Collectors.toList()), ","));
                 }
             }
         }

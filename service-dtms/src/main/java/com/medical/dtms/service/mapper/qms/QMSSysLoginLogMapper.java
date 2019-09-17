@@ -27,4 +27,6 @@ public interface QMSSysLoginLogMapper {
     List<SysLoginLogModel> listLoginLogs(QMSSysLoginLogQuery Query);
 
     List<SimpleLogInLogModel> listUserLastVisitAndVisitTime(List<Long> userIds);
+
+    SysLoginLogModel getIpByUserId(@Param("userId") Long userId);
 }

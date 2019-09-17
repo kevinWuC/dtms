@@ -223,7 +223,7 @@
     <select id="listLoginLogs" parameterType="com.medical.dtms.dto.log.query.QMSSysLoginLogQuery"
             resultType="com.medical.dtms.common.model.syslog.SysLoginLogModel">
         SELECT
-        create_date AS createDate ,  account AS account ,  login_log_status AS loginLogStatus ,ip_address AS ipAddress,
+        create_date AS createDate , account AS account , login_log_status AS loginLogStatus ,ip_address AS ipAddress,
         ip_address_name AS ipAddressName
         FROM
         <include refid="table_name"/>
@@ -254,5 +254,17 @@
         <foreach collection="list" item="userId" open="(" close=")" index="index" separator=",">
             #{userId}
         </foreach>
+    </select>
+
+    <!-- 根据用户 id 获取ip-->
+    <select id="getIpByUserId" parameterType="java.lang.Long"
+            resultType="com.medical.dtms.common.model.syslog.SysLoginLogModel">
+        select
+        ip_address AS ipAddress,
+        MAX(create_date) AS createDate
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and creator_id = #{userId}
     </select>
 </mapper>

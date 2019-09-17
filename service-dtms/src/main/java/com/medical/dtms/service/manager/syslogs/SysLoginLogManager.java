@@ -86,4 +86,9 @@ public class SysLoginLogManager {
         return qmsSysLoginLogMapper.listUserLastVisitAndVisitTime(userIds);
     }
 
+    /** 根据用户 id 获取 ip*/
+    public SysLoginLogModel getIpByUserId(Long userId){
+        return qmsSysLoginLogMapper.getIpByUserId(userId);
+    }
+
 }
