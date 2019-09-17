@@ -104,6 +104,7 @@ public class QMSUserController {
         dto.setCreator(info.getDspName());
         dto.setCreatorId(info.getUserId());
         userService.addUser(dto);
+
         return Result.buildSuccess(true);
     }
 

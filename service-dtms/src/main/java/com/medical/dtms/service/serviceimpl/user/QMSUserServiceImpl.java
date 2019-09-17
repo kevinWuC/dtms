@@ -10,6 +10,7 @@ import com.medical.dtms.common.model.syslog.SysLoginLogModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
+import com.medical.dtms.dto.log.QMSSysLogsDTO;
 import com.medical.dtms.dto.menu.query.QMSMenuQuery;
 import com.medical.dtms.dto.role.QMSRoleDTO;
 import com.medical.dtms.dto.role.query.QMSRoleQuery;
@@ -29,6 +30,7 @@ import com.medical.dtms.service.manager.dept.QMSDeptManager;
 import com.medical.dtms.service.manager.role.QMSRoleInMenuManager;
 import com.medical.dtms.service.manager.role.QMSRoleManager;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
+import com.medical.dtms.service.manager.syslogs.SysLogsManager;
 import com.medical.dtms.service.manager.user.QMSUserInDeptManager;
 import com.medical.dtms.service.manager.user.QMSUserInJobsManager;
 import com.medical.dtms.service.manager.user.QMSUserInRoleManager;
@@ -69,6 +71,8 @@ public class QMSUserServiceImpl implements QMSUserService {
     private QMSUserInDeptManager userInDeptManager;
     @Autowired
     private QMSRoleInMenuManager roleInMenuManager;
+    @Autowired
+    private SysLogsManager sysLogsManager;
     @Autowired
     private QMSMenuService menuService;
     @Autowired

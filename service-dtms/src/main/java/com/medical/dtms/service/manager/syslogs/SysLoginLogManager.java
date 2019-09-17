@@ -1,5 +1,7 @@
 package com.medical.dtms.service.manager.syslogs;
 
+import com.medical.dtms.common.eception.BizException;
+import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.syslog.SimpleLogInLogModel;
 import com.medical.dtms.common.model.syslog.SysLoginLogModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
@@ -7,6 +9,7 @@ import com.medical.dtms.dto.log.QMSSysLoginLogDTO;
 import com.medical.dtms.dto.log.query.QMSSysLoginLogQuery;
 import com.medical.dtms.service.dataobject.log.QMSSysLoginLogDO;
 import com.medical.dtms.service.mapper.qms.QMSSysLoginLogMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,8 +90,13 @@ public class SysLoginLogManager {
     }
 
     /** 根据用户 id 获取 ip*/
-    public SysLoginLogModel getIpByUserId(Long userId){
-        return qmsSysLoginLogMapper.getIpByUserId(userId);
+    public String getIpByUserId(String userId){
+        if (StringUtils.isBlank(userId)) {
+            throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "用户id 为空");
+        }
+        long user = Long.parseLong(userId);
+        SysLoginLogModel model = qmsSysLoginLogMapper.getIpByUserId(user);
+        return model == null ? null : StringUtils.isBlank(model.getIpAddress()) == true ? null : model.getIpAddress();
     }
 
 }

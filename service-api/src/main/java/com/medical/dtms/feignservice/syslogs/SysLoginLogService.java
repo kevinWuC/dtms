@@ -22,7 +22,4 @@ public interface SysLoginLogService {
 
     @RequestMapping(value = "/loginLogs/listLoginLogs", method = RequestMethod.POST)
     PageInfo<SysLoginLogModel> pageListLoginLogs(@RequestBody QMSSysLoginLogQuery query);
-
-    @RequestMapping(value = "/loginLogs/getIpByUserId", method = RequestMethod.POST)
-    SysLoginLogModel getIpByUserId(@RequestParam("userId") Long userId);
 }

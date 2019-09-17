@@ -48,7 +48,7 @@ public class OperateManager {
     /**
      * 获取实体类对应的表名，由于实体类命名与表名未完全对应，所以 实体类上需要加上 @Table 注解
      */
-    public static String getTableName(Class<?> object) {
+    public  String getTableName(Class<?> object) {
         return object.getAnnotation(Table.class).name();
     }
 

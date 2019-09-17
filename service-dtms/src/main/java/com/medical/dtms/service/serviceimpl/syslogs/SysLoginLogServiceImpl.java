@@ -66,14 +66,4 @@ public class SysLoginLogServiceImpl implements SysLoginLogService {
         }
         return new PageInfo<>(models);
     }
-
-    /**
-     * @param [userId]
-     * @return java.lang.String
-     * @description 根据用户 id 获取ip
-     **/
-    @Override
-    public SysLoginLogModel getIpByUserId(@RequestParam("userId") Long userId) {
-        return loginLogManager.getIpByUserId(userId);
-    }
 }

@@ -1,8 +1,12 @@
 package com.medical.dtms.service.manager.syslogs;
 
+import com.medical.dtms.common.util.BeanConvertUtils;
+import com.medical.dtms.dto.log.QMSSysLogsDTO;
 import com.medical.dtms.dto.log.query.QMSSysLogsQuery;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
+import com.medical.dtms.service.dataobject.user.QMSUserDO;
 import com.medical.dtms.service.manager.table.OperateManager;
+import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +22,16 @@ import java.util.List;
 public class SysLogsManager {
 
     @Autowired
-    private OperateManager operateManager;
+    private QMSSysLogsMapper qmsSysLogsMapper;
 
-    public List<QMSSysLogsDO> getLogsTable(QMSSysLogsQuery query) {
-//        String comment = tableManager.getTableComment(aDo.getClass());
-
-
-        return null;
+    /**
+     * 系统日志--新增日志
+     * @param dto
+     * @return
+     */
+    public Integer insert(QMSSysLogsDTO dto) {
+        QMSSysLogsDO aDo = BeanConvertUtils.convert(dto, QMSSysLogsDO.class);
+        return qmsSysLogsMapper.insert(aDo);
     }
 
 
