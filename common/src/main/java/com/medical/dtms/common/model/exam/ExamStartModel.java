@@ -44,6 +44,8 @@ public class ExamStartModel {
     private Integer totalPoints;
     /**通过分数*/
     private Integer passPoints;
+    /**用户得分*/
+    private Integer userPoints;
 
     private List<ExamQuestionsTypeModel> examQuestionTypes;
 

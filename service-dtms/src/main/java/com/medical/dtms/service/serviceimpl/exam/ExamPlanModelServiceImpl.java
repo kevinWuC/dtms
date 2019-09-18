@@ -7,6 +7,7 @@ package com.medical.dtms.service.serviceimpl.exam;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.medical.dtms.service.manager.exam.ExamUserAnswerModelManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,44 @@ public class ExamPlanModelServiceImpl implements ExamPlanModelService {
     private IdGenerator              idGenerator;
     @Autowired
     private ExamUserPlanModelManager examUserPlanModelManager;
+    @Autowired
+    private ExamUserAnswerModelManager examUserAnswerModelManager;
+
+
+    @Override
+    @Transactional
+    public Boolean deleteExamPlanModel(Long examPlanModelId) {
+        //校验是否被删除
+        ExamPlanModelDTO examPlanModelDTO = examPlanModelManager.getExamPlanModelById(examPlanModelId);
+        if (null == examPlanModelDTO){
+            log.error("考试安排不存在或已被删除");
+            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "考试安排不存在或已被删除");
+        }
+        // 未被删除
+        //删除与用户的关联
+        try {
+            examUserPlanModelManager.deleteByExamPlanId(examPlanModelId);
+        } catch (Exception e) {
+            log.error("删除考试安排时,删除考试安排与用户的关联失败", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        }
+        //删除与用户答案的关联
+        try {
+            examUserAnswerModelManager.deleteByExamPlanId(examPlanModelId);
+        } catch (Exception e) {
+            log.error("删除考试安排时,删除考试安排与用户答案的关联失败", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        }
+        //删除考试安排
+        try {
+            examPlanModelManager.deleteExamPlanModelByPlanModeID(examPlanModelId);
+        } catch (Exception e) {
+            log.error("删除考试安排失败", e);
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
+        }
+
+        return true;
+    }
 
     @Override
     public Boolean insertExamPlanModel(@RequestBody ExamPlanModelDTO examPlanModelDTO) {

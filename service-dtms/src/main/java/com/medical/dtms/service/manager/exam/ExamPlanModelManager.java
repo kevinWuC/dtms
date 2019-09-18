@@ -24,8 +24,19 @@ public class ExamPlanModelManager {
 
     /**
      * 新增
+     *
+     * @param examPlanModelId
+     * @return
+     */
+    public Boolean deleteExamPlanModelByPlanModeID(Long examPlanModelId) {
+        Integer num = examPlanModelMapper.deleteExamPlanModelByPlanModeID(examPlanModelId);
+        return num > 0 ? true : false;
+    }
+
+    /**
+     * 新增
      * 
-     * @param examPlanModelDO
+     * @param examPlanModelDTO
      * @return
      */
     public Boolean insertExamPlanModel(ExamPlanModelDTO examPlanModelDTO) {
@@ -38,7 +49,7 @@ public class ExamPlanModelManager {
     /**
      * 修改
      * 
-     * @param examPlanModelDO
+     * @param examPlanModelDTO
      * @return
      */
     public Boolean updateExamPlanModel(ExamPlanModelDTO examPlanModelDTO) {

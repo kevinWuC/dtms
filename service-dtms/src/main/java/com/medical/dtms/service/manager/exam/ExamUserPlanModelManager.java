@@ -75,6 +75,16 @@ public class ExamUserPlanModelManager {
     }
 
     /**
+     * 分页查询（批卷用）
+     *
+     * @param query
+     * @return
+     */
+    public List<ExamUserPlanModelDTO> listExamUserPlanByQueryForMark(ExamPlanModelQuery query) {
+        return examUserPlanModelMapper.listExamUserPlanByQueryForMark(query);
+    }
+
+    /**
      * 根据用户考试bizId查询用户考试信息
      *
      * @param bizId

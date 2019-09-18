@@ -17,4 +17,5 @@ public class ExamPlanModelQuery {
     private Integer pageNo;
     private Integer pageSize;
     private Long    userId;
+    private Boolean isMark;
 }

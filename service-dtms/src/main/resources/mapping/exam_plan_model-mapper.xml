@@ -66,6 +66,12 @@
     type_points3, type_points4, type_points5, is_deleted,createdate, create_user_id, create_user_name, 
     modify_date, modify_user_id, modify_user_name, sort_code
   </sql>
+
+  <delete id="deleteExamPlanModelByPlanModeID" parameterType="java.lang.Long">
+    update tb_dtms_exam_plan_model
+    set  is_deleted = 1 ,modify_date = NOW()
+    where biz_id = #{examPlanModelId,jdbcType=BIGINT}
+  </delete>
    
   <insert id="insertExamPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamPlanModelDO">
     insert into tb_dtms_exam_plan_model (<include refid="Base_Column_List"/>)
