@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
+import com.medical.dtms.common.model.exam.ExamDetailModel;
 import com.medical.dtms.common.model.train.TrainConfigModel;
 import com.medical.dtms.common.model.train.TrainConfigQueryModel;
 import com.medical.dtms.common.model.train.TrainConfigStatementModel;
@@ -18,6 +19,7 @@ import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.dto.user.QMSUserDTO;
 import com.medical.dtms.dto.user.query.BaseUserQuery;
 import com.medical.dtms.feignservice.train.TrainConfigService;
+import com.medical.dtms.service.manager.exam.ExamModelManager;
 import com.medical.dtms.service.manager.file.FileModelManager;
 import com.medical.dtms.service.manager.train.TrainConfigManager;
 import com.medical.dtms.service.manager.train.TrainFilesManager;
@@ -54,6 +56,8 @@ public class TrainConfigServiceImpl implements TrainConfigService {
     private QMSUserManager qmsUserManager;
     @Autowired
     private IdGenerator idGenerator;
+    @Autowired
+    private ExamModelManager examModelManager;
 
     /**
      * @param [trainConfigDTO]
@@ -73,8 +77,15 @@ public class TrainConfigServiceImpl implements TrainConfigService {
         if (null == trainConfigDTO.getIsStart()) {
             trainConfigDTO.setIsStart(false);
         }
+        //查询试卷是否存在
+        ExamDetailModel examModel = examModelManager.getExamByExamId(trainConfigDTO.getExamId());
+        if (null == examModel){
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "试卷不存在，请重新填写");
+        }
 
         try {
+            trainConfigDTO.setExamName(examModel.getExamName());
+            trainConfigDTO.setTotalPoint(examModel.getTotalPoints());
             trainConfigDTO.setBizId(idGenerator.nextId());
             trainConfigManager.insert(trainConfigDTO);
         } catch (Exception e) {
@@ -340,6 +351,9 @@ public class TrainConfigServiceImpl implements TrainConfigService {
         model.setEndDate(configModel.getEndDate());
         model.setExamName(configModel.getExamName());
         model.setTrainDescription(configModel.getTrainDescription());
+        model.setTrainTypeId(configModel.getTrainTypeId());
+        model.setPassPoint(configModel.getPassPoint());
+        model.setReadFen(configModel.getReadFen());
         //获取培训文件信息
         TrainFileQuery fileQuery = new TrainFileQuery();
         fileQuery.setTrainId(trainConfigDTO.getBizId());

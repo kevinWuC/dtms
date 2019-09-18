@@ -4,6 +4,10 @@ import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import com.medical.dtms.common.constants.HostConstants;
+import com.medical.dtms.common.eception.BizException;
+import com.medical.dtms.common.enumeration.ErrorCodeEnum;
+import com.medical.dtms.common.model.syslog.SysLoginLogModel;
+import com.medical.dtms.feignservice.syslogs.SysLoginLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,7 @@ import java.net.*;
 
 /**
  * @version： IpAdressManager.java v 1.0, 2019年08月19日 15:44 wuxuelin Exp$
- * @Description 通过 ip 获取城市
+ * @Description ip 相关操作类
  **/
 @Service
 @Slf4j
@@ -52,41 +56,6 @@ public class IpAddressManager {
      * 获取 ip
      */
     public String getUserAddress(HttpServletRequest request) {
-
-//        try {
-//            // 遍历网络接口
-//            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-//            while (interfaces.hasMoreElements()) {
-//                NetworkInterface anInterface = interfaces.nextElement();
-//
-//                // 遍历所有接口下的网络 ip
-//                Enumeration<InetAddress> inetAddresses = anInterface.getInetAddresses();
-//                while (inetAddresses.hasMoreElements()) {
-//                    InetAddress address = inetAddresses.nextElement();
-//                    // 本机
-//                    if (!address.isLoopbackAddress()) {
-//                        String addr = request.getRemoteAddr();
-//                        log.error("addr:" + addr);
-//                        return HostConstants.LOCAL_HOST_Name;
-//                    }
-//                    // 局域网
-//                    if (address.isSiteLocalAddress()) {
-//                        return HostConstants.PART_HOST_NAME;
-//                    }
-//
-//                    // 普通 ip
-//                    if (address.getHostAddress().indexOf(":") == -1) {
-//                        if (address != null && address instanceof Inet4Address) {
-//                            return address.toString();
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.error("获取网络接口/ip失败", e);
-//            return null;
-//        }
-
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
@@ -97,9 +66,6 @@ public class IpAddressManager {
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteHost();
         }
-
-        System.out.println("-- - - - - - - host:" + request.getRemoteHost());
-
         return ip;
     }
 
@@ -143,6 +109,5 @@ public class IpAddressManager {
         }
         return null;
     }
-
 
 }

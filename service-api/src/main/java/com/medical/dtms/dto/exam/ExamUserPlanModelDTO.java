@@ -26,6 +26,8 @@ public class ExamUserPlanModelDTO {
     private Long    examUserPlanModelId;
     /**是否结束*/
     private Boolean isFinish;
+    /**是否开始考试*/
+    private Boolean isBegin;
     /**考试时间*/
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
     private Date    examTime;

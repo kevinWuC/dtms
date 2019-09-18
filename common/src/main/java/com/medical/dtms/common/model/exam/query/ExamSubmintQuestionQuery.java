@@ -13,12 +13,7 @@ import lombok.Data;
 @Data
 public class ExamSubmintQuestionQuery {
 
-    /**
-     * 业务主键
-     **/
-    @JsonDeserialize(using = LongJsonDeserializer.class)
-    @JsonSerialize(using = LongJsonSerializer.class)
-    private Long bizId;
+
     /**
      * 试题ID
      **/

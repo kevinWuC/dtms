@@ -18,6 +18,8 @@ public class ExamUserPlanModelDO {
     private Long    examUserPlanModelId;
     /**是否结束*/
     private Boolean isFinish;
+    /**是否开始考试*/
+    private Boolean isBegin;
     /**考试时间*/
     private Date    examTime;
     /**考试安排id*/

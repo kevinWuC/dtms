@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.datasource.QMSTaskMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.datasource.QMSTaskDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="exc_date" jdbcType="INTEGER" property="excDate"/>
+        <result column="effective" jdbcType="BIT" property="effective"/>
+        <result column="url_path" jdbcType="VARCHAR" property="urlPath"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, biz_id, task_name, exc_date, effective, url_path, is_deleted, creator, creator_id,gmt_created
+  </sql>
+
+    <sql id="table_name">
+    tb_dtms_qms_task
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 添加-->
+    <insert id="insert" parameterType="com.medical.dtms.service.dataobject.datasource.QMSTaskDO">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR},
+        #{excDate,jdbcType=INTEGER}, #{effective,jdbcType=BIT}, #{urlPath,jdbcType=VARCHAR},
+        0, #{creator,jdbcType=VARCHAR}, #{creatorId,jdbcType=VARCHAR},
+        NOW())
+    </insert>
+
+    <!-- 更新-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.datasource.QMSTaskDO">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="taskName != null">
+                task_name = #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="excDate != null">
+                exc_date = #{excDate,jdbcType=INTEGER},
+            </if>
+            <if test="effective != null">
+                effective = #{effective,jdbcType=BIT},
+            </if>
+            <if test="urlPath != null">
+                url_path = #{urlPath,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 校验定时任务是否存在-->
+    <select id="queryTaskExistOrNot" parameterType="com.medical.dtms.dto.datasource.query.QMSTaskQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted =0
+        and exc_date = #{excDate,jdbcType=INTEGER}
+        and effective = #{effective,jdbcType=BIT}
+    </select>
+
+    <!-- 有效的定时任务列表-->
+    <select id="listTasks" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted =0
+        and effective = 1
+    </select>
+</mapper>

@@ -51,14 +51,6 @@ public class QMSSysLogsDO {
      */
     private String createDate;
     /**
-     * 创建用户主键
-     */
-    private String createUserId;
-    /**
-     * 创建用户
-     */
-    private String createUserName;
-    /**
      * 0-未删除  1-删除
      */
     private Boolean isDeleted;

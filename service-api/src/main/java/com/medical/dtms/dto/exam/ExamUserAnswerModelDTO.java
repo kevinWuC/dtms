@@ -24,7 +24,7 @@ public class ExamUserAnswerModelDTO {
      **/
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
-    private Long bizId;
+    private Long examUserAnswerModeId;
     /**
      * 试题ID
      **/
@@ -95,5 +95,7 @@ public class ExamUserAnswerModelDTO {
      * 修改时间
      */
     private Date gmtModified;
+
+
 
 }

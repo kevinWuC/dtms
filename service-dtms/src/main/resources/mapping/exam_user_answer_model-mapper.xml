@@ -3,7 +3,7 @@
 <mapper namespace="com.medical.dtms.service.mapper.exam.ExamUserAnswerModelMapper">
     <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="biz_id" jdbcType="BIGINT" property="examUserAnswerModeId"/>
         <result column="questions_id" jdbcType="BIGINT" property="questionsId"/>
         <result column="exam_id" jdbcType="BIGINT" property="examId"/>
         <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId"/>
@@ -35,9 +35,9 @@
         )
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id,jdbcType=BIGINT}, #{item.bizId,jdbcType=BIGINT}, #{item.questionsId,jdbcType=BIGINT},
+            (#{item.id,jdbcType=BIGINT}, #{item.examUserAnswerModeId,jdbcType=BIGINT}, #{item.questionsId,jdbcType=BIGINT},
             #{item.examId,jdbcType=BIGINT}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examUserPlanId,jdbcType=BIGINT},
-            #{item.userId,jdbcType=BIGINT}, #{item.answer,jdbcType=VARCHAR}, #{item.answerPoints,jdbcType=INTEGER},
+            #{item.userId,jdbcType=BIGINT}, #{item.answer,jdbcType=VARCHAR}, 0,
             #{item.sortCode,jdbcType=INTEGER},0, #{item.creator,jdbcType=VARCHAR},
             #{item.creatorId,jdbcType=VARCHAR}, NOW(), #{item.modifier,jdbcType=VARCHAR},
             #{item.modifierId,jdbcType=VARCHAR}, NOW())
@@ -53,28 +53,30 @@
 
     <!-- 批量更新 -->
     <update id="updateBatchExamUserAnswerModel" parameterType="java.util.List">
-        update tb_dtms_exam_user_answer_model
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update standard_relation
+            update tb_dtms_exam_user_answer_model
             <set>
                 gmt_modified = NOW(),
                 <if test="item.answer != null">
-                    answer = #{answer,jdbcType=VARCHAR},
+                    answer = #{item.answer,jdbcType=VARCHAR},
                 </if>
-                <if test="item.answer_points != null">
+                <if test="item.answerPoints != null">
                     answer_points=#{item.answerPoints,jdbcType=INTEGER},
                 </if>
                 <if test="item.isDeleted != null">
-                    is_deleted = #{isDeleted,jdbcType=BIT},
+                    is_deleted = #{item.isDeleted,jdbcType=BIT},
                 </if>
                 <if test="item.modifier != null">
-                    modifier = #{modifier,jdbcType=VARCHAR},
+                    modifier = #{item.modifier,jdbcType=VARCHAR},
                 </if>
                 <if test="item.modifierId != null">
-                    modifier_id = #{modifierId,jdbcType=VARCHAR},
+                    modifier_id = #{item.modifierId,jdbcType=VARCHAR},
                 </if>
             </set>
-            where biz_id = #{item.biz_id,jdbcType=BIGINT}
+            where questions_id = #{item.questionsId,jdbcType=BIGINT}
+            and exam_id = #{item.examId,jdbcType=BIGINT}
+            and exam_plan_id = #{item.examPlanId,jdbcType=BIGINT}
+            and exam_user_plan_id = #{item.examUserPlanId,jdbcType=BIGINT}
         </foreach>
     </update>
 

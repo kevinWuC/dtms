@@ -177,8 +177,8 @@ public class QMSRoleServiceImpl implements QMSRoleService {
         List<QMSMenuModel> menuModels = roleInMenuManager.listMenuByRole(roleIdList);
         if (CollectionUtils.isNotEmpty(menuModels)) {
             for (QMSRoleModel roleModel : models) {
-                roleModel.setMenuIdList(CollectionUtils.isEmpty(menuModels.stream().filter(qmsMenuModel -> roleModel.getBizId().equals(qmsMenuModel.getRoleId())).collect(Collectors.toList())) == true ?
-                        new ArrayList<>() : menuModels.stream().filter(qmsMenuModel -> roleModel.getBizId().equals(qmsMenuModel.getRoleId())).collect(Collectors.toList()).stream().map(QMSMenuModel::getBizId).distinct().collect(Collectors.toList()));
+                roleModel.setMenuIdListStr(CollectionUtils.isEmpty(menuModels.stream().filter(qmsMenuModel -> roleModel.getBizId().equals(qmsMenuModel.getRoleId())).collect(Collectors.toList())) == true ?
+                        null : StringUtils.join(menuModels.stream().filter(qmsMenuModel -> roleModel.getBizId().equals(qmsMenuModel.getRoleId())).collect(Collectors.toList()).stream().map(QMSMenuModel::getBizId).distinct().collect(Collectors.toList()),","));
             }
         }
         return new PageInfo<>(models);

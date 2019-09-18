@@ -22,7 +22,6 @@ public interface ExamUserAnswerModelMapper {
      * @return
      */
     int insertBatchExamUserAnswerModel(List<ExamUserAnswerModelDo> dos);
-
     /**
      * 批量更新
      *
@@ -30,14 +29,13 @@ public interface ExamUserAnswerModelMapper {
      * @return
      */
     int updateBatchExamUserAnswerModel(List<ExamUserAnswerModelDo> dos);
-
     /**
      * 通过考试ID删除题目
      *
      * @param examUserPlanId
      * @return
      */
-    int deleteByExamUserPlanId(@Param("examUserPlanId") Long examUserPlanId);
+    int deleteByExamUserPlanId(@Param("examUserPlanId")Long examUserPlanId);
 
 
     int deleteByPrimaryKey(Long id);
