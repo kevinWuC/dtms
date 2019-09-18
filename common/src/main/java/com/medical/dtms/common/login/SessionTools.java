@@ -22,15 +22,16 @@ public class SessionTools {
         if (model.getKeepLogin() == false) {
             // 清除session
             session.removeAttribute(SessionConstants.SESSION_KEY);
+            // 设置过期时间
+            session.setAttribute(SessionConstants.SESSION_TIME_OUT, System.currentTimeMillis());
         }
         // 放入用户信息
         OperatorInfo info = new OperatorInfo();
         BeanUtils.copyProperties(model, info);
         info.setUserId(String.valueOf(info.getBizId()));
 
-        // 设置 session 信息及过期时间
+        // 设置 session 信息
         session.setAttribute(SessionConstants.SESSION_KEY, info);
-        session.setAttribute(SessionConstants.SESSION_TIME_OUT, System.currentTimeMillis());
     }
 
     /**
