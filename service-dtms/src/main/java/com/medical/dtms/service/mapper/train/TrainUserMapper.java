@@ -1,9 +1,11 @@
 package com.medical.dtms.service.mapper.train;
 
+import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.service.dataobject.train.TrainUserDO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,4 +39,8 @@ public interface TrainUserMapper {
 
     //考试
     List<TrainUserModel> pageListExamTotal(TrainUserQuery query);
+
+    TrainUserDO getTrainUserByPrimaryKey(@Param("bizId") Long bizId);
+
+    MyTrainTestModel listExamIds(@Param("bizId") Long bizId);
 }

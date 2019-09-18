@@ -1,5 +1,6 @@
 package com.medical.dtms.service.manager.train;
 
+import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
@@ -156,4 +157,18 @@ public class TrainUserManager {
         return trainDos;
     }
 
+    /**
+     * 主键查询 用户 - 培训 是否存在
+     */
+    public TrainUserDTO getTrainUserByPrimaryKey(Long bizId) {
+        TrainUserDO userDO = trainUserMapper.getTrainUserByPrimaryKey(bizId);
+        return BeanConvertUtils.convert(userDO, TrainUserDTO.class);
+    }
+
+    /**
+     * 查询考试 id
+     */
+    public MyTrainTestModel listExamIds(Long bizId) {
+        return trainUserMapper.listExamIds(bizId);
+    }
 }

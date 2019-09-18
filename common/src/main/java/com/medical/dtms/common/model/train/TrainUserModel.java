@@ -7,6 +7,7 @@ import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @version： QMSUserModel.java v 1.0, 2019年08月20日 18:10  Exp$
@@ -192,6 +193,10 @@ TrainUserModel {
      * F答案
      */
     private String questionF;
+    /** 用户 id 集合*/
+    private List<Long> userIds;
+    /** 问题类型 id 集合*/
+    private List<Long> questionsTypeIds;
 
 
 }

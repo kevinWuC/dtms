@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.login.OperatorInfo;
 import com.medical.dtms.common.login.SessionTools;
+import com.medical.dtms.common.model.exam.ExamStartModel;
+import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainExcelModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
@@ -35,7 +37,7 @@ public class TrainUserController {
     /**
      * 分页参数校验
      *
-     * @param query
+     * @param [query]
      */
     private void checkParams(TrainUserQuery query) {
         if (null == query) {
@@ -99,22 +101,31 @@ public class TrainUserController {
      * @description 我的培训- 查看考试信息
      **/
     @RequestMapping(value = "/train/viewMyTrain", method = RequestMethod.POST)
-    public Result<PageInfo<TrainUserModel>> viewMyTrain(@RequestBody TrainUserQuery query) {
-        checkParams(query);
-        PageInfo<TrainUserModel> pageInfo = trainUserService.viewMyTrain(query);
-        return Result.buildSuccess(pageInfo);
+    public Result<MyTrainTestModel> viewMyTrain(@RequestBody TrainUserDTO trainUserDTO) {
+        OperatorInfo operatorInfo = SessionTools.getOperator();
+        trainUserDTO.setCreatorId(operatorInfo.getBizId().toString());
+
+        MyTrainTestModel testModel = trainUserService.beginTrainExam(trainUserDTO);
+        return Result.buildSuccess(testModel);
     }
 
     /**
-     * @param [query]
-     * @return com.medical.dtms.common.resp.Result<java.util.List < com.medical.dtms.model.train.trainuserModel>>
+     * @param userPlanModelDTO
+     * @return
      * @description 我的培训- 开始考试
      **/
     @RequestMapping(value = "/train/beginTrainExam", method = RequestMethod.POST)
-    public Result<PageInfo<TrainUserModel>> beginTrainExam(@RequestBody TrainUserQuery query) {
-        checkParams(query);
-        PageInfo<TrainUserModel> pageInfo = trainUserService.beginTrainExam(query);
-        return Result.buildSuccess(pageInfo);
+    public Result<MyTrainTestModel> beginTrainExam(@RequestBody TrainUserDTO trainUserDTO) {
+        if (null == trainUserDTO || null == trainUserDTO.getBizId()){
+            return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "主键为空");
+        }
+
+        OperatorInfo operatorInfo = SessionTools.getOperator();
+        trainUserDTO.setCreatorId(operatorInfo.getBizId().toString());
+        trainUserDTO.setCreator(operatorInfo.getDspName());
+
+        MyTrainTestModel testModel = trainUserService.beginTrainExam(trainUserDTO);
+        return Result.buildSuccess(testModel);
     }
 
 

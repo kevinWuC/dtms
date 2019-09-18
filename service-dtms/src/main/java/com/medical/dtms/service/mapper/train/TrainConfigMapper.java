@@ -3,6 +3,7 @@ package com.medical.dtms.service.mapper.train;
 
 import com.medical.dtms.common.model.train.TrainConfigModel;
 import com.medical.dtms.common.model.train.TrainConfigQueryModel;
+import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.dto.train.query.TrainConfigQuery;
 import com.medical.dtms.service.dataobject.train.TrainConfigDO;
 import org.apache.ibatis.annotations.Param;
@@ -33,5 +34,7 @@ public interface TrainConfigMapper {
     List<TrainConfigModel> listTrainConfigs(TrainConfigQuery query);
 
     TrainConfigQueryModel selectTrainConfig(@Param("bizId") Long bizId);
+
+    TrainUserModel queryTrainInfo(@Param("trainId") Long trainId);
 
 }

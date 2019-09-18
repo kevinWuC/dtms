@@ -264,4 +264,31 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+    <!-- 查询用户答题信息-->
+    <select id="listExamInfo" resultType="com.medical.dtms.common.model.train.UserExamInfoModel"
+            parameterType="com.medical.dtms.dto.exam.query.ExamUserAnswerModelQuery">
+        SELECT
+        usr.exam_id AS examId,
+	    usr.answer AS userAnswer,
+	    usr.answer_points AS answerPoints,
+	    question.questions_type_id AS questionsTypeId,
+	    item.item_name AS questionTypeName,
+	    question.question_title AS questionTitle,
+	    question.question_content AS questionContent,
+	    question.question_a AS questionA,
+	    question.question_b AS questionB,
+	    question.question_c AS questionC,
+	    question.question_d AS questionD,
+	    question.question_e AS questionE,
+	    question.question_f AS questionF
+        FROM
+	    tb_dtms_exam_user_answer_model usr
+	    LEFT JOIN tb_dtms_questions question ON usr.questions_id = question.biz_id
+	    LEFT JOIN tb_dtms_qms_item_details item ON item.biz_id = question.questions_type_id
+        where usr.is_deleted = 0
+        AND question.is_deleted = 0
+        and item.is_deleted = 0
+        and usr.exam_id = #{examId}
+        and usr.user_id = #{userId}
+    </select>
 </mapper>
