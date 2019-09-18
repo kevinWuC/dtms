@@ -52,7 +52,10 @@ public class UploadManager {
                 file.transferTo(new File(path, filename));
 
                 String url = urlPath + staticPath.replaceAll("\\*", "") + filename;
-                map.put(file.getOriginalFilename(), url);
+                map.put(file.getOriginalFilename(),url);
+                map.put("name",file.getOriginalFilename());
+                map.put("status",ErrorCodeEnum.SUCCESS.getErrorCode());
+                map.put("url",url);
                 list.add(map);
 
             } catch (IOException e) {

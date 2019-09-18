@@ -23,12 +23,14 @@ import com.medical.dtms.service.manager.file.FileModelManager;
 import com.medical.dtms.service.manager.file.FileQueryManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -181,6 +183,7 @@ public class FileQueryServiceImpl implements FileQueryService {
         if (CollectionUtils.isEmpty(models)) {
             return new PageInfo<>(new ArrayList<>());
         }
+        getContentUrls(models);
         return new PageInfo<>(models);
     }
 
@@ -219,6 +222,9 @@ public class FileQueryServiceImpl implements FileQueryService {
         if (CollectionUtils.isEmpty(models)) {
             return new PageInfo<>(new ArrayList<>());
         }
+
+        getContentUrls(models);
+
         return new PageInfo<>(models);
     }
 
@@ -239,5 +245,17 @@ public class FileQueryServiceImpl implements FileQueryService {
         }
     }
 
+    /**
+     * 处理文件 url
+     */
+    private void getContentUrls(List<FileQueryModel> models) {
+        for (FileQueryModel model : models) {
+            if (StringUtils.isBlank(model.getFileContent())) {
+                model.setFileContentUrls(new ArrayList<>());
+            } else {
+                model.setFileContentUrls(Arrays.asList(model.getFileContent()));
+            }
+        }
+    }
 
 }

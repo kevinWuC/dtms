@@ -8,6 +8,7 @@ import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @version： FileQueryModel.java v 1.0, 2019年08月28日 18:09 wuxuelin Exp$
@@ -33,6 +34,7 @@ public class FileQueryModel {
      * 附件
      */
     private String fileContent;
+    private List<String> fileContentUrls;
     /**
      * 版本号
      */

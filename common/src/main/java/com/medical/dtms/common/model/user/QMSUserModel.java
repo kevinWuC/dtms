@@ -96,13 +96,13 @@ public class QMSUserModel {
     /**
      * 角色id 集合
      */
-    private String roleIdListStr;
+    private List<String> roleIdListStr;
     /**
      * 岗位ID 集合
      */
-    private String jobIdListStr;
+    private List<String> jobIdListStr;
     /**
      * 部门id 集合
      */
-    private String deptIdListStr;
+    private List<String> deptIdListStr;
 }
