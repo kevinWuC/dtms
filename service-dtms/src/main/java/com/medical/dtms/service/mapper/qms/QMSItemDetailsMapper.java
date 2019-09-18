@@ -3,6 +3,7 @@ package com.medical.dtms.service.mapper.qms;
 import com.medical.dtms.common.model.dropdown.DropDownDetailsModel;
 import com.medical.dtms.common.model.dropdown.DropDownModel;
 import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
+import com.medical.dtms.common.model.item.QMSItemDetailsModel;
 import com.medical.dtms.common.model.question.QuestionItemModel;
 import com.medical.dtms.dto.item.query.QMSItemDetailsQuery;
 import com.medical.dtms.service.dataobject.item.QMSItemDetailsDO;
@@ -22,7 +23,7 @@ public interface QMSItemDetailsMapper {
 
     int updateByPrimaryKeySelective(QMSItemDetailsDO record);
 
-    List<QMSItemDetailsDO> listDetailsByItemsId(QMSItemDetailsQuery query);
+    List<QMSItemDetailsModel> listDetailsByItemsId(QMSItemDetailsQuery query);
 
     Integer deleteByItemId(@Param("itemsId") Long itemsId);
 

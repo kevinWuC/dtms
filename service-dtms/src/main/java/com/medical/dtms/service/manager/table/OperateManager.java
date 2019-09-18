@@ -274,7 +274,7 @@ public class OperateManager {
         String dataBaseName = getDataBaseName();
         String fileName = System.currentTimeMillis() + "_" + "dtms.sql";
 
-        sb.append("mysqldump").append(" --opt ").append(" -h ").append(host).append(" --user=").append(userName).append(" --password=").append(password).append(" --databases ").append(dataBaseName);
+        sb.append("/usr/bin/mysqldump").append(" --opt ").append(" -h ").append(host).append(" --user=").append(userName).append(" --password=").append(password).append(" --databases ").append(dataBaseName);
         sb.append(" --result-file=").append(sqlPath + fileName).append(" --default-character-set=utf8 ");
         String sqlUrl = "";
         try {

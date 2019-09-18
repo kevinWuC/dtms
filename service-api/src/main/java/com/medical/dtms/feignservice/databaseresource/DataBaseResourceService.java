@@ -6,6 +6,7 @@ import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.model.table.DataBaseTableModel;
 import com.medical.dtms.common.model.table.TableDetailModel;
 import com.medical.dtms.common.model.table.query.DataBaseTableQuery;
+import com.medical.dtms.common.util.Paginator;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
 import com.medical.dtms.dto.datasource.QMSTaskDTO;
 import com.medical.dtms.dto.datasource.query.QMSBackUpQuery;
@@ -37,7 +38,7 @@ public interface DataBaseResourceService {
     Class<?> executeQuerySql(@RequestBody DataBaseTableQuery query);
 
     @RequestMapping(value = "/table/showUsageOfTables", method = RequestMethod.POST)
-    PageInfo<UsageOfTablesModel> showUsageOfTables(@RequestBody DataBaseTableQuery query);
+    Paginator<UsageOfTablesModel> showUsageOfTables(@RequestBody DataBaseTableQuery query);
 
     @RequestMapping(value = "/table/exportSql", method = RequestMethod.POST)
     Boolean exportSql(@RequestBody QMSBackUpDTO dto);
