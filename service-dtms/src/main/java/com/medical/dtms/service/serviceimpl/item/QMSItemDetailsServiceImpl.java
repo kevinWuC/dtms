@@ -145,16 +145,15 @@ public class QMSItemDetailsServiceImpl implements QMSItemDetailsService {
     /**
      * @param [query]
      * @return com.github.pagehelper.PageInfo<com.medical.dtms.model.item.QMSItemDetailsModel>
-     * @description 字典明细 - 分页展示功能  TODO 修改，去掉 BeanConvertUtils.convertList
+     * @description 字典明细 - 分页展示功能
      **/
     @Override
     public PageInfo<QMSItemDetailsModel> pageListQMSItemDetails(@RequestBody QMSItemDetailsQuery query) {
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-        List<QMSItemDetailsDO> dos = detailsManager.listDetailsByItemsId(query);
+        List<QMSItemDetailsModel> dos = detailsManager.listDetailsByItemsId(query);
         if (CollectionUtils.isEmpty(dos)) {
             return new PageInfo<>(new ArrayList<>());
         }
-        List<QMSItemDetailsModel> models = BeanConvertUtils.convertList(dos, QMSItemDetailsModel.class);
-        return new PageInfo<>(models);
+        return new PageInfo<>(dos);
     }
 }

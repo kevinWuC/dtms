@@ -42,6 +42,10 @@ public class UserLoginModel implements Serializable {
      */
     private String deptName;
     /**
+     * 是否保持登录 true 是 false 否
+     */
+    private Boolean keepLogin;
+    /**
      * 用户角色 list
      */
     private List<QMSUserInRoleModel> roleList;

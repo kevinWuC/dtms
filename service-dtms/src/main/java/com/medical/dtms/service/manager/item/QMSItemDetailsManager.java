@@ -3,6 +3,7 @@ package com.medical.dtms.service.manager.item;
 import com.medical.dtms.common.model.dropdown.DropDownDetailsModel;
 import com.medical.dtms.common.model.dropdown.DropDownModel;
 import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
+import com.medical.dtms.common.model.item.QMSItemDetailsModel;
 import com.medical.dtms.common.model.question.QuestionItemModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.item.QMSItemDetailsDTO;
@@ -34,7 +35,7 @@ public class QMSItemDetailsManager {
     /**
      * 根据数据字典表主键查询关联的 明细表数据
      */
-    public List<QMSItemDetailsDO> listDetailsByItemsId(QMSItemDetailsQuery query) {
+    public List<QMSItemDetailsModel> listDetailsByItemsId(QMSItemDetailsQuery query) {
         return detailsMapper.listDetailsByItemsId(query);
     }
 

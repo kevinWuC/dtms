@@ -53,6 +53,10 @@ public class QMSUserDTO {
      */
     private Boolean allowEnable;
     /**
+     * 是否保持登录 true 是 false 否
+     */
+    private Boolean keepLogin;
+    /**
      * 排序码
      */
     private String sortCode;

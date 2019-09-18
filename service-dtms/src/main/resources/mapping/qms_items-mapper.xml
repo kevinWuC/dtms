@@ -144,7 +144,8 @@
     <!--    字典类别 列表查询-->
     <select id="listQMSItems" parameterType="com.medical.dtms.dto.item.query.QMSItemsQuery"
             resultType="com.medical.dtms.common.model.item.QMSItemsModel">
-        select biz_id AS bizId,code AS code,full_name AS fullName,parent_id AS parentId,category AS category
+        select biz_id AS bizId,code AS code,full_name AS fullName,parent_id AS parentId,category AS category,
+        enabled AS enabled,allow_edit AS allowEdit,allow_delete AS allowDelete,sort_code AS sortCode
         FROM <include refid="table_name"/>
         where is_deleted = 0
         and parent_id = #{parentId,jdbcType=BIGINT}

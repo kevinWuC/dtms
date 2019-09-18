@@ -7,6 +7,7 @@ import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.datasource.BackUpInfoModel;
 import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.util.IdGenerator;
+import com.medical.dtms.common.util.Paginator;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
 import com.medical.dtms.dto.datasource.QMSTaskDTO;
 import com.medical.dtms.dto.datasource.query.QMSBackUpQuery;
@@ -121,10 +122,12 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
      * @return
      */
     @Override
-    public PageInfo<UsageOfTablesModel> showUsageOfTables(@RequestBody DataBaseTableQuery query) {
+    public Paginator<UsageOfTablesModel> showUsageOfTables(@RequestBody DataBaseTableQuery query) {
         List<UsageOfTablesModel> list = operateManager.showUsageOfTables();
+        List<UsageOfTablesModel> newList = new ArrayList<>();
+        Long totalCount = 0L;
         if (CollectionUtils.isEmpty(list)) {
-            return new PageInfo<>(new ArrayList<>());
+            return new Paginator<>();
         }
         for (UsageOfTablesModel model : list) {
             if (StringUtils.isBlank(model.getIndexUsageSum()) && StringUtils.isNotBlank(model.getUsageSum())) {
@@ -144,7 +147,15 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
                 }
             }
         }
-        return new PageInfo<>(list);
+        // 手动分页
+        int offset = query.getPageNo() > 1 ? (query.getPageNo() - 1) * query.getPageSize() : 0;
+        for (int i = 0; i < query.getPageSize() && i < list.size() - offset; i++) {
+            UsageOfTablesModel model = list.get(offset + i);
+            newList.add(model);
+        }
+        totalCount = Long.valueOf(newList.size());
+
+        return new Paginator<>(query.getPageNo(), query.getPageSize(), totalCount,newList);
     }
 
     /**

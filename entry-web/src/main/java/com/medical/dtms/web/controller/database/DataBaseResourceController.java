@@ -8,6 +8,7 @@ import com.medical.dtms.common.login.SessionTools;
 import com.medical.dtms.common.model.datasource.BackUpInfoModel;
 import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.resp.Result;
+import com.medical.dtms.common.util.Paginator;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
 import com.medical.dtms.dto.datasource.QMSTaskDTO;
 import com.medical.dtms.dto.datasource.query.QMSBackUpQuery;
@@ -83,8 +84,9 @@ public class DataBaseResourceController {
      * @return
      */
     @RequestMapping(value = "/table/showUsageOfTables", method = RequestMethod.POST)
-    public Result<PageInfo<UsageOfTablesModel>> showUsageOfTables(@RequestBody DataBaseTableQuery query) {
-        PageInfo<UsageOfTablesModel> pageInfo = dataBaseResourceService.showUsageOfTables(query);
+    public Result<Paginator<UsageOfTablesModel>> showUsageOfTables(@RequestBody DataBaseTableQuery query) {
+        checkQueryParams(query);
+        Paginator<UsageOfTablesModel> pageInfo = dataBaseResourceService.showUsageOfTables(query);
         return Result.buildSuccess(pageInfo);
     }
 
@@ -165,6 +167,23 @@ public class DataBaseResourceController {
     private void checkParams(QMSBackUpQuery query) {
         if (null == query) {
             query = new QMSBackUpQuery();
+        }
+        if (null == query.getPageNo()) {
+            query.setPageNo(1);
+        }
+        if (null == query.getPageSize()) {
+            query.setPageSize(10);
+        }
+    }
+
+    /**
+     * 分页参数校验
+     *
+     * @param query
+     */
+    private void checkQueryParams(DataBaseTableQuery query) {
+        if (null == query) {
+            query = new DataBaseTableQuery();
         }
         if (null == query.getPageNo()) {
             query.setPageNo(1);

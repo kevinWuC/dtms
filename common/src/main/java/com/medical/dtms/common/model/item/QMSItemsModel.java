@@ -40,6 +40,22 @@ public class QMSItemsModel {
      */
     private String category;
     /**
+     * 有效：1-有效，0-无效
+     */
+    private Boolean enabled;
+    /**
+     * 允许编辑
+     */
+    private Boolean allowEdit;
+    /**
+     * 允许删除
+     */
+    private Boolean allowDelete;
+    /**
+     * 排序码
+     */
+    private String sortCode;
+    /**
      * 是否为末级 true 是 false 否
      */
     private Boolean lastOrNot;
