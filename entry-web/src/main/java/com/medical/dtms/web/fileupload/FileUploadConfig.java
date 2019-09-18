@@ -60,7 +60,9 @@ public class FileUploadConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(env.getProperty("upload.staticPath")).addResourceLocations("file:" + env.getProperty("upload.path") + File.separator + "files" + File.separator);
+        registry.addResourceHandler(env.getProperty("upload.staticPath")).addResourceLocations("file:" + env.getProperty("upload.path"));
+        registry.addResourceHandler(env.getProperty("doc.staticPath")).addResourceLocations("file:" + env.getProperty("doc.path"));
+        registry.addResourceHandler(env.getProperty("sqlbackup.staticPath")).addResourceLocations("file:" + env.getProperty("sqlbackup.path"));
     }
 
     @Override

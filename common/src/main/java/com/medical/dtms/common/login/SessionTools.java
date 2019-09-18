@@ -19,8 +19,10 @@ public class SessionTools {
      */
     public static void saveUserInfo(UserLoginModel model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        // 清除session
-        session.removeAttribute(SessionConstants.SESSION_KEY);
+        if (model.getKeepLogin() == false) {
+            // 清除session
+            session.removeAttribute(SessionConstants.SESSION_KEY);
+        }
         // 放入用户信息
         OperatorInfo info = new OperatorInfo();
         BeanUtils.copyProperties(model, info);

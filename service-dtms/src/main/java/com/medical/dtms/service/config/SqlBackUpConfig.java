@@ -1,6 +1,7 @@
-package com.medical.dtms.service.sqlbackup;
+package com.medical.dtms.service.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -11,13 +12,13 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
 
-import java.io.File;
 import java.util.List;
 
 /**
- * @version： SqlBackUpConfig.java v 1.0, 2019年09月16日 15:26 wuxuelin Exp$
- * @Description sql 备份的虚拟路径
+ * @version： FileUploadConfig.java v 1.0, 2019年08月27日 22:45 wuxuelin Exp$
+ * @Description 设置虚拟路径
  **/
+@Configuration
 public class SqlBackUpConfig implements WebMvcConfigurer {
 
     @Autowired
@@ -58,7 +59,7 @@ public class SqlBackUpConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(env.getProperty("sqlbackup.staticPath")).addResourceLocations("file:" + env.getProperty("sqlbackup.path") + File.separator + "sql" + File.separator);
+        registry.addResourceHandler(env.getProperty("sqlbackup.staticPath")).addResourceLocations("file:" + env.getProperty("sqlbackup.path"));
     }
 
     @Override

@@ -31,7 +31,15 @@ request:
 
 # 文件上传的绝对路径
 upload:
-  path: E:/dtms
+  path: E:/dtms/files/uploadfile/
+  staticPath: /dtms/files/**
+
+doc:
+  path: E:/dtms/files/doc/
+  staticPath: /dtms/files/**
+
+sqlbackup:
+  path: E:/dtms/files/sql/
   staticPath: /dtms/files/**
 
 geolite2:
