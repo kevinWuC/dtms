@@ -18,7 +18,7 @@ public class SimpleQMSJobsModel {
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
-    private Long jobId;
+    private Long bizId;
     /**
      * 职位名称
      */

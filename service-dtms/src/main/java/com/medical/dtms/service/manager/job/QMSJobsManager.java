@@ -59,8 +59,16 @@ public class QMSJobsManager {
     /**
      * 岗位设置 - 列表查询
      */
-    public List<QMSJobsModel> listJobs(QMSJobsQuery query){
+    public List<QMSJobsModel> listJobs(QMSJobsQuery query) {
         return jobsMapper.listJobs(query);
     }
+
+    /**
+     * 根据部门 id  查询 职位 信息
+     */
+    public List<QMSJobsModel> listJobsByDeptIds(List<String> lastIds) {
+        return jobsMapper.listJobsByDeptIds(lastIds);
+    }
+
 
 }

@@ -83,6 +83,14 @@ public class FileApplyDO {
      */
     private Long applyReasonId;
     /**
+     * 编写人 id
+     */
+    private Long applyUserId;
+    /**
+     * 编写人 姓名
+     */
+    private String applyUserName;
+    /**
      * 审核人id
      */
     private String auditUserId;

@@ -52,7 +52,6 @@ public class TrainUserController {
         }
     }
 
-
     /**
      * @param [query]
      * @return com.medical.dtms.common.resp.Result<java.lang.Boolean>
@@ -64,7 +63,6 @@ public class TrainUserController {
         PageInfo<TrainUserModel> info = trainUserService.pageListTrainUser(query);
         return Result.buildSuccess(info);
     }
-
 
     /**
      * @param [query, request, response]
@@ -166,12 +164,6 @@ public class TrainUserController {
 
         return Result.buildSuccess(true);
     }
-
-
-
-
-
-
 
     /**
      * @param [query]

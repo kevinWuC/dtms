@@ -5,13 +5,18 @@ import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.dept.QMSDeptInJobModel;
 import com.medical.dtms.common.model.dept.QMSDeptModel;
+import com.medical.dtms.common.model.job.QMSJobsModel;
+import com.medical.dtms.common.model.job.SimpleQMSJobsModel;
+import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
 import com.medical.dtms.dto.dept.query.QMSDeptQuery;
 import com.medical.dtms.feignservice.dept.QMSDeptService;
 import com.medical.dtms.service.manager.dept.QMSDeptManager;
+import com.medical.dtms.service.manager.job.QMSJobsManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +40,8 @@ public class QMSDeptServiceImpl implements QMSDeptService {
     private QMSDeptManager qmsDeptManager;
     @Autowired
     private IdGenerator idGenerator;
+    @Autowired
+    private QMSJobsManager jobsManager;
 
 
     /**
@@ -170,6 +177,91 @@ public class QMSDeptServiceImpl implements QMSDeptService {
         return models;
     }
 
+
+    /**
+     * @param []
+     * @return java.util.List<com.medical.dtms.common.model.dept.QMSDeptInJobModel>
+     * @description 用户管理 - 职位授权 - 部门 和 职位列表
+     **/
+    @Override
+    public List<QMSDeptInJobModel> listDeptInJobs() {
+        // 查询部门列表
+        QMSDeptQuery query = new QMSDeptQuery();
+        List<QMSDeptModel> models = qmsDeptManager.listQMSDept(query);
+        if (CollectionUtils.isEmpty(models)) {
+            return new ArrayList<>();
+        }
+
+        List<String> lastIds = new ArrayList<>();
+        Map<Long, List<QMSDeptModel>> map = models.stream().collect(Collectors.groupingBy(QMSDeptModel::getParentId));
+
+        getList(lastIds, map);
+
+        if (CollectionUtils.isEmpty(lastIds)) {
+            return new ArrayList<>();
+        }
+
+        lastIds = lastIds.stream().distinct().collect(Collectors.toList());
+
+        List<QMSDeptInJobModel> jobModelList = new ArrayList<>();
+
+        // 获取职位
+        List<QMSJobsModel> jobsModels = jobsManager.listJobsByDeptIds(lastIds);
+        if (CollectionUtils.isNotEmpty(jobsModels)){
+            Map<String, List<QMSJobsModel>> jobMap = jobsModels.stream().collect(Collectors.groupingBy(QMSJobsModel::getDeptId));
+            QMSDeptInJobModel deptInJobModel;
+
+            for (QMSDeptModel model : models) {
+                if (!lastIds.contains(String.valueOf(model.getBizId()))){
+                    continue;
+                }
+                deptInJobModel = new QMSDeptInJobModel();
+                BeanUtils.copyProperties(model,deptInJobModel);
+                List<QMSJobsModel> list = jobMap.get(String.valueOf(model.getBizId()));
+                if (CollectionUtils.isEmpty(list)){
+                    deptInJobModel.setJobsModels(new ArrayList<>());
+                }else {
+                    List<SimpleQMSJobsModel> qmsJobsModels = BeanConvertUtils.convertList(list, SimpleQMSJobsModel.class);
+                    deptInJobModel.setJobsModels(qmsJobsModels);
+                }
+
+                jobModelList.add(deptInJobModel);
+            }
+        }
+
+        return jobModelList;
+    }
+
+
+
+    /**
+     * 递归取末级id
+     */
+    private List<QMSDeptInJobModel> getList(List<String> lastIds, Map<Long, List<QMSDeptModel>> map) {
+        if (null == map || map.size() == 0) {
+            return new ArrayList<>();
+        }
+
+        for (Long aLong : map.keySet()) {
+            List<QMSDeptModel> list = map.get(aLong);
+            getLastIds(lastIds, map, list);
+        }
+        return new ArrayList<>();
+    }
+
+    private void getLastIds(List<String> lastIds, Map<Long, List<QMSDeptModel>> map, List<QMSDeptModel> list) {
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (QMSDeptModel deptModel : list) {
+                List<QMSDeptModel> models = map.get(deptModel.getBizId());
+                if (CollectionUtils.isEmpty(models)){
+                    lastIds.add(String.valueOf(deptModel.getBizId()));
+                    continue;
+                }
+                getLastIds(lastIds,map,models);
+            }
+        }
+    }
+
     /**
      * 递归查询部门
      */
@@ -186,45 +278,5 @@ public class QMSDeptServiceImpl implements QMSDeptService {
             query.setParentId(deptModel.getBizId());
             getDeptList(query, deptModel);
         }
-    }
-
-
-    /**
-     * @param []
-     * @return java.util.List<com.medical.dtms.common.model.dept.QMSDeptInJobModel>
-     * @description 用户管理 - 职位授权 - 部门 和 职位列表
-     **/
-    @Override
-    public List<QMSDeptInJobModel> listDeptInJobs() {
-        // 先查询部门列表
-        QMSDeptQuery query = new QMSDeptQuery();
-        if (null == query || null == query.getParentId()) {
-            // 一级类别
-            query.setParentId(Constants.PARENT_ID);
-        }
-
-        List<QMSDeptModel> models = qmsDeptManager.listQMSDept(query);
-        if (CollectionUtils.isEmpty(models)) {
-            return new ArrayList<>();
-        }
-
-        for (QMSDeptModel model : models) {
-            query.setParentId(model.getBizId());
-            getDeptList(query, model);
-        }
-
-        // 末级部门id
-        Map<Boolean, List<QMSDeptModel>> map = models.stream().collect(Collectors.groupingBy(QMSDeptModel::getLastOrNot));
-
-
-        List<Long> ids = models.stream().filter(model -> model.getLastOrNot().equals(true)).collect(Collectors.toList()).stream().map(QMSDeptModel::getBizId).distinct().collect(Collectors.toList());
-        // 非末级部门
-        List<QMSDeptModel> notLastModel = models.stream().filter(model -> model.getLastOrNot().equals(false)).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(notLastModel)){
-
-        }
-
-
-        return null;
     }
 }

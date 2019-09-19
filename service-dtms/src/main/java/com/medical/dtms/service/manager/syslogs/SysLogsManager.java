@@ -1,5 +1,6 @@
 package com.medical.dtms.service.manager.syslogs;
 
+import com.medical.dtms.common.model.syslog.QMSSysLogsModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.log.QMSSysLogsDTO;
 import com.medical.dtms.dto.log.query.QMSSysLogsQuery;
@@ -26,12 +27,20 @@ public class SysLogsManager {
 
     /**
      * 系统日志--新增日志
+     *
      * @param dto
      * @return
      */
     public Integer insert(QMSSysLogsDTO dto) {
         QMSSysLogsDO aDo = BeanConvertUtils.convert(dto, QMSSysLogsDO.class);
         return qmsSysLogsMapper.insert(aDo);
+    }
+
+    /**
+     * 分页查询系统日志
+     */
+    public List<QMSSysLogsModel> pageListSysLogs(QMSSysLogsQuery query) {
+        return qmsSysLogsMapper.pageListSysLogs(query);
     }
 
 

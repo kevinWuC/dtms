@@ -42,10 +42,6 @@ public class QMSJobsController {
             return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "职位名称为空");
         }
 
-        /*if (null == jobsDTO.getSortCode()){
-            return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "排序码为空");
-        }*/
-
         if (StringUtils.isBlank(jobsDTO.getDeptId())) {
             return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "部门id为空");
         }

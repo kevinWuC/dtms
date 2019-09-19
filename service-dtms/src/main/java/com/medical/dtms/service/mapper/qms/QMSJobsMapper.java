@@ -27,6 +27,6 @@ public interface QMSJobsMapper {
 
     int updateByPrimaryKey(QMSJobsDO record);
 
-
+    List<QMSJobsModel> listJobsByDeptIds(List<String> lastIds);
 
 }
