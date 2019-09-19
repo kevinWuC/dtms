@@ -5,7 +5,7 @@
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
         <result column="operation_type" jdbcType="INTEGER" property="operationType"/>
-        <result column="table_name" jdbcType="VARCHAR" property="tableName"/>
+        <result column="db_table_name" jdbcType="VARCHAR" property="tableName"/>
         <result column="business_name" jdbcType="VARCHAR" property="businessName"/>
         <result column="object_id" jdbcType="VARCHAR" property="objectId"/>
         <result column="operation_ip" jdbcType="VARCHAR" property="operationIp"/>
@@ -18,7 +18,7 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, biz_id, operation_type, table_name, business_name, object_id, operation_ip,
+    id, biz_id, operation_type, db_table_name, business_name, object_id, operation_ip,
      is_deleted, creator, creator_id, gmt_created, modifier,
     modifier_id, gmt_modified
   </sql>
@@ -34,25 +34,28 @@
         <include refid="table_name"/>
         where id = #{id,jdbcType=BIGINT}
     </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from
         <include refid="table_name"/>
         where id = #{id,jdbcType=BIGINT}
     </delete>
+
     <insert id="insert" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
         insert into
         <include refid="table_name"/>
-        (id, biz_id, operation_type,
-        table_name, business_name, object_id,
-        operation_ip, is_deleted, creator,
-        creator_id, gmt_created, modifier,
-        modifier_id, gmt_modified)
-        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{operationType,jdbcType=INTEGER},
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values (
+        #{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{operationType,jdbcType=INTEGER},
         #{tableName,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR},
         #{operationIp,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
         #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
-        #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP})
+        #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP}
+        )
     </insert>
+
     <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
         insert into
         <include refid="table_name"/>
@@ -67,7 +70,7 @@
                 operation_type,
             </if>
             <if test="tableName != null">
-                table_name,
+                db_table_name,
             </if>
             <if test="businessName != null">
                 business_name,
@@ -145,6 +148,7 @@
             </if>
         </trim>
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
         update
         <include refid="table_name"/>
@@ -156,7 +160,7 @@
                 operation_type = #{operationType,jdbcType=INTEGER},
             </if>
             <if test="tableName != null">
-                table_name = #{tableName,jdbcType=VARCHAR},
+                db_table_name = #{tableName,jdbcType=VARCHAR},
             </if>
             <if test="businessName != null">
                 business_name = #{businessName,jdbcType=VARCHAR},
@@ -191,12 +195,13 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
     <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
         update
         <include refid="table_name"/>
         set biz_id = #{bizId,jdbcType=BIGINT},
         operation_type = #{operationType,jdbcType=INTEGER},
-        table_name = #{tableName,jdbcType=VARCHAR},
+        db_table_name = #{tableName,jdbcType=VARCHAR},
         business_name = #{businessName,jdbcType=VARCHAR},
         object_id = #{objectId,jdbcType=VARCHAR},
         operation_ip = #{operationIp,jdbcType=VARCHAR},
@@ -214,20 +219,35 @@
     <select id="pageListSysLogs" parameterType="com.medical.dtms.dto.log.query.QMSSysLogsQuery"
             resultType="com.medical.dtms.common.model.syslog.QMSSysLogsModel">
         select
-        biz_id AS bizId,gmt_created AS operateDate,operation_type AS operationType,
-        table_name AS tableName,object_id AS domainKey,business_name AS businessName,
-        operation_ip AS operationIp,creator AS operationUser
+        biz_id AS bizId,
+        operation_type AS operationType,
+        db_table_name AS tableName,
+        object_id AS domainKey,
+        business_name AS businessName,
+        operation_ip AS operationIp,
+        gmt_modified AS operateDate,
+        modifier AS operationUser
         from
         <include refid="table_name"/>
-        where is_deleted =0
+        where is_deleted = 0
+        <if test="beginTime != null and endTime == null">
+            AND gmt_modified  <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="beginTime == null and endTime != null">
+            AND gmt_modified  <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="beginTime != null and endTime != null">
+            AND #{beginTime,jdbcType=TIMESTAMP} <![CDATA[ <= ]]> gmt_modified <![CDATA[ <= ]]>
+            #{endTime,jdbcType=TIMESTAMP}
+        </if>
         <if test="operationType != null">
-            AND operation_type = #{operationType}
+            AND operation_type = #{operationType,jdbcType=INTEGER}
         </if>
-        <if test="businessName != null">
-            AND business_name concat('%',#{businessName},'%')
+        <if test="businessName != null and businessName != ''">
+            AND business_name like concat(concat('%',#{businessName,jdbcType=VARCHAR}),'%')
         </if>
-        <if test="operationUser != null">
-            AND creator concat('%',#{operationUser},'%')
+        <if test="operationUser != null and operationUser != ''">
+            and modifier like concat(concat('%',#{operationUser,jdbcType=VARCHAR}),'%')
         </if>
         order by gmt_modified desc
     </select>
