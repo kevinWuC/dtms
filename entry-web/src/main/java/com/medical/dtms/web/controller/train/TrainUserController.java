@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.login.OperatorInfo;
 import com.medical.dtms.common.login.SessionTools;
+import com.medical.dtms.common.model.exam.ExamExcelModel;
 import com.medical.dtms.common.model.exam.ExamStartModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainExcelModel;
@@ -182,6 +183,23 @@ public class TrainUserController {
         checkParams(query);
         PageInfo<TrainUserModel> info = trainUserService.pageListExamTotal(query);
         return Result.buildSuccess(info);
+    }
+
+
+    /**
+     * @param [query, request, response]
+     * @return void
+     * @description 考试统计-导出考试人员的成绩信息(导出所有记录)  TODO 调整表格样式
+     **/
+    @RequestMapping(value = "/train/exportExam", method = RequestMethod.GET)
+    public void exportExam(TrainUserQuery query, HttpServletRequest request, HttpServletResponse response) {
+        checkParams(query);
+        List<ExamExcelModel> list = trainUserService.exportExam(query);
+        // 导出
+        String fileName = "考试统计.xls";
+        String title = "考试统计";
+        String[] header = {"姓名", " 部门", "考试名称", "得分", "及格/总分", "完成时间", "是否合格"};
+        ExcelHandlerService.handleWorkBookExam(list, null, title, fileName, header, request, response);
     }
 
 }

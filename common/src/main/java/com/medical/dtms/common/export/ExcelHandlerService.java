@@ -1,5 +1,6 @@
 package com.medical.dtms.common.export;
 
+import com.medical.dtms.common.model.exam.ExamExcelModel;
 import com.medical.dtms.common.model.file.ArchiveOrInvalidModel;
 import com.medical.dtms.common.model.file.ExportModel;
 import com.medical.dtms.common.model.file.FileYearRecordExportModel;
@@ -249,6 +250,64 @@ public class ExcelHandlerService {
         } catch (IOException e) {
             log.error("导出失败", e);
         }
+    }
+
+
+    /**
+     * 处理 trainuser-Excel
+     */
+    public static void handleWorkBookExam(List<ExamExcelModel> list, String sheetName, String title, String fileName, String[] header, HttpServletRequest request, HttpServletResponse response) {
+        // Excel 2003
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        if (StringUtils.isBlank(sheetName)) {
+            sheetName = "sheet1";
+        }
+
+        Sheet sheet = workbook.createSheet(sheetName);
+        // 获取属性个数
+        int length = list.get(0).getClass().getDeclaredFields().length;
+        StyleModel styleModel = new StyleModel();
+        styleModel.setMerge(true);
+        styleModel.setFirstRow(0);
+        styleModel.setLastRow(0);
+        styleModel.setFirstCol(0);
+        styleModel.setLastCol(length - 1);
+        styleModel.setTitleRow(0);
+        styleModel.setHeadRow(1);
+        styleModel.setBodyRow(2);
+        workbook = setSheetStyle(workbook, list, header, styleModel);
+
+
+        // 设置标题
+        sheet.getRow(0).getCell(0).setCellValue(title);
+
+        Row headRow = sheet.getRow(1);
+        for (int i = 0; i < header.length; i++) {
+            headRow.createCell(i).setCellValue(header[i]);
+        }
+        // 设置主体内容
+        ExamExcelModel model = null;
+        // 从第三行还是写入，第一行为标题，第二行为表头
+        for (int i = 0; i < list.size(); i++) {
+            Row mainRow = sheet.createRow(i + 2);
+            model = list.get(i);
+            // 开始写入数据
+            mainRow.createCell(0).setCellValue(model.getDspName());
+            mainRow.createCell(1).setCellValue(model.getDeptName());
+            mainRow.createCell(2).setCellValue(model.getTrainName());
+            mainRow.createCell(3).setCellValue(model.getPointStr());
+            mainRow.createCell(4).setCellValue(model.getPassandtotal());
+            mainRow.createCell(5).setCellValue(model.getFinishTimeStr());
+            mainRow.createCell(6).setCellValue(model.getPassStr());
+        }
+
+        // 导出数据
+        try {
+            setOutData(request, response, fileName, workbook);
+        } catch (IOException e) {
+            log.error("导出失败", e);
+        }
+
     }
 
     /**

@@ -6,6 +6,7 @@ import com.medical.dtms.common.constants.Constants;
 import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.dept.QMSUserInDeptModel;
+import com.medical.dtms.common.model.exam.ExamExcelModel;
 import com.medical.dtms.common.model.exam.ExamQuestionsTypeModel;
 import com.medical.dtms.common.model.question.DtmsQuestionsModel;
 import com.medical.dtms.common.model.question.QuestionItemModel;
@@ -444,5 +445,60 @@ public class TrainUserServiceImpl implements TrainUserService {
         return new PageInfo<>(list);
     }
 
+
+
+
+    /**
+     * @param [query]
+     * @return java.util.List<com.medical.dtms.common.model.file.ExportModel>
+     * @description 考试统计 - 导出
+     **/
+    @Override
+    public List<ExamExcelModel> exportExam(@RequestBody TrainUserQuery query) {
+        // 不分页，但是需要根据条件查询，然后将结果导出
+        List<TrainUserModel> models = trainUserManager.exportExam(query);
+        if (CollectionUtils.isEmpty(models)) {
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "无满足条件数据,请更换查询条件");
+        }
+
+        // 获取用户 id 集合
+        List<Long> userIds = models.stream().map(TrainUserModel::getUserId).distinct().collect(Collectors.toList());
+        QMSUserInDeptQuery deptQuery = new QMSUserInDeptQuery();
+        deptQuery.setUserIds(userIds);
+        List<QMSUserInDeptModel> deptModels = userInDeptManager.listDeptByUserIdsAndDept(deptQuery);
+        // 获取培训id 集合
+        List<Long> trainIds = models.stream().map(TrainUserModel::getTrainId).distinct().collect(Collectors.toList());
+        // 查询培训关联的文件id、名称
+        List<SimpleTrainFileModel> modelList = trainFilesManager.listFileInfoByTrainIds(trainIds);
+
+        if (CollectionUtils.isNotEmpty(modelList)) {
+            Map<Long, List<SimpleTrainFileModel>> map = modelList.stream().collect(Collectors.groupingBy(SimpleTrainFileModel::getTrainId));
+            Map<Long, List<QMSUserInDeptModel>> deptMap = deptModels.stream().collect(Collectors.groupingBy(QMSUserInDeptModel::getUserId));
+
+            for (TrainUserModel aDo : models) {
+                aDo.setFileName(CollectionUtils.isEmpty(map.get(aDo.getTrainId())) == true ? null : map.get(aDo.getTrainId()).get(0) == null ? null : StringUtils.isBlank(map.get(aDo.getTrainId()).get(0).getFileName()) == true ? null : map.get(aDo.getTrainId()).get(0).getFileName());
+                if (StringUtils.isBlank(aDo.getPointStr())) {
+                    aDo.setPointStr(String.valueOf(0));
+                }
+                if (null == aDo.getTotalPoints() || 0 == aDo.getTotalPoints()) {
+                    aDo.setTotalPoints(0);
+                }
+
+                aDo.setPoint(aDo.getPointStr() + "/" + aDo.getTotalPoints());
+                aDo.setFinishTimeStr(DateUtils.format(aDo.getFinishTime(), DateUtils.YYYY_MM_DD_HH_mm_ss));
+                if (aDo.getTotalPoints() < Integer.valueOf(aDo.getPointStr())) {
+                    aDo.setPassStr("不合格");
+                }
+                if (aDo.getTotalPoints() >= Integer.valueOf(aDo.getPointStr())) {
+                    aDo.setPassStr("合格");
+                }
+
+                // 部门名称
+                aDo.setDeptName(CollectionUtils.isEmpty(deptMap.get(aDo.getUserId())) == true ? null : deptMap.get(aDo.getUserId()).get(0) == null ? null : StringUtils.isBlank(deptMap.get(aDo.getUserId()).get(0).getDeptName()) == true ? null : deptMap.get(aDo.getUserId()).get(0).getDeptName());
+            }
+        }
+
+        return BeanConvertUtils.convertList(models, ExamExcelModel.class);
+    }
 
 }

@@ -158,6 +158,17 @@ public class TrainUserManager {
     }
 
     /**
+     * 考试统计-导出
+     */
+    public List<TrainUserModel> exportExam(TrainUserQuery query) {
+        List<TrainUserModel> trainDos = trainUserMapper.pageListExamTotal(query);
+        if (CollectionUtils.isEmpty(trainDos)) {
+            return new ArrayList<>();
+        }
+        return trainDos;
+    }
+
+    /**
      * 主键查询 用户 - 培训 是否存在
      */
     public TrainUserDTO getTrainUserByPrimaryKey(Long bizId) {
