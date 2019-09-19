@@ -6,9 +6,11 @@ import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 @Data
+@Table(name = "tb_dtms_file_dept_role")
 public class FileInDeptRoleDO {
     /**
      * 自增主键

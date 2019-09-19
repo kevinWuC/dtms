@@ -2,9 +2,11 @@ package com.medical.dtms.service.dataobject.demo;
 
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 @Data
+@Table(name = "tb_demo_leave")
 public class LeaveDO {
 
     /**

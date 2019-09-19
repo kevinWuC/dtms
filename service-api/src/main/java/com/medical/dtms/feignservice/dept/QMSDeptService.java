@@ -1,5 +1,6 @@
 package com.medical.dtms.feignservice.dept;
 
+import com.medical.dtms.common.model.dept.QMSDeptInJobModel;
 import com.medical.dtms.common.model.dept.QMSDeptModel;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
 import com.medical.dtms.dto.dept.query.QMSDeptQuery;
@@ -29,4 +30,7 @@ public interface QMSDeptService {
 
     @RequestMapping(value = "/dept/listQMSDept", method = RequestMethod.POST)
     List<QMSDeptModel> listQMSDept(@RequestBody QMSDeptQuery query);
+
+    @RequestMapping(value = "/dept/listDeptInJob")
+    List<QMSDeptInJobModel> listDeptInJobs();
 }

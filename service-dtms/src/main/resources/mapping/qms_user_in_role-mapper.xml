@@ -74,7 +74,7 @@
     </delete>
 
     <!-- 根据用户id 查询角色-->
-    <select id="listRoleInfoByUserId" resultType="com.medical.dtms.common.model.user.QMSUserInRoleModel">
+    <select id="listRoleInfoByUserId" resultType="com.medical.dtms.common.model.user.QMSUserInRoleModel" parameterType="java.lang.Long">
         select role.role_name AS roleName,usr.role_id AS roleId
         from tb_dtms_qms_user_in_role usr
         left join tb_dtms_qms_role role on usr.role_id = role.biz_id

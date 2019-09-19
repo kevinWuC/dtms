@@ -468,7 +468,7 @@ public class QMSUserServiceImpl implements QMSUserService {
     @Override
     public List<QMSMenuModel> listMenusByUserId(@RequestBody BaseUserQuery query) {
         // 查询用户所拥有的角色
-        List<QMSUserInRoleModel> roleInfo = userInRoleManager.listRoleInfoByUserId(query.getBizId());
+        List<QMSUserInRoleModel> roleInfo = userInRoleManager.listRoleInfoByUserId(query.getUserId());
         if (CollectionUtils.isEmpty(roleInfo)) {
             log.error("该用户未绑定角色");
             return new ArrayList<>();
@@ -476,7 +476,6 @@ public class QMSUserServiceImpl implements QMSUserService {
 
         // 查询菜单信息
         List<Long> roleIds = roleInfo.stream().map(QMSUserInRoleModel::getRoleId).distinct().collect(Collectors.toList());
-        List<QMSMenuModel> newMenuList = new ArrayList<>();
         List<QMSMenuModel> menuModels = roleInMenuManager.listMenuByRole(roleIds);
         if (CollectionUtils.isNotEmpty(menuModels)) {
             for (QMSMenuModel model : menuModels) {
@@ -486,10 +485,10 @@ public class QMSUserServiceImpl implements QMSUserService {
                 if (CollectionUtils.isEmpty(models)) {
                     continue;
                 }
-                newMenuList.addAll(models);
+                model.setList(models);
             }
         }
-        return newMenuList;
+        return menuModels;
     }
 
 

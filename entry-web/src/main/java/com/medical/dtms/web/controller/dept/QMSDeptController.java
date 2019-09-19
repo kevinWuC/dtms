@@ -3,6 +3,7 @@ package com.medical.dtms.web.controller.dept;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.login.OperatorInfo;
 import com.medical.dtms.common.login.SessionTools;
+import com.medical.dtms.common.model.dept.QMSDeptInJobModel;
 import com.medical.dtms.common.model.dept.QMSDeptModel;
 import com.medical.dtms.common.resp.Result;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
@@ -97,4 +98,17 @@ public class QMSDeptController {
         List<QMSDeptModel> list = qmsDeptService.listQMSDept(query);
         return Result.buildSuccess(list);
     }
+
+    /**
+     * @param []
+     * @return com.medical.dtms.common.resp.Result<java.util.List < com.medical.dtms.common.model.dept.QMSDeptInJobModel>>
+     * @description 用户管理 - 职位授权 - 部门 和 职位列表
+     **/
+    @RequestMapping(value = "/dept/listDeptInJob")
+    public Result<List<QMSDeptInJobModel>> listDeptInJobs() {
+        List<QMSDeptInJobModel> models = qmsDeptService.listDeptInJobs();
+        return Result.buildSuccess(models);
+    }
+
+
 }

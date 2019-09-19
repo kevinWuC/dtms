@@ -4,6 +4,8 @@ import java.util.Date;
 
 import lombok.Data;
 
+import javax.persistence.Table;
+
 /**
  * 试卷关联试题类型表
  * 
@@ -11,6 +13,7 @@ import lombok.Data;
  * @version $Id: ExamQuestionSTypeDO.java, v 0.1 2019年9月7日 下午8:12:25 shenqifeng Exp $
  */
 @Data
+@Table(name = "tb_dtms_exam_questions_type")
 public class ExamQuestionsTypeDO {
     /**主键*/
     private Long    id;
