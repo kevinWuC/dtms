@@ -1,6 +1,8 @@
 package com.medical.dtms.feignservice.train;
 
 import com.github.pagehelper.PageInfo;
+import com.medical.dtms.common.model.exam.ExamExcelModel;
+import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainExcelModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
@@ -33,7 +35,7 @@ public interface TrainUserService {
     PageInfo<TrainUserModel> viewMyTrain(@RequestBody TrainUserQuery query);
 
     @RequestMapping(value = "/train/beginTrainExam", method = RequestMethod.POST)
-    PageInfo<TrainUserModel> beginTrainExam(@RequestBody TrainUserQuery query);
+    MyTrainTestModel beginTrainExam(@RequestBody TrainUserDTO trainUserDTO);
 
     @RequestMapping(value = "/train/listTrainExam", method = RequestMethod.POST)
     PageInfo<TrainUserQueryModel> listTrainExam(@RequestBody TrainUserQuery query);
@@ -44,4 +46,7 @@ public interface TrainUserService {
     //考试
     @RequestMapping(value = "/train/pageListExamTotal", method = RequestMethod.POST)
     PageInfo<TrainUserModel> pageListExamTotal(@RequestBody TrainUserQuery query);
+
+    @RequestMapping(value = "/train/exportExam", method = RequestMethod.POST)
+    List<ExamExcelModel> exportExam(@RequestBody TrainUserQuery query);
 }

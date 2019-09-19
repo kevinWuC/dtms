@@ -8,9 +8,12 @@ import com.medical.dtms.feignservice.syslogs.SysLogsService;
 import com.medical.dtms.common.model.syslog.QMSSysLogsModel;
 import com.medical.dtms.service.manager.syslogs.SysLogsManager;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 /**
@@ -34,9 +37,11 @@ public class SysLogsServiceImpl implements SysLogsService {
     @Override
     public PageInfo<QMSSysLogsModel> pageListSysLogs(@RequestBody QMSSysLogsQuery query) {
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-//        logsManager.pageListSysLogs(query);
-
-        return null;
+        List<QMSSysLogsModel> models = logsManager.pageListSysLogs(query);
+        if (CollectionUtils.isEmpty(models)) {
+            return new PageInfo<>(models);
+        }
+        return new PageInfo<>(models);
     }
 
 

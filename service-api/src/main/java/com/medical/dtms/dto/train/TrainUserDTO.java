@@ -151,4 +151,74 @@ public class TrainUserDTO {
      * 修改日期
      */
     private Date gmtModified;
+    /**
+     * 用户姓名
+     */
+    private String dspName;
+    /**
+     * 部门名称
+     */
+    private String deptName;
+    /** 用户 id 集合*/
+    private List<Long> userIds;
+    /** 问题类型 id 集合*/
+    private List<Long> questionsTypeIds;
+    /**
+     * 试卷id
+     */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long examId;
+    /**
+     * 考试时长
+     */
+    private Integer examDuration;
+    /**
+     * 及格分数
+     */
+    private Integer passPoint;
+    /**
+     * 总分
+     */
+    private Integer totalPoints;
+    /**
+     * 试题类别
+     */
+    private Long questionsTypeId;
+    /**
+     * 试题类别 name
+     */
+    private String questionsTypeName;
+    /**
+     * 试题题目
+     */
+    private String questionTitle;
+    /**
+     * 试题内容
+     */
+    private String questionContent;
+    /**
+     * A答案
+     */
+    private String questionA;
+    /**
+     * B答案
+     */
+    private String questionB;
+    /**
+     * C答案
+     */
+    private String questionC;
+    /**
+     * D答案
+     */
+    private String questionD;
+    /**
+     * E答案
+     */
+    private String questionE;
+    /**
+     * F答案
+     */
+    private String questionF;
 }

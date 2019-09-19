@@ -2,6 +2,7 @@ package com.medical.dtms.service.manager.train;
 
 import com.medical.dtms.common.model.train.TrainConfigModel;
 import com.medical.dtms.common.model.train.TrainConfigQueryModel;
+import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.train.TrainConfigDTO;
 import com.medical.dtms.dto.train.query.TrainConfigQuery;
@@ -81,5 +82,11 @@ public class TrainConfigManager {
         return trainConfigMapper.deleteByPrimaryKey(bizId);
     }
 
+    /**
+     * 查询培训信息和试卷信息
+     */
+    public TrainUserModel queryTrainInfo(Long bizId) {
+        return trainConfigMapper.queryTrainInfo(bizId);
+    }
 
 }

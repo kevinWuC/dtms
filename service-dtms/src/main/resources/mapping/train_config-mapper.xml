@@ -318,7 +318,7 @@
         where
         is_deleted = 0
         <if test="trainName != null">
-          and  train_name = #{trainName,jdbcType=VARCHAR}
+            and train_name = #{trainName,jdbcType=VARCHAR}
         </if>
     </select>
 
@@ -357,4 +357,19 @@
         and config.biz_id = #{bizId,jdbcType=BIGINT}
     </select>
 
+    <!--查询培训信息和试卷信息-->
+    <select id="queryTrainInfo" parameterType="java.lang.Long"
+            resultType="com.medical.dtms.common.model.train.TrainUserModel">
+        select
+
+
+
+        from
+           tb_dtms_train_config config
+
+
+           where   config.is_deleted = 0
+
+            and config.biz_id = #{trainId,jdbcType=BIGINT}
+    </select>
 </mapper>

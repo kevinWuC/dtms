@@ -60,10 +60,11 @@
 
 
     <!-- 岗位设置 列表查询-->
-    <select id="listJobs" parameterType="com.medical.dtms.dto.job.query.QMSJobsQuery" resultType="com.medical.dtms.common.model.job.QMSJobsModel">
+    <select id="listJobs" parameterType="com.medical.dtms.dto.job.query.QMSJobsQuery"
+            resultType="com.medical.dtms.common.model.job.QMSJobsModel">
         select
-        biz_id as bizId ,  job_name as jobName , allow_query as allowQuery , allow_read as allowRead ,
-        allow_edit as allowEdit ,  allow_enable as allowEnable , allow_freeze as  allowFreeze ,
+        biz_id as bizId , job_name as jobName , allow_query as allowQuery , allow_read as allowRead ,
+        allow_edit as allowEdit , allow_enable as allowEnable , allow_freeze as allowFreeze ,
         allow_delete as allowDelete , sort_code as sortCode , dept_id as deptId , dept_name as deptName
         from
         <include refid="table_name"/>
@@ -71,7 +72,6 @@
         ORDER BY
         gmt_created DESC
     </select>
-
 
 
     <!-- 根据业务主键删除岗位 -->
@@ -306,5 +306,17 @@
     where biz_id = #{bizId,jdbcType=BIGINT}
   </update>
 
-
+    <!--  根据部门 查询 职位-->
+    <select id="listJobsByDeptIds" parameterType="java.util.List"
+            resultType="com.medical.dtms.common.model.job.QMSJobsModel">
+        select
+        biz_id as bizId,job_name as jobName,dept_id as deptId
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and dept_id in
+        <foreach collection="list" index="index" open="(" close=")" separator="," item="deptId">
+            #{deptId}
+        </foreach>
+    </select>
 </mapper>

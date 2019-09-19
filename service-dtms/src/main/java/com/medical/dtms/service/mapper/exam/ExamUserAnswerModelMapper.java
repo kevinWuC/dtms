@@ -1,6 +1,7 @@
 package com.medical.dtms.service.mapper.exam;
 
-import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
+import com.medical.dtms.common.model.train.UserExamInfoModel;
+import com.medical.dtms.dto.exam.query.ExamUserAnswerModelQuery;
 import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -60,6 +61,8 @@ public interface ExamUserAnswerModelMapper {
     int updateByPrimaryKeySelective(ExamUserAnswerModelDo record);
 
     int updateByPrimaryKey(ExamUserAnswerModelDo record);
+
+    List<UserExamInfoModel> listExamInfo(ExamUserAnswerModelQuery query);
 
 
 }

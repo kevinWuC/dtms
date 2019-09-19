@@ -22,30 +22,40 @@
      is_deleted, creator, creator_id, gmt_created, modifier,
     modifier_id, gmt_modified
   </sql>
+
+    <sql id="table_name">
+       tb_dtms_qms_sys_logs
+    </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from tb_dtms_qms_sys_logs
+        from
+        <include refid="table_name"/>
         where id = #{id,jdbcType=BIGINT}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from tb_dtms_qms_sys_logs
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
+        delete from
+        <include refid="table_name"/>
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
     <insert id="insert" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
-    insert into tb_dtms_qms_sys_logs (id, biz_id, operation_type, 
-      table_name, business_name, object_id, 
-      operation_ip, is_deleted, creator,
-      creator_id, gmt_created, modifier, 
-      modifier_id, gmt_modified)
-    values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{operationType,jdbcType=INTEGER}, 
-      #{tableName,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR}, 
-      #{operationIp,jdbcType=VARCHAR},  #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
-      #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, 
-      #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP})
-  </insert>
+        insert into
+        <include refid="table_name"/>
+        (id, biz_id, operation_type,
+        table_name, business_name, object_id,
+        operation_ip, is_deleted, creator,
+        creator_id, gmt_created, modifier,
+        modifier_id, gmt_modified)
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{operationType,jdbcType=INTEGER},
+        #{tableName,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR},
+        #{operationIp,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
     <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
-        insert into tb_dtms_qms_sys_logs
+        insert into
+        <include refid="table_name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
@@ -136,7 +146,8 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
-        update tb_dtms_qms_sys_logs
+        update
+        <include refid="table_name"/>
         <set>
             <if test="bizId != null">
                 biz_id = #{bizId,jdbcType=BIGINT},
@@ -181,20 +192,43 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.medical.dtms.service.dataobject.log.QMSSysLogsDO">
-    update tb_dtms_qms_sys_logs
-    set biz_id = #{bizId,jdbcType=BIGINT},
-      operation_type = #{operationType,jdbcType=INTEGER},
-      table_name = #{tableName,jdbcType=VARCHAR},
-      business_name = #{businessName,jdbcType=VARCHAR},
-      object_id = #{objectId,jdbcType=VARCHAR},
-      operation_ip = #{operationIp,jdbcType=VARCHAR},
-      is_deleted = #{isDeleted,jdbcType=BIT},
-      creator = #{creator,jdbcType=VARCHAR},
-      creator_id = #{creatorId,jdbcType=VARCHAR},
-      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
-      modifier = #{modifier,jdbcType=VARCHAR},
-      modifier_id = #{modifierId,jdbcType=VARCHAR},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+        update
+        <include refid="table_name"/>
+        set biz_id = #{bizId,jdbcType=BIGINT},
+        operation_type = #{operationType,jdbcType=INTEGER},
+        table_name = #{tableName,jdbcType=VARCHAR},
+        business_name = #{businessName,jdbcType=VARCHAR},
+        object_id = #{objectId,jdbcType=VARCHAR},
+        operation_ip = #{operationIp,jdbcType=VARCHAR},
+        is_deleted = #{isDeleted,jdbcType=BIT},
+        creator = #{creator,jdbcType=VARCHAR},
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+        gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+        modifier = #{modifier,jdbcType=VARCHAR},
+        modifier_id = #{modifierId,jdbcType=VARCHAR},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 分页展示系统日志-->
+    <select id="pageListSysLogs" parameterType="com.medical.dtms.dto.log.query.QMSSysLogsQuery"
+            resultType="com.medical.dtms.common.model.syslog.QMSSysLogsModel">
+        select
+        biz_id AS bizId,gmt_created AS operateDate,operation_type AS operationType,
+        table_name AS tableName,object_id AS domainKey,business_name AS businessName,
+        operation_ip AS operationIp,creator AS operationUser
+        from
+        <include refid="table_name"/>
+        where is_deleted =0
+        <if test="operationType != null">
+            AND operation_type = #{operationType}
+        </if>
+        <if test="businessName != null">
+            AND business_name concat('%',#{businessName},'%')
+        </if>
+        <if test="operationUser != null">
+            AND creator concat('%',#{operationUser},'%')
+        </if>
+        order by gmt_modified desc
+    </select>
 </mapper>

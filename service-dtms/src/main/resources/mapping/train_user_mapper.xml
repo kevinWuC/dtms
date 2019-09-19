@@ -264,7 +264,6 @@
         tusr.gmt_created desc
     </select>
 
-
     <!-- 培训与用户的关联 新增 -->
     <insert id="insert" parameterType="java.util.List">
         insert into
@@ -321,7 +320,7 @@
         </if>
     </select>
 
-<!-- 新增交卷记录-->
+    <!-- 新增交卷记录-->
     <insert id="addTrainUser" parameterType="com.medical.dtms.service.dataobject.train.TrainUserDO">
         insert into
         <include refid="table_name"/>
@@ -341,10 +340,6 @@
         #{rel.modifierId,jdbcType=VARCHAR}, NOW()
         )
     </insert>
-
-
-
-
 
     <!-- 考试统计 - 分页展示查询查看  -->
     <select id="pageListExamTotal" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
@@ -383,4 +378,29 @@
         order by any_value(tusr.gmt_created) desc
     </select>
 
+    <!-- 主键查询是否存在-->
+    <select id="getTrainUserByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and biz_id = #{bizId}
+    </select>
+
+    <!-- 查询考试 信息-->
+    <select id="listExamIds" resultType="com.medical.dtms.common.model.train.MyTrainTestModel"
+            parameterType="java.lang.Long">
+      SELECT
+	    config.exam_id AS examId,
+	    exam.exam_name AS examName,
+	    exam.exam_duration AS examDuration,
+	    config.pass_point AS passPoint
+    FROM
+	    tb_dtms_train_config config
+	LEFT JOIN tb_dtms_exam_model exam ON config.exam_id = exam.biz_id
+    WHERE
+	    config.biz_id IN
+	        ( SELECT train_id FROM tb_dtms_train_user WHERE is_deleted = 0 and biz_id = #{bizId} )
+    </select>
 </mapper>

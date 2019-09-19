@@ -1,6 +1,10 @@
 package com.medical.dtms.common.model.syslog;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.medical.dtms.common.convert.LongJsonDeserializer;
+import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,12 +15,21 @@ import java.util.Date;
  **/
 @Data
 public class QMSSysLogsModel {
-
+    /**
+     * 业务主键
+     */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long bizId;
     /**
      * 操作时间
      */
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
     private Date operateDate;
+    /**
+     * 操作类型
+     */
+    private Integer operationType;
     /**
      * 操作类型
      */
@@ -40,5 +53,5 @@ public class QMSSysLogsModel {
     /**
      * 操作用户
      */
-    private String operationRole;
+    private String operationUser;
 }

@@ -18,6 +18,8 @@
         <result column="make_dept_id" jdbcType="BIGINT" property="makeDeptId"/>
         <result column="make_dept_name" jdbcType="VARCHAR" property="makeDeptName"/>
         <result column="apply_reason_id" jdbcType="BIGINT" property="applyReasonId"/>
+        <result column="apply_user_id" jdbcType="BIGINT" property="applyUserId"/>
+        <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName"/>
         <result column="audit_user_id" jdbcType="VARCHAR" property="auditUserId"/>
         <result column="audit_user_name" jdbcType="VARCHAR" property="auditUserName"/>
         <result column="approver_user_id" jdbcType="VARCHAR" property="approverUserId"/>
@@ -39,7 +41,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, biz_id, file_id, log_id, file_no, file_name, file_type_id, apply_type, apply_date, 
-    file_version, effect_date, apply_dept_id, apply_dept_name, make_dept_id,make_dept_name,apply_reason_id, audit_user_id,
+    file_version, effect_date, apply_dept_id, apply_dept_name, make_dept_id,make_dept_name,apply_reason_id,apply_user_id,apply_user_name, audit_user_id,
     audit_user_name, approver_user_id, approver_user_name, content, approver_date, result, 
     is_finish, before_change, after_change,file_apply_type,is_deleted, creator, creator_id, gmt_created,
     modifier, modifier_id, gmt_modified
@@ -78,7 +80,9 @@
         #{fileVersion,jdbcType=VARCHAR}, #{effectDate,jdbcType=TIMESTAMP},
         #{applyDeptId,jdbcType=BIGINT},#{applyDeptName,jdbcType=VARCHAR},
         #{makeDeptId,jdbcType=BIGINT},#{makeDeptName,jdbcType=VARCHAR},
-        #{applyReasonId,jdbcType=BIGINT}, #{auditUserId,jdbcType=VARCHAR},
+        #{applyReasonId,jdbcType=BIGINT},
+        #{applyUserId,jdbcType=BIGINT},#{applyUserName,jdbcType=VARCHAR},
+        #{auditUserId,jdbcType=VARCHAR},
         #{auditUserName,jdbcType=VARCHAR}, #{approverUserId,jdbcType=VARCHAR}, #{approverUserName,jdbcType=VARCHAR},
         #{content,jdbcType=VARCHAR}, #{approverDate,jdbcType=TIMESTAMP}, #{result,jdbcType=BIT},
         #{isFinish,jdbcType=BIT}, #{beforeChange,jdbcType=VARCHAR},
@@ -136,6 +140,12 @@
             </if>
             <if test="applyReasonId != null">
                 apply_reason_id = #{applyReasonId,jdbcType=BIGINT},
+            </if>
+            <if test="applyUserId != null">
+                apply_user_id = #{applyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="applyUserName != null">
+                apply_user_name = #{applyUserName,jdbcType=VARCHAR},
             </if>
             <if test="auditUserId != null">
                 audit_user_id = #{auditUserId,jdbcType=VARCHAR},
@@ -210,7 +220,7 @@
             apply.file_version AS fileVersion,
             apply.file_name AS fileName,
             dt.item_name AS fileTypeIdName,
-            file.creator AS applyUserName,
+            apply.apply_user_name AS applyUserName,
             file.approver_user_name AS approveUserName,
             file.gmt_modified AS approveTime,
             file.auditor_name AS auditorName,

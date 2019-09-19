@@ -1,7 +1,9 @@
 package com.medical.dtms.service.manager.exam;
 
+import com.medical.dtms.common.model.train.UserExamInfoModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.exam.ExamUserAnswerModelDTO;
+import com.medical.dtms.dto.exam.query.ExamUserAnswerModelQuery;
 import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
 import com.medical.dtms.service.mapper.exam.ExamUserAnswerModelMapper;
 import org.apache.commons.collections4.CollectionUtils;
@@ -61,7 +63,7 @@ public class ExamUserAnswerModelManager {
      * @param dtos
      * @return
      */
-    public Boolean insertBatchExamUserAnswerModel(List<ExamUserAnswerModelDTO> dtos){
+    public Boolean insertBatchExamUserAnswerModel(List<ExamUserAnswerModelDTO> dtos) {
         List<ExamUserAnswerModelDo> dos = BeanConvertUtils.convertList(dtos, ExamUserAnswerModelDo.class);
         int num = answerModelMapper.insertBatchExamUserAnswerModel(dos);
         return num > 0 ? true : false;
@@ -74,12 +76,18 @@ public class ExamUserAnswerModelManager {
      * @param dtos
      * @return
      */
-    public Boolean updateBatchExamUserAnswerModel(List<ExamUserAnswerModelDTO> dtos){
+    public Boolean updateBatchExamUserAnswerModel(List<ExamUserAnswerModelDTO> dtos) {
         List<ExamUserAnswerModelDo> dos = BeanConvertUtils.convertList(dtos, ExamUserAnswerModelDo.class);
         int num = answerModelMapper.updateBatchExamUserAnswerModel(dos);
         return num > 0 ? true : false;
     }
 
+    /**
+     * 根据用户 id 和 试卷ID 查询用户答题情况
+     */
+    public List<UserExamInfoModel> listExamInfo(ExamUserAnswerModelQuery query) {
+        return answerModelMapper.listExamInfo(query);
+    }
 
 
 }
