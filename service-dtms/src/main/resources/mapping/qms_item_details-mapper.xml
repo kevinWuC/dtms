@@ -114,9 +114,10 @@
 
     <!--  根据数据字典表主键查询关联的 明细表数据-->
     <select id="listDetailsByItemsId" parameterType="com.medical.dtms.dto.item.query.QMSItemDetailsQuery"
-            resultMap="BaseResultMap">
+            resultType="com.medical.dtms.common.model.item.QMSItemDetailsModel">
         select
-        <include refid="Base_Column_List"/>
+        biz_id AS bizId,item_name AS itemName,item_code AS itemCode,description AS description,enabled AS enabled,
+        allow_edit AS allowEdit,allow_delete AS allowDelete,sort_code AS sortCode
         from
         <include refid="table_name"/>
         where is_deleted = 0
@@ -181,11 +182,11 @@
     </select>
 
     <select id="listDetailsByItemsIdForQuestion" resultType="com.medical.dtms.common.model.question.QuestionItemModel">
-    	select biz_id as itemId ,item_name as itemName
-    	 from
+        select biz_id as itemId ,item_name as itemName
+        from
         <include refid="table_name"/>
         where is_deleted = 0
-            and items_id = #{itemsId,jdbcType=BIGINT}
+        and items_id = #{itemsId,jdbcType=BIGINT}
     </select>
 
 
@@ -196,7 +197,7 @@
         <include refid="table_name"/>
         where is_deleted = 0
         <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
-                #{item}
+            #{item}
         </foreach>
 
     </select>

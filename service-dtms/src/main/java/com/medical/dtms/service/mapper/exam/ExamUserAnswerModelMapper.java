@@ -14,7 +14,13 @@ import java.util.List;
  **/
 @Repository
 public interface ExamUserAnswerModelMapper {
-
+    /**
+     * 通过条件获取用户答案
+     *
+     * @param record
+     * @return
+     */
+    ExamUserAnswerModelDo getUserAnswerByCondition(ExamUserAnswerModelDo record);
     /**
      * 批量新增
      *
@@ -32,11 +38,17 @@ public interface ExamUserAnswerModelMapper {
     /**
      * 通过考试ID删除题目
      *
-     * @param examUserPlanId
+     * @param examPlanId
      * @return
      */
-    int deleteByExamUserPlanId(@Param("examUserPlanId")Long examUserPlanId);
-
+    int deleteByExamUserPlanId(@Param("examPlanId")Long examPlanId);
+    /**
+     * 通过条件删除用户答案
+     *
+     * @param record
+     * @return
+     */
+    List<ExamUserAnswerModelDo> getUserAnswerListByCondition(ExamUserAnswerModelDo record);
 
     int deleteByPrimaryKey(Long id);
 

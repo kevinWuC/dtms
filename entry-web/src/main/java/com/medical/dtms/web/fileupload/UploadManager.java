@@ -37,12 +37,10 @@ public class UploadManager {
         String urlPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 
         List<Map<String, String>> list = new ArrayList();
-        // 创建文件存储路径
-        String absPath = path + File.separator + "files";
         for (MultipartFile file : files) {
             Map<String, String> map = new HashMap<>();
             String filename = file.getOriginalFilename();
-            File file1 = new File(absPath, filename);
+            File file1 = new File(path, filename);
             // 如果文件目录不存在，则创建
             if (!file1.getParentFile().exists()) {
                 file1.getParentFile().mkdirs();
@@ -51,10 +49,13 @@ public class UploadManager {
             try {
                 // 加上时间戳防止重名
                 filename = filename.substring(0, filename.lastIndexOf(".")) + "_" + System.currentTimeMillis() + filename.substring(filename.lastIndexOf("."));
-                file.transferTo(new File(absPath + File.separator + filename));
+                file.transferTo(new File(path, filename));
 
                 String url = urlPath + staticPath.replaceAll("\\*", "") + filename;
-                map.put(file.getOriginalFilename(), url);
+                map.put(file.getOriginalFilename(),url);
+                map.put("name",file.getOriginalFilename());
+                map.put("status",ErrorCodeEnum.SUCCESS.getErrorCode());
+                map.put("url",url);
                 list.add(map);
 
             } catch (IOException e) {
@@ -83,8 +84,7 @@ public class UploadManager {
      * 删除文件
      */
     public Boolean deleteUploadFile(String uploadFileId) {
-        String absPath = path + File.separator + "files";
-        File file = new File(absPath);
+        File file = new File(path);
         File[] files = file.listFiles();
         if (null == files || files.length == 0) {
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "文件不存在");
@@ -95,11 +95,11 @@ public class UploadManager {
                 file1.delete();
                 break;
             } else {
-                i ++;
+                i++;
             }
         }
-        if (i == files.length){
-            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(),"文件不存在");
+        if (i == files.length) {
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "文件不存在");
         }
         return true;
     }

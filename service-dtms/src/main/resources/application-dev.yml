@@ -58,5 +58,5 @@ snowflake:
 #    password: Kevin123!
 
 sqlbackup:
-  path: E:/dtms/sql/
-  staticPath: /dtms/sql/**
+  path: E:/dtms/files/sql/
+  staticPath: /dtms/files/**

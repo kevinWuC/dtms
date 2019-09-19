@@ -50,6 +50,13 @@ public interface ExamUserPlanModelMapper {
      * @return
      */
     List<ExamUserPlanModelDTO> listExamUserPlanByQuery(ExamPlanModelQuery query);
+    /**
+     * 分页查询（批卷用）
+     *
+     * @param query
+     * @return
+     */
+    List<ExamUserPlanModelDTO> listExamUserPlanByQueryForMark(ExamPlanModelQuery query);
 
     /**
      * 根据用户考试bizId查询用户考试信息

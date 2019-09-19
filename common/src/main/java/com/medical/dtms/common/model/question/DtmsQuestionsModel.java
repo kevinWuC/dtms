@@ -50,7 +50,11 @@ public class DtmsQuestionsModel {
     private String questionF;
     /**答案*/
     private String answer;
-
+    /**用户答案*/
+    private String userAnswer;
+    /**用户得分*/
+    private Integer userPoints;
+    /**是否删除*/
     private Boolean deleted;
     /**是否使用*/
     private Boolean isUsed;

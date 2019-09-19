@@ -7,6 +7,7 @@ import com.medical.dtms.common.model.train.TrainFileModel;
 import com.medical.dtms.dto.file.query.FileModelQuery;
 import com.medical.dtms.dto.train.query.TrainFileQuery;
 import com.medical.dtms.service.dataobject.file.FileModelDO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface FileModelMapper {
 
     int insert(FileModelDO record);
 
-    FileDetailModel selectByPrimaryKey(Long id);
+    FileDetailModel selectByPrimaryKey(@Param("bizId") Long id);
 
     int updateByPrimaryKeySelective(FileModelDO record);
 

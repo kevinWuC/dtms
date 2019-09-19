@@ -39,5 +39,5 @@ snowflake:
 
 # 数据库备份文件存放目录
 sqlbackup:
-  path: /home/dtms/sql/
-  staticPath: /dtms/sql/**
+  path: /home/dtms/files/sql/
+  staticPath: /dtms/files/**

@@ -24,6 +24,8 @@ import com.medical.dtms.dto.question.QuestionQuery;
 import com.medical.dtms.dto.user.QMSUserDTO;
 import com.medical.dtms.dto.user.query.BaseUserQuery;
 import com.medical.dtms.feignservice.exam.ExamUserPlanModelService;
+import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
+import com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO;
 import com.medical.dtms.service.manager.exam.ExamModelManager;
 import com.medical.dtms.service.manager.exam.ExamQuestionsTypeManager;
 import com.medical.dtms.service.manager.exam.ExamUserAnswerModelManager;
@@ -38,11 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -74,6 +73,14 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
     public PageInfo<ExamUserPlanModelDTO> listExamUserPlanByQuery(@RequestBody ExamPlanModelQuery query) {
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
         List<ExamUserPlanModelDTO> list = examUserPlanModelManager.listExamUserPlanByQuery(query);
+        PageInfo<ExamUserPlanModelDTO> paginfo = new PageInfo<>(list);
+        return paginfo;
+    }
+
+    @Override
+    public PageInfo<ExamUserPlanModelDTO> listExamUserPlanByQueryForMark(@RequestBody ExamPlanModelQuery query) {
+        PageHelper.startPage(query.getPageNo(), query.getPageSize());
+        List<ExamUserPlanModelDTO> list = examUserPlanModelManager.listExamUserPlanByQueryForMark(query);
         PageInfo<ExamUserPlanModelDTO> paginfo = new PageInfo<>(list);
         return paginfo;
     }
@@ -184,10 +191,16 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
     @Transactional
     public Boolean submitExamAnswer(@RequestBody ExamSubmitAnswerQuery query) {
 
-        if (null == query) {
-            log.error("参数为空");
-            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "参数为空");
+        ExamUserPlanModelDTO examUserPlanlDTO = examUserPlanModelManager.selectExamUserPlanModelByBizId(query.getExamUserPlanId());
+        if (null == examUserPlanlDTO) {
+            log.error("本场考试不存在");
+            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "本场考试不存在");
         }
+        if (null != examUserPlanlDTO.getIsFinish() && examUserPlanlDTO.getIsFinish()) {
+            log.error("该试卷已提交,勿重复提交");
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "该试卷已提交,勿重复提交");
+        }
+
 
         //创建要修改的试卷内容(更新考试结束时间,考试得分,考试结束时间)
         ExamUserPlanModelDTO examUserPlanModelDTO = new ExamUserPlanModelDTO();
@@ -229,5 +242,76 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
         examUserPlanModelManager.updateExamUserPlanModel(examUserPlanModelDTO);
         return true;
     }
+
+    /**
+     * 开始考试
+     *
+     * @see com.medical.dtms.feignservice.exam.ExamUserPlanModelService#startExam(com.medical.dtms.dto.exam.ExamUserPlanModelDTO)
+     */
+    @Override
+    public ExamStartModel lookExam(@RequestBody ExamUserPlanModelDTO userPlanModelDTO) {
+        ExamStartModel model = new ExamStartModel();
+        //获取用户考试信息
+        ExamUserPlanModelDTO examUserPlanModelDTO = examUserPlanModelManager.selectExamUserPlanModelByBizId(userPlanModelDTO.getExamUserPlanModelId());
+        if (null == examUserPlanModelDTO) {
+            log.error("本场考试不存在");
+            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "本场考试不存在");
+        }
+        if (null != examUserPlanModelDTO.getIsStart() && !examUserPlanModelDTO.getIsStart()) {
+            log.error("请先考试,再查看");
+            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "请先考试,再查看");
+        }
+        BaseUserQuery userQuery = new BaseUserQuery();
+        userQuery.setUserId(examUserPlanModelDTO.getUserId());
+        QMSUserDTO user = userManager.getUserByCondition(userQuery);
+        ExamDetailModel exam = examModelManager.getExamByExamId(examUserPlanModelDTO.getExamId());
+        model.setUserId(examUserPlanModelDTO.getUserId());
+        model.setDspName(user.getDspName());
+        model.setExamId(examUserPlanModelDTO.getExamId());
+        model.setExamPlanId(examUserPlanModelDTO.getExamPlanId());
+        model.setExamUserPlanModelId(examUserPlanModelDTO.getExamUserPlanModelId());
+        model.setExamName(exam.getExamName());
+        model.setExamDuration(examUserPlanModelDTO.getExamDuration());
+        model.setExamPlanName(examUserPlanModelDTO.getExamPlanName());
+        model.setPassPoints(examUserPlanModelDTO.getPassPoints());
+        model.setTotalPoints(examUserPlanModelDTO.getTotalPoints());
+        model.setUserPoints(examUserPlanModelDTO.getBaseTotalPoints());
+        //2.查询试题类型
+        List<ExamQuestionsTypeModel> typeModels = examQuestionsTypeManager.listQuestionTypeByExamId(examUserPlanModelDTO.getExamId());
+        if (CollectionUtils.isNotEmpty(typeModels)) {
+            //查询试题试题
+            QuestionQuery query = new QuestionQuery();
+            ExamUserAnswerModelDo answerModelDo;
+            ExamUserAnswerModelDTO userAnswer;
+            for (ExamQuestionsTypeModel typeModel : typeModels) {
+                if (StringUtils.isNotBlank(typeModel.getExamQuestionString())) {
+                    query.setQuestionIds(Arrays.asList(typeModel.getExamQuestionString().split(",")));
+                    //查询试题
+                    List<DtmsQuestionsDTO> listQuestionsForPreview = dtmsQuestionManager
+                            .listQuestionsForPreview(query);
+                    typeModel.setQuestionForPreview(BeanConvertUtils
+                            .convertList(listQuestionsForPreview, DtmsQuestionsModel.class));
+                    for (DtmsQuestionsModel questionsModel:typeModel.getQuestionForPreview()) {
+                        answerModelDo = new ExamUserAnswerModelDo();
+                        answerModelDo.setQuestionsId(questionsModel.getBizId());
+                        answerModelDo.setExamId(examUserPlanModelDTO.getExamId());
+                        answerModelDo.setExamPlanId(examUserPlanModelDTO.getExamPlanId());
+                        answerModelDo.setExamUserPlanId(examUserPlanModelDTO.getExamUserPlanModelId());
+                        userAnswer = userAnswerModelManager.getUserAnswerByCondition(answerModelDo);
+                        if (null != userAnswer ){
+                            questionsModel.setUserAnswer(userAnswer.getAnswer());
+                            questionsModel.setUserPoints(userAnswer.getAnswerPoints());
+                        }
+                        userAnswer = null;
+                    }
+                }
+            }
+            model.setExamQuestionTypes(typeModels);
+        }
+        return model;
+    }
+
+
+
 
 }

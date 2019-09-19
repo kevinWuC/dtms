@@ -107,5 +107,5 @@ public class QMSRoleModel {
     /**
      * 菜单id 集合
      */
-    private String menuIdListStr;
+    private List<String> menuIdListStr;
 }

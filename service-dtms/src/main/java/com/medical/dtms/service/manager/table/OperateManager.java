@@ -48,7 +48,7 @@ public class OperateManager {
     /**
      * 获取实体类对应的表名，由于实体类命名与表名未完全对应，所以 实体类上需要加上 @Table 注解
      */
-    public  String getTableName(Class<?> object) {
+    public String getTableName(Class<?> object) {
         return object.getAnnotation(Table.class).name();
     }
 
@@ -165,11 +165,16 @@ public class OperateManager {
                 }
 
                 // 获取默认值
-                ResultSet set = smt.executeQuery("select default(" + columnName + ") AS def from" + "\t" + tableName + "\t");
-                while (set.next()) {
-                    String def = set.getString("def");
-                    model.setDefaultValue(def);
-                    break;
+                ResultSet set = null;
+                try {
+                    set = smt.executeQuery("select default(" + columnName + ") AS def from" + "\t" + tableName + "\t");
+                    while (set.next()) {
+                        String def = set.getString("def");
+                        model.setDefaultValue(def);
+                        break;
+                    }
+                } catch (Exception e) {
+                    model.setDefaultValue(null);
                 }
 
                 list.add(model);
@@ -262,19 +267,23 @@ public class OperateManager {
     /**
      * 导出 sql 并返回相关信息
      */
-    public  QMSBackUpDTO exportSql(QMSBackUpDTO dto) {
+    public QMSBackUpDTO exportSql(QMSBackUpDTO dto) {
         // 指定导出的 sql 存放的文件夹
         File saveFile = new File(sqlPath);
         if (!saveFile.exists()) {
             saveFile.mkdirs();
         }
 
-        StringBuilder sb = new StringBuilder();
         String host = getHost();
+
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("find  ").append("/ ").append("name  ").append("mysql ").append("print ").append(" -h ").append(host);
+
+        StringBuilder sb = new StringBuilder();
         String dataBaseName = getDataBaseName();
         String fileName = System.currentTimeMillis() + "_" + "dtms.sql";
-
-        sb.append("mysqldump").append(" --opt ").append(" -h ").append(host).append(" --user=").append(userName).append(" --password=").append(password).append(" --databases ").append(dataBaseName);
+        sb.append("/").append("usr").append("/").append("local").append("/").append("mysql").append("/").append("bin").append("/");
+        sb.append("mysqldump").append(" --opt ").append(" -h ").append(host).append(" --user=").append(userName).append(" --password=").append(password).append(" --lock-all-tables=true").append(" --databases ").append(dataBaseName);
         sb.append(" --result-file=").append(sqlPath + fileName).append(" --default-character-set=utf8 ");
         String sqlUrl = "";
         try {

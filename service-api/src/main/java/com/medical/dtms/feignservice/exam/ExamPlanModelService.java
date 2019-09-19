@@ -23,6 +23,16 @@ import com.medical.dtms.dto.exam.query.ExamPlanModelQuery;
 @FeignClient("service-dtms")
 public interface ExamPlanModelService {
 
+
+    /**
+     * 删除
+     *
+     * @param examPlanModelId
+     * @return
+     */
+    @RequestMapping(value = "/examPlan/deleteExamPlanModel", method = RequestMethod.POST)
+    Boolean deleteExamPlanModel(@RequestParam("examPlanModelId") Long examPlanModelId);
+
     /**
      * 新增
      * 

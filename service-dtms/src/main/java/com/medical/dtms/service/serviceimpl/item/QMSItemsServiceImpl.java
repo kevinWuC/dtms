@@ -3,6 +3,7 @@ package com.medical.dtms.service.serviceimpl.item;
 import com.medical.dtms.common.constants.Constants;
 import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
+import com.medical.dtms.common.model.item.QMSItemDetailsModel;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.item.query.QMSItemDetailsQuery;
 import com.medical.dtms.feignservice.item.QMSItemsService;
@@ -118,7 +119,7 @@ public class QMSItemsServiceImpl implements QMSItemsService {
         // 校验数据字典明细表 是否有被删除
         QMSItemDetailsQuery query = new QMSItemDetailsQuery();
         query.setItemsId(dto.getBizId());
-        List<QMSItemDetailsDO> dos = detailsManager.listDetailsByItemsId(query);
+        List<QMSItemDetailsModel> dos = detailsManager.listDetailsByItemsId(query);
         if (null == itemsDTO) {
             if (CollectionUtils.isEmpty(dos)) {
                 return true;

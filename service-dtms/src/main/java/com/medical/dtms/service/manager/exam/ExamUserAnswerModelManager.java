@@ -6,6 +6,9 @@ import com.medical.dtms.dto.exam.ExamUserAnswerModelDTO;
 import com.medical.dtms.dto.exam.query.ExamUserAnswerModelQuery;
 import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
 import com.medical.dtms.service.mapper.exam.ExamUserAnswerModelMapper;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,39 @@ public class ExamUserAnswerModelManager {
 
     @Autowired
     ExamUserAnswerModelMapper answerModelMapper;
+
+    /**
+     * 通过条件获取用户答案
+     *
+     * @param userAnswerModelDo
+     * @return
+     */
+    public ExamUserAnswerModelDTO getUserAnswerByCondition(ExamUserAnswerModelDo userAnswerModelDo){
+        ExamUserAnswerModelDo userAnswerModelDo1 = answerModelMapper.getUserAnswerByCondition(userAnswerModelDo);
+        return  BeanConvertUtils.convert(userAnswerModelDo1,ExamUserAnswerModelDTO.class);
+    }
+
+    /**
+     * 通过条件获取试卷题目
+     *
+     * @param userAnswerModelDo
+     * @return
+     */
+    public List<ExamUserAnswerModelDTO> getUserAnswerListByCondition(ExamUserAnswerModelDo userAnswerModelDo){
+        List<ExamUserAnswerModelDo> list = answerModelMapper.getUserAnswerListByCondition(userAnswerModelDo);
+        return BeanConvertUtils.convertList(list,ExamUserAnswerModelDTO.class);
+    }
+
+    /**
+     * 通过考试ID删除题目
+     *
+     * @param examPlanId
+     * @return
+     */
+    public Boolean deleteByExamPlanId(@Param("examPlanId")Long examPlanId){
+        int num = answerModelMapper.deleteByExamUserPlanId(examPlanId);
+        return num > 0 ? true : false;
+    }
 
     /**
      * 批量新增
@@ -52,5 +88,6 @@ public class ExamUserAnswerModelManager {
     public List<UserExamInfoModel> listExamInfo(ExamUserAnswerModelQuery query) {
         return answerModelMapper.listExamInfo(query);
     }
+
 
 }

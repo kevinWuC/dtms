@@ -44,6 +44,8 @@ public class ExamUserPlanModelDO {
     private Integer baseTotalPoints;
     /**是否批卷*/
     private Boolean isMark;
+    /**是否删除*/
+    private Boolean isDeleted;
     /***/
     private Date    createDate;
     /***/

@@ -26,6 +26,18 @@
     creator, creator_id, gmt_created, modifier, modifier_id, gmt_modified
   </sql>
 
+    <!-- 通过条件获取答案 -->
+    <select id="getUserAnswerByCondition" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_dtms_exam_user_answer_model
+        where is_deleted = 0
+        and questions_id = #{questionsId,jdbcType=BIGINT}
+        and exam_id = #{examId,jdbcType=BIGINT}
+        and exam_plan_id = #{examPlanId,jdbcType=BIGINT}
+        and exam_user_plan_id = #{examUserPlanId,jdbcType=BIGINT}
+    </select>
 
     <!-- 批量新增答案 -->
     <insert id="insertBatchExamUserAnswerModel" parameterType="java.util.List">
@@ -35,7 +47,8 @@
         )
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id,jdbcType=BIGINT}, #{item.examUserAnswerModeId,jdbcType=BIGINT}, #{item.questionsId,jdbcType=BIGINT},
+            (#{item.id,jdbcType=BIGINT}, #{item.examUserAnswerModeId,jdbcType=BIGINT},
+            #{item.questionsId,jdbcType=BIGINT},
             #{item.examId,jdbcType=BIGINT}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examUserPlanId,jdbcType=BIGINT},
             #{item.userId,jdbcType=BIGINT}, #{item.answer,jdbcType=VARCHAR}, 0,
             #{item.sortCode,jdbcType=INTEGER},0, #{item.creator,jdbcType=VARCHAR},
@@ -44,12 +57,23 @@
         </foreach>
     </insert>
 
+    <!-- 通过条件删除答案 -->
+    <select id="getUserAnswerListByCondition" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_dtms_exam_user_answer_model
+        where is_deleted = 0
+        and exam_id = #{examId,jdbcType=BIGINT}
+        and exam_plan_id = #{examPlanId,jdbcType=BIGINT}
+        and exam_user_plan_id = #{examUserPlanId,jdbcType=BIGINT}
+    </select>
+
     <!-- 通过考试ID删除答案 -->
     <delete id="deleteByExamUserPlanId" parameterType="java.lang.Long">
     update tb_dtms_exam_user_answer_model
     set is_deleted = 1
-    where exam_plan_id = #{examUserPlanId,jdbcType=BIGINT}
-  </delete>
+    where exam_plan_id = #{examPlanId,jdbcType=BIGINT}
+   </delete>
 
     <!-- 批量更新 -->
     <update id="updateBatchExamUserAnswerModel" parameterType="java.util.List">

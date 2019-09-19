@@ -24,9 +24,19 @@ eureka:
     service-url:
       defaultZone: http://${eureka-server:localhost}:8761/eureka/
 
-# 文件上传的绝对路径
+# 文件上传路径
 upload:
-  path: /home/dtms
+  path: /home/dtms/files/uploadfile/
+  staticPath: /dtms/files/**
+
+# doc 文档保存路径
+doc:
+  path: /home/dtms/files/doc/
+  staticPath: /dtms/files/**
+
+# sql 文件备份路径
+sqlbackup:
+  path: /home/dtms/files/sql/
   staticPath: /dtms/files/**
 
 geolite2:

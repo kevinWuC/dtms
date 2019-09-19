@@ -56,6 +56,7 @@ public class QMSUserController {
         }
 
         UserLoginModel model = userService.login(dto);
+        model.setKeepLogin(dto.getKeepLogin() == null ? false : dto.getKeepLogin());
         SessionTools.saveUserInfo(model, request);
 
         // 保存登录信息到 登录日志表
@@ -97,7 +98,7 @@ public class QMSUserController {
         if (null == dto || StringUtils.isBlank(dto.getAccount()) || StringUtils.isBlank(dto.getDspName())) {
             return new Result<>(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode());
         }
-        if (StringUtils.isBlank(dto.getEmail()) || null == dto.getDeptId() || null == dto.getRoleId()){
+        if (StringUtils.isBlank(dto.getEmail()) || null == dto.getDeptId() || null == dto.getRoleId()) {
             return new Result<>(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "邮箱/默认部门/角色未填写，请填写完整");
         }
         OperatorInfo info = SessionTools.getOperator();

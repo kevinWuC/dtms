@@ -4,24 +4,24 @@
  */
 package com.medical.dtms.web.controller.exam;
 
-import com.medical.dtms.common.eception.BizException;
-import com.medical.dtms.common.model.exam.ExamStartModel;
-import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.github.pagehelper.PageInfo;
+import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.login.OperatorInfo;
 import com.medical.dtms.common.login.SessionTools;
+import com.medical.dtms.common.model.exam.ExamStartModel;
+import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
 import com.medical.dtms.common.resp.Result;
 import com.medical.dtms.dto.exam.ExamUserPlanModelDTO;
 import com.medical.dtms.dto.exam.query.ExamPlanModelQuery;
 import com.medical.dtms.feignservice.exam.ExamUserPlanModelService;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 考试安排
@@ -42,6 +42,39 @@ public class ExamUserPlanModelController {
      */
     @RequestMapping(value = "/examUserPlan/listExamUserPlanByQuery", method = RequestMethod.POST)
     public Result<PageInfo<ExamUserPlanModelDTO>> listExamUserPlanByQuery(@RequestBody ExamPlanModelQuery query) {
+        checkParams(query);
+        //获取用户信息
+        OperatorInfo operatorInfo = SessionTools.getOperator();
+        query.setUserId(operatorInfo.getBizId());
+
+        PageInfo<ExamUserPlanModelDTO> examPlans = examUserPlanModelService
+            .listExamUserPlanByQuery(query);
+        return new Result<PageInfo<ExamUserPlanModelDTO>>(ErrorCodeEnum.SUCCESS.getErrorCode(),
+            Boolean.TRUE, "查询成功", examPlans);
+    }
+
+    /**
+     * 分页查询(批卷用)
+     *
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/examUserPlan/listExamUserPlanByQueryForMark", method = RequestMethod.POST)
+    public Result<PageInfo<ExamUserPlanModelDTO>> listExamUserPlanByQueryForMark(@RequestBody ExamPlanModelQuery query) {
+        checkParams(query);
+        //获取用户信息
+        PageInfo<ExamUserPlanModelDTO> examPlans = examUserPlanModelService
+                .listExamUserPlanByQueryForMark(query);
+        return new Result<PageInfo<ExamUserPlanModelDTO>>(ErrorCodeEnum.SUCCESS.getErrorCode(),
+                Boolean.TRUE, "查询成功", examPlans);
+    }
+
+    /**
+     * 分页参数校验
+     *
+     * @param query
+     */
+    private void checkParams(ExamPlanModelQuery query) {
         if (null == query) {
             query = new ExamPlanModelQuery();
         }
@@ -51,14 +84,6 @@ public class ExamUserPlanModelController {
         if (null == query.getPageSize()) {
             query.setPageSize(10);
         }
-        //获取用户信息
-        OperatorInfo operatorInfo = SessionTools.getOperator();
-        query.setUserId(operatorInfo.getBizId());
-
-        PageInfo<ExamUserPlanModelDTO> examPlans = examUserPlanModelService
-            .listExamUserPlanByQuery(query);
-        return new Result<PageInfo<ExamUserPlanModelDTO>>(ErrorCodeEnum.SUCCESS.getErrorCode(),
-            Boolean.TRUE, "查询成功", examPlans);
     }
 
     /**
@@ -107,6 +132,22 @@ public class ExamUserPlanModelController {
         examUserPlanModelService.submitExamAnswer(query);
 
         return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "提交成功", true);
+    }
+
+    /**
+     * 试卷查看
+     *
+     * @param userPlanModelDTO
+     * @return
+     */
+    @RequestMapping(value = "/examUserPlan/lookExam", method = RequestMethod.POST)
+    public Result<ExamStartModel> lookExam(@RequestBody ExamUserPlanModelDTO userPlanModelDTO){
+        if (null == userPlanModelDTO || null == userPlanModelDTO.getExamUserPlanModelId()){
+            return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "主键为空");
+        }
+        ExamStartModel exam = examUserPlanModelService.lookExam(userPlanModelDTO);
+
+        return Result.buildSuccess(exam);
     }
 
 

@@ -11,6 +11,14 @@ import com.medical.dtms.service.dataobject.exam.ExamPlanModelDO;
 
 @Repository
 public interface ExamPlanModelMapper {
+
+    /**
+     * 删除
+     *
+     * @param examPlanModelId
+     * @return
+     */
+    Integer  deleteExamPlanModelByPlanModeID(@Param("examPlanModelId") Long examPlanModelId);
     /**
      * 新增
      * 

@@ -24,4 +24,12 @@ public class DataBaseTableQuery {
      * 执行类型  1 查询列表 2 更新与删除
      */
     private Integer operateType;
+    /**
+     * 当前页码
+     */
+    private Integer pageNo;
+    /**
+     * 每页展示数据条数
+     */
+    private Integer pageSize;
 }

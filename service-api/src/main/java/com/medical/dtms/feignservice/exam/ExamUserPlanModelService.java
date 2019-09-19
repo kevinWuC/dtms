@@ -52,4 +52,22 @@ public interface ExamUserPlanModelService {
     @RequestMapping(value = "/examUserPlan/submitExamAnswer", method = RequestMethod.POST)
     Boolean submitExamAnswer(@RequestBody ExamSubmitAnswerQuery query);
 
+    /**
+     * 试卷查看
+     *
+     * @param userPlanModelDTO
+     * @return
+     */
+    @RequestMapping(value = "/examUserPlan/lookExam", method = RequestMethod.POST)
+    ExamStartModel lookExam(@RequestBody ExamUserPlanModelDTO userPlanModelDTO);
+
+    /**
+     * 分页查询
+     *
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/examUserPlan/listExamUserPlanByQueryForMark", method = RequestMethod.POST)
+    PageInfo<ExamUserPlanModelDTO> listExamUserPlanByQueryForMark(@RequestBody ExamPlanModelQuery query);
+
 }

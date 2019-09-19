@@ -7,10 +7,7 @@ package com.medical.dtms.web.controller.exam;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.github.pagehelper.PageInfo;
 import com.medical.dtms.common.eception.BizException;
@@ -34,6 +31,26 @@ import lombok.extern.slf4j.Slf4j;
 public class ExamPlanModelController {
     @Autowired
     private ExamPlanModelService examPlanModelService;
+
+
+    /**
+     * 删除
+     *
+     * @param examPlanModelDTO
+     * @return
+     */
+    @RequestMapping(value = "/examPlan/deleteExamPlanModel", method = RequestMethod.POST)
+    public Result<Boolean> deleteExamPlanModel(@RequestBody ExamPlanModelDTO examPlanModelDTO){
+        if (null == examPlanModelDTO || null == examPlanModelDTO.getExamPlanModelId()) {
+            log.error("缺少参数");
+            throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "缺少参数");
+        }
+        OperatorInfo operatorInfo = SessionTools.getOperator();
+        examPlanModelDTO.setModifyUserId(operatorInfo.getBizId());
+        examPlanModelDTO.setModifyUserName(operatorInfo.getDspName());
+        examPlanModelService.deleteExamPlanModel(examPlanModelDTO.getExamPlanModelId());
+        return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "删除成功", true);
+    }
 
     /**
      * 新增
@@ -179,4 +196,5 @@ public class ExamPlanModelController {
 
         return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "配置成功", true);
     }
+
 }
