@@ -35,6 +35,7 @@ import com.medical.dtms.service.manager.train.TrainFilesManager;
 import com.medical.dtms.service.manager.train.TrainUserManager;
 import com.medical.dtms.service.manager.user.QMSUserInDeptManager;
 import lombok.extern.slf4j.Slf4j;
+import netscape.security.Privilege;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class TrainUserServiceImpl implements TrainUserService {
     private ExamService examService;
     @Autowired
     private ExamUserAnswerModelManager answerModelManager;
+
 
     /**
      * @param [query]
@@ -446,8 +448,6 @@ public class TrainUserServiceImpl implements TrainUserService {
     }
 
 
-
-
     /**
      * @param [query]
      * @return java.util.List<com.medical.dtms.common.model.file.ExportModel>
@@ -474,7 +474,6 @@ public class TrainUserServiceImpl implements TrainUserService {
         if (CollectionUtils.isNotEmpty(modelList)) {
             Map<Long, List<SimpleTrainFileModel>> map = modelList.stream().collect(Collectors.groupingBy(SimpleTrainFileModel::getTrainId));
             Map<Long, List<QMSUserInDeptModel>> deptMap = deptModels.stream().collect(Collectors.groupingBy(QMSUserInDeptModel::getUserId));
-
             for (TrainUserModel aDo : models) {
                 aDo.setFileName(CollectionUtils.isEmpty(map.get(aDo.getTrainId())) == true ? null : map.get(aDo.getTrainId()).get(0) == null ? null : StringUtils.isBlank(map.get(aDo.getTrainId()).get(0).getFileName()) == true ? null : map.get(aDo.getTrainId()).get(0).getFileName());
                 if (StringUtils.isBlank(aDo.getPointStr())) {
@@ -483,8 +482,11 @@ public class TrainUserServiceImpl implements TrainUserService {
                 if (null == aDo.getTotalPoints() || 0 == aDo.getTotalPoints()) {
                     aDo.setTotalPoints(0);
                 }
-
-                aDo.setPoint(aDo.getPointStr() + "/" + aDo.getTotalPoints());
+                if (null == aDo.getPassPoint() || 0 == aDo.getPassPoint()) {
+                    aDo.setPassPoint(0);
+                }
+                aDo.setPointStr(aDo.getPointStr());
+                aDo.setPassTotal(aDo.getPassPoint() + "/" + aDo.getTotalPoints());
                 aDo.setFinishTimeStr(DateUtils.format(aDo.getFinishTime(), DateUtils.YYYY_MM_DD_HH_mm_ss));
                 if (aDo.getTotalPoints() < Integer.valueOf(aDo.getPointStr())) {
                     aDo.setPassStr("不合格");
@@ -497,8 +499,6 @@ public class TrainUserServiceImpl implements TrainUserService {
                 aDo.setDeptName(CollectionUtils.isEmpty(deptMap.get(aDo.getUserId())) == true ? null : deptMap.get(aDo.getUserId()).get(0) == null ? null : StringUtils.isBlank(deptMap.get(aDo.getUserId()).get(0).getDeptName()) == true ? null : deptMap.get(aDo.getUserId()).get(0).getDeptName());
             }
         }
-
         return BeanConvertUtils.convertList(models, ExamExcelModel.class);
     }
-
 }

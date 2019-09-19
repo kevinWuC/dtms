@@ -28,7 +28,7 @@ public class ExamExcelModel {
     /**
      * 及格/总分
      */
-    private String passandtotal;
+    private String passTotal;
     /**
      * 完成时间 str
      */

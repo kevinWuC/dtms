@@ -296,7 +296,7 @@ public class ExcelHandlerService {
             mainRow.createCell(1).setCellValue(model.getDeptName());
             mainRow.createCell(2).setCellValue(model.getTrainName());
             mainRow.createCell(3).setCellValue(model.getPointStr());
-            mainRow.createCell(4).setCellValue(model.getPassandtotal());
+            mainRow.createCell(4).setCellValue(model.getPassTotal());
             mainRow.createCell(5).setCellValue(model.getFinishTimeStr());
             mainRow.createCell(6).setCellValue(model.getPassStr());
         }

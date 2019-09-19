@@ -197,6 +197,10 @@ TrainUserModel {
     private List<Long> userIds;
     /** 问题类型 id 集合*/
     private List<Long> questionsTypeIds;
+    /**
+     * 及格/总分
+     */
+    private String passTotal;
 
 
 }
