@@ -1,0 +1,7 @@
+/common/*.iml
+/discovery/*.iml
+/.idea
+/entry-web/*.iml
+/service-api/*.iml
+/service-dtms/*.iml
+/*.iml
