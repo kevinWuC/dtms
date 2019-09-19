@@ -6,10 +6,12 @@ import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Table(name = "tb_dtms_file_approve_log")
 public class FileApproveLogDO {
     /**
      * 自增id

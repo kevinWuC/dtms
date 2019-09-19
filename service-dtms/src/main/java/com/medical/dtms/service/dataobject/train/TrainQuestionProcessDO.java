@@ -2,6 +2,7 @@ package com.medical.dtms.service.dataobject.train;
 
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -9,6 +10,7 @@ import java.util.Date;
  * @Descrption 用户培训答题过程
  **/
 @Data
+@Table(name = "tb_dtms_train_question_process")
 public class TrainQuestionProcessDO {
 
     /**

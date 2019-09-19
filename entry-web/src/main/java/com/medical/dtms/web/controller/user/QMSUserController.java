@@ -210,12 +210,17 @@ public class QMSUserController {
     /**
      * @param [query]
      * @return com.medical.dtms.common.resp.Result<java.util.List < com.medical.dtms.model.menu.QMSMenuModel>>
-     * @description 查询用户所拥有的菜单（子父级结构，默认返回一二级，三级需要通过点击二级来展开）
+     * @description 查询用户所拥有的菜单（均为末级菜单）
      **/
     @RequestMapping(value = "/user/listMenusByUserId", method = RequestMethod.POST)
     public Result<List<QMSMenuModel>> listMenusByUserId(@RequestBody BaseUserQuery query) {
-        OperatorInfo info = SessionTools.getOperator();
-        query.setUserId(info.getBizId());
+        if (null == query){
+            query = new BaseUserQuery();
+        }
+        if (null == query.getUserId()){
+            OperatorInfo info = SessionTools.getOperator();
+            query.setUserId(info.getBizId());
+        }
         List<QMSMenuModel> list = userService.listMenusByUserId(query);
         return Result.buildSuccess(list);
     }

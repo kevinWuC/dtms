@@ -29,12 +29,12 @@ public class SysLogsServiceImpl implements SysLogsService {
     /**
      * @param [query]
      * @return com.github.pagehelper.PageInfo<com.medical.dtms.model.syslog.QMSSysLogsModel>
-     * @description 系统日志 - 操作日志列表分页查询  TODO
+     * @description 系统日志 - 操作日志列表分页查询
      **/
     @Override
     public PageInfo<QMSSysLogsModel> pageListSysLogs(@RequestBody QMSSysLogsQuery query) {
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-//        logsManager.getLogsTable(query);
+//        logsManager.pageListSysLogs(query);
 
         return null;
     }

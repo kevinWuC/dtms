@@ -4,6 +4,8 @@ import java.util.Date;
 
 import lombok.Data;
 
+import javax.persistence.Table;
+
 /**
  * 用户考试计划
  * 
@@ -11,6 +13,7 @@ import lombok.Data;
  * @version $Id: ExamUserPlanModelDO.java, v 0.1 2019年9月10日 下午10:01:12 shenqifeng Exp $
  */
 @Data
+@Table(name = "tb_dtms_exam_user_plan_model")
 public class ExamUserPlanModelDO {
     /**主键*/
     private Long    id;

@@ -45,6 +45,7 @@ public class QMSDeptManager {
     public List<QMSDeptModel> listParentInfos(List<Long> parentIds) {
         return qmsDeptMapper.listParentInfos(parentIds);
     }
+
     /**
      * 部门类别 - 新增
      */

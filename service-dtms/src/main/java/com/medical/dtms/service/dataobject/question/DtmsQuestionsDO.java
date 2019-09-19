@@ -9,6 +9,8 @@ import com.medical.dtms.common.convert.LongJsonSerializer;
 
 import lombok.Data;
 
+import javax.persistence.Table;
+
 /**
  * 试卷管理
  * 
@@ -16,6 +18,7 @@ import lombok.Data;
  * @version $Id: DtmsQuestionsDO.java, v 0.1 2019年8月27日 下午5:18:16 shenqifeng Exp $
  */
 @Data
+@Table(name = "tb_dtms_questions")
 public class DtmsQuestionsDO {
     /**自增主键*/
     private Long    id;

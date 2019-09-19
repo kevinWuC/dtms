@@ -3,6 +3,7 @@ package com.medical.dtms.service.serviceimpl.dept;
 import com.medical.dtms.common.constants.Constants;
 import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
+import com.medical.dtms.common.model.dept.QMSDeptInJobModel;
 import com.medical.dtms.common.model.dept.QMSDeptModel;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -165,5 +168,63 @@ public class QMSDeptServiceImpl implements QMSDeptService {
         }
 
         return models;
+    }
+
+    /**
+     * 递归查询部门
+     */
+    private void getDeptList(QMSDeptQuery query, QMSDeptModel model) {
+        List<QMSDeptModel> models = qmsDeptManager.listQMSDept(query);
+        if (CollectionUtils.isEmpty(models)) {
+            model.setLastOrNot(true);
+            model.setList(new ArrayList<>());
+        } else {
+            model.setLastOrNot(false);
+            model.setList(models);
+        }
+        for (QMSDeptModel deptModel : models) {
+            query.setParentId(deptModel.getBizId());
+            getDeptList(query, deptModel);
+        }
+    }
+
+
+    /**
+     * @param []
+     * @return java.util.List<com.medical.dtms.common.model.dept.QMSDeptInJobModel>
+     * @description 用户管理 - 职位授权 - 部门 和 职位列表
+     **/
+    @Override
+    public List<QMSDeptInJobModel> listDeptInJobs() {
+        // 先查询部门列表
+        QMSDeptQuery query = new QMSDeptQuery();
+        if (null == query || null == query.getParentId()) {
+            // 一级类别
+            query.setParentId(Constants.PARENT_ID);
+        }
+
+        List<QMSDeptModel> models = qmsDeptManager.listQMSDept(query);
+        if (CollectionUtils.isEmpty(models)) {
+            return new ArrayList<>();
+        }
+
+        for (QMSDeptModel model : models) {
+            query.setParentId(model.getBizId());
+            getDeptList(query, model);
+        }
+
+        // 末级部门id
+        Map<Boolean, List<QMSDeptModel>> map = models.stream().collect(Collectors.groupingBy(QMSDeptModel::getLastOrNot));
+
+
+        List<Long> ids = models.stream().filter(model -> model.getLastOrNot().equals(true)).collect(Collectors.toList()).stream().map(QMSDeptModel::getBizId).distinct().collect(Collectors.toList());
+        // 非末级部门
+        List<QMSDeptModel> notLastModel = models.stream().filter(model -> model.getLastOrNot().equals(false)).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(notLastModel)){
+
+        }
+
+
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @Description 培训用户表
  **/
 @Data
+@Table(name = "tb_dtms_train_user")
 public class TrainUserDO {
     /**
      * 自增主键
