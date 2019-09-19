@@ -25,6 +25,8 @@ public interface QMSItemDetailsMapper {
 
     List<QMSItemDetailsModel> listDetailsByItemsId(QMSItemDetailsQuery query);
 
+    QMSItemDetailsDO queryQMSItemDetails(String itemsName);
+
     Integer deleteByItemId(@Param("itemsId") Long itemsId);
 
     QMSItemDetailsDO getQMSItemDetailsByCondition(QMSItemDetailsQuery query);

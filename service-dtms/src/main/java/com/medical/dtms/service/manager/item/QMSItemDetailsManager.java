@@ -39,6 +39,12 @@ public class QMSItemDetailsManager {
         return detailsMapper.listDetailsByItemsId(query);
     }
 
+    public QMSItemDetailsDTO queryQMSItemDetails(String itemsName) {
+        QMSItemDetailsDO qmsItemDetailsDO = detailsMapper.queryQMSItemDetails(itemsName);
+        return BeanConvertUtils.convert(qmsItemDetailsDO, QMSItemDetailsDTO.class);
+    }
+
+
     /**
      * 文件类别/申请原因下拉
      */

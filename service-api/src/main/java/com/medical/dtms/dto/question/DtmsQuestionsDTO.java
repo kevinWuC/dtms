@@ -17,11 +17,11 @@ public class DtmsQuestionsDTO {
     /**试题id*/
     private Long    bizId;
     /**培训类别*/
-    private Long    examTypeId;
+    private String    examTypeId;
     /**试题库类别*/
-    private Long    questionsBankTypeId;
+    private String    questionsBankTypeId;
     /**试题类别*/
-    private Long    questionsTypeId;
+    private String    questionsTypeId;
     /**试题题目*/
     private String  questionTitle;
     /**试题内容*/

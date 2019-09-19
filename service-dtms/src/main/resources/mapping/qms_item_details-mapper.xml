@@ -125,6 +125,18 @@
         order by gmt_created desc
     </select>
 
+
+    <!--  根据数据字典表名称查询数据-->
+    <select id="queryQMSItemDetails" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and item_name = #{itemName}
+        order by gmt_created desc
+    </select>
+
     <!--  根据数据字典表 id 删除数据-->
     <delete id="deleteByItemId" parameterType="java.lang.Long">
         UPDATE
