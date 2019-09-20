@@ -6,7 +6,6 @@ import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 /**

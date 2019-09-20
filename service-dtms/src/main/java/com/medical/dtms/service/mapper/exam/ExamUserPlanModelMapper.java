@@ -18,6 +18,13 @@ public interface ExamUserPlanModelMapper {
      * @return
      */
     Integer insertBatchExamUserPlanModel(List<ExamUserPlanModelDO> list);
+    /**
+     * 重新安排考试
+     *
+     * @param list
+     * @return
+     */
+    Integer insertBatchExamUserPlanModelForAfresh(List<ExamUserPlanModelDO> list);
 
     /**
      * 修改
@@ -66,4 +73,11 @@ public interface ExamUserPlanModelMapper {
      */
     ExamUserPlanModelDTO selectExamUserPlanModelByBizId(@Param("examUserPlanModelId")Long bizId);
 
+    /**
+     * 根据用户ID和考试ID删除用户和考试的关联
+     *
+     * @param dos
+     * @return
+     */
+    Integer deleteBatchByCondition(List<ExamUserPlanModelDO> dos);
 }

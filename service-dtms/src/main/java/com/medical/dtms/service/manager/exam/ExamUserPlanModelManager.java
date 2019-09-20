@@ -2,6 +2,7 @@ package com.medical.dtms.service.manager.exam;
 
 import java.util.List;
 
+import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,33 +19,46 @@ public class ExamUserPlanModelManager {
 
     /**
      * 批量新增
-     * 
+     *
      * @param list
      * @return
      */
     public Boolean insertBatchExamUserPlanModel(List<ExamUserPlanModelDTO> list) {
         List<ExamUserPlanModelDO> examUserPlanModelDOs = BeanConvertUtils.convertList(list,
-            ExamUserPlanModelDO.class);
+                ExamUserPlanModelDO.class);
         Integer num = examUserPlanModelMapper.insertBatchExamUserPlanModel(examUserPlanModelDOs);
         return num > 0 ? true : false;
     }
 
     /**
+     * 重新安排考试（补考）
+     *
+     * @param list
+     * @return
+     */
+    public Boolean insertBatchExamUserPlanModelForAfresh(List<ExamUserPlanModelDTO> list) {
+        List<ExamUserPlanModelDO> examUserPlanModelDOs = BeanConvertUtils.convertList(list,
+                ExamUserPlanModelDO.class);
+        Integer num = examUserPlanModelMapper.insertBatchExamUserPlanModelForAfresh(examUserPlanModelDOs);
+        return num > 0 ? true : false;
+    }
+
+    /**
      * 修改
-     * 
+     *
      * @param examUserPlanModelDO
      * @return
      */
     public Boolean updateExamUserPlanModel(ExamUserPlanModelDTO examUserPlanModelDTO) {
         ExamUserPlanModelDO examUserPlanModelDO = BeanConvertUtils.convert(examUserPlanModelDTO,
-            ExamUserPlanModelDO.class);
+                ExamUserPlanModelDO.class);
         Integer num = examUserPlanModelMapper.updateExamUserPlanModel(examUserPlanModelDO);
         return num > 0 ? true : false;
     }
 
     /**
      * 启动
-     * 
+     *
      * @param examPlanId
      * @return
      */
@@ -55,7 +69,7 @@ public class ExamUserPlanModelManager {
 
     /**
      * 根据考试安排id  删除
-     * 
+     *
      * @param examPlanId
      * @return
      */
@@ -66,7 +80,7 @@ public class ExamUserPlanModelManager {
 
     /**
      * 分页查询
-     * 
+     *
      * @param query
      * @return
      */
@@ -90,8 +104,20 @@ public class ExamUserPlanModelManager {
      * @param bizId
      * @return
      */
-    public ExamUserPlanModelDTO selectExamUserPlanModelByBizId(Long bizId){
+    public ExamUserPlanModelDTO selectExamUserPlanModelByBizId(Long bizId) {
         return examUserPlanModelMapper.selectExamUserPlanModelByBizId(bizId);
+    }
+
+    /**
+     * 根据用户ID和考试ID删除用户和考试的关联
+     *
+     * @param dtos
+     * @return
+     */
+    public Boolean deleteBatchByCondition(List<ExamUserPlanModelDTO> dtos) {
+        List<ExamUserPlanModelDO> dos = BeanConvertUtils.convertList(dtos, ExamUserPlanModelDO.class);
+        Integer num = examUserPlanModelMapper.deleteBatchByCondition(dos);
+        return num > 0 ? true : false;
     }
 
 }
