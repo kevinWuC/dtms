@@ -150,6 +150,10 @@ TrainUserModel {
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long examId;
     /**
+     * 考试名称
+     */
+    private String examName;
+    /**
      * 考试时长
      */
     private Integer examDuration;

@@ -155,6 +155,10 @@ public class TrainUserQuery {
     private List<Long> userIds;
     /** 问题类型 id 集合*/
     private List<Long> questionsTypeIds;
+    /**
+     * 考试名称
+     */
+    private String examName;
 
 
 }

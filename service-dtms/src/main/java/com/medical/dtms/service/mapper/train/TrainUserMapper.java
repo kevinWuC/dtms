@@ -1,5 +1,6 @@
 package com.medical.dtms.service.mapper.train;
 
+import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
@@ -38,7 +39,7 @@ public interface TrainUserMapper {
     Integer addTrainUser(TrainUserDO dto);
 
     //考试
-    List<TrainUserModel> pageListExamTotal(TrainUserQuery query);
+    List<ExamTotalModel> pageListExamTotal(TrainUserQuery query);
 
     TrainUserDO getTrainUserByPrimaryKey(@Param("bizId") Long bizId);
 

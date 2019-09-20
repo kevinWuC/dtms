@@ -207,20 +207,20 @@ public class QMSDeptServiceImpl implements QMSDeptService {
 
         // 获取职位
         List<QMSJobsModel> jobsModels = jobsManager.listJobsByDeptIds(lastIds);
-        if (CollectionUtils.isNotEmpty(jobsModels)){
+        if (CollectionUtils.isNotEmpty(jobsModels)) {
             Map<String, List<QMSJobsModel>> jobMap = jobsModels.stream().collect(Collectors.groupingBy(QMSJobsModel::getDeptId));
             QMSDeptInJobModel deptInJobModel;
 
             for (QMSDeptModel model : models) {
-                if (!lastIds.contains(String.valueOf(model.getBizId()))){
+                if (!lastIds.contains(String.valueOf(model.getBizId()))) {
                     continue;
                 }
                 deptInJobModel = new QMSDeptInJobModel();
-                BeanUtils.copyProperties(model,deptInJobModel);
+                BeanUtils.copyProperties(model, deptInJobModel);
                 List<QMSJobsModel> list = jobMap.get(String.valueOf(model.getBizId()));
-                if (CollectionUtils.isEmpty(list)){
+                if (CollectionUtils.isEmpty(list)) {
                     deptInJobModel.setJobsModels(new ArrayList<>());
-                }else {
+                } else {
                     List<SimpleQMSJobsModel> qmsJobsModels = BeanConvertUtils.convertList(list, SimpleQMSJobsModel.class);
                     deptInJobModel.setJobsModels(qmsJobsModels);
                 }
@@ -233,10 +233,13 @@ public class QMSDeptServiceImpl implements QMSDeptService {
     }
 
 
-
     /**
      * 递归取末级id
-     */
+     *
+     * @param lastIds
+     * @param map
+     * @return
+     **/
     private List<QMSDeptInJobModel> getList(List<String> lastIds, Map<Long, List<QMSDeptModel>> map) {
         if (null == map || map.size() == 0) {
             return new ArrayList<>();
@@ -253,18 +256,22 @@ public class QMSDeptServiceImpl implements QMSDeptService {
         if (CollectionUtils.isNotEmpty(list)) {
             for (QMSDeptModel deptModel : list) {
                 List<QMSDeptModel> models = map.get(deptModel.getBizId());
-                if (CollectionUtils.isEmpty(models)){
+                if (CollectionUtils.isEmpty(models)) {
                     lastIds.add(String.valueOf(deptModel.getBizId()));
                     continue;
                 }
-                getLastIds(lastIds,map,models);
+                getLastIds(lastIds, map, models);
             }
         }
     }
 
     /**
      * 递归查询部门
-     */
+     *
+     * @param query
+     * @param model
+     * @return
+     **/
     private void getDeptList(QMSDeptQuery query, QMSDeptModel model) {
         List<QMSDeptModel> models = qmsDeptManager.listQMSDept(query);
         if (CollectionUtils.isEmpty(models)) {

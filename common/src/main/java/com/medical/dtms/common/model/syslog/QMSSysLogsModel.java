@@ -11,7 +11,7 @@ import java.util.Date;
 
 /**
  * @version： QMSSysLogsModel.java v 1.0, 2019年08月19日 15:56 wuxuelin Exp$
- * @Description
+ * @Description 系统日志 model
  **/
 @Data
 public class QMSSysLogsModel {

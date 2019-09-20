@@ -2,22 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.medical.dtms.service.mapper.qms.QMSSysLogDetailsMapper">
     <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO">
-        <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="biz_id" jdbcType="BIGINT" property="bizId" />
-        <result column="field_name" jdbcType="VARCHAR" property="fieldName" />
-        <result column="field_text" jdbcType="VARCHAR" property="fieldText" />
-        <result column="new_value" jdbcType="LONGVARCHAR" property="newValue" />
-        <result column="old_value" jdbcType="LONGVARCHAR" property="oldValue" />
-        <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-        <result column="creator" jdbcType="VARCHAR" property="creator" />
-        <result column="creator_id" jdbcType="VARCHAR" property="creatorId" />
-        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
-        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
-        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId" />
-        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="log_id" jdbcType="BIGINT" property="logId"/>
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName"/>
+        <result column="field_text" jdbcType="VARCHAR" property="fieldText"/>
+        <result column="new_value" jdbcType="LONGVARCHAR" property="newValue"/>
+        <result column="old_value" jdbcType="LONGVARCHAR" property="oldValue"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="creator_id" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modifier_id" jdbcType="VARCHAR" property="modifierId"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
     </resultMap>
     <sql id="Base_Column_List">
-     id, biz_id, field_name, field_text,new_value, old_value, is_deleted, creator, creator_id, gmt_created,
+     id, biz_id, log_id,field_name, field_text,new_value, old_value, is_deleted, creator, creator_id, gmt_created,
     modifier, modifier_id, gmt_modified
   </sql>
 
@@ -45,7 +46,7 @@
         (
         <include refid="Base_Column_List"/>
         )
-        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{fieldName,jdbcType=VARCHAR},
+        values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT},#{logId,jdbcType=BIGINT}, #{fieldName,jdbcType=VARCHAR},
         #{fieldText,jdbcType=VARCHAR},#{newValue,jdbcType=LONGVARCHAR},
         #{oldValue,jdbcType=LONGVARCHAR}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
         #{creatorId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
@@ -58,6 +59,9 @@
         <set>
             <if test="bizId != null">
                 biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="logId != null">
+                log_id = #{logId,jdbcType=BIGINT},
             </if>
             <if test="fieldName != null">
                 field_name = #{fieldName,jdbcType=VARCHAR},
@@ -95,4 +99,18 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
+    <!-- 根据 系统日志 id 查询 系统操作日志明细-->
+    <select id="listQMSSysLogDetails" parameterType="com.medical.dtms.dto.log.query.QMSSysLogsQuery"
+            resultType="com.medical.dtms.common.model.syslog.QMSSysLogDetailsModel">
+        select
+        field_name AS fieldName,
+        field_text AS fieldText,
+        new_value AS newValue,
+        old_value AS oldValue
+        FROM
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and log_id = #{logId,jdbcType=BIGINT}
+    </select>
 </mapper>

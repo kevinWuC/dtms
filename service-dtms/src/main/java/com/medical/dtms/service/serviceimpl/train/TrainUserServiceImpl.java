@@ -7,35 +7,24 @@ import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.dept.QMSUserInDeptModel;
 import com.medical.dtms.common.model.exam.ExamExcelModel;
-import com.medical.dtms.common.model.exam.ExamQuestionsTypeModel;
-import com.medical.dtms.common.model.question.DtmsQuestionsModel;
+import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.question.QuestionItemModel;
 import com.medical.dtms.common.model.train.*;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.common.util.DateUtils;
 import com.medical.dtms.common.util.IdGenerator;
-import com.medical.dtms.dto.exam.ExamUserAnswerModelDTO;
-import com.medical.dtms.dto.exam.ExamUserPlanModelDTO;
 import com.medical.dtms.dto.exam.query.ExamUserAnswerModelQuery;
-import com.medical.dtms.dto.question.DtmsQuestionsDTO;
-import com.medical.dtms.dto.question.QuestionQuery;
-import com.medical.dtms.dto.train.TrainConfigDTO;
 import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.dto.user.query.QMSUserInDeptQuery;
 import com.medical.dtms.feignservice.exam.ExamService;
 import com.medical.dtms.feignservice.train.TrainUserService;
-import com.medical.dtms.service.manager.exam.ExamQuestionsTypeManager;
 import com.medical.dtms.service.manager.exam.ExamUserAnswerModelManager;
-import com.medical.dtms.service.manager.exam.ExamUserPlanModelManager;
 import com.medical.dtms.service.manager.item.QMSItemDetailsManager;
-import com.medical.dtms.service.manager.question.DtmsQuestionManager;
-import com.medical.dtms.service.manager.train.TrainConfigManager;
 import com.medical.dtms.service.manager.train.TrainFilesManager;
 import com.medical.dtms.service.manager.train.TrainUserManager;
 import com.medical.dtms.service.manager.user.QMSUserInDeptManager;
 import lombok.extern.slf4j.Slf4j;
-import netscape.security.Privilege;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -400,7 +389,7 @@ public class TrainUserServiceImpl implements TrainUserService {
      * @description 考试统计 - 查询查看
      **/
     @Override
-    public PageInfo<TrainUserModel> pageListExamTotal(@RequestBody TrainUserQuery query) {
+    public PageInfo<ExamTotalModel> pageListExamTotal(@RequestBody TrainUserQuery query) {
         // 处理部门
         List<QMSUserInDeptModel> deptModels = new ArrayList<>();
         if (null != query.getDepId()) {
@@ -418,13 +407,13 @@ public class TrainUserServiceImpl implements TrainUserService {
         }
 
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
-        List<TrainUserModel> list = trainUserManager.pageListExamTotal(query);
+        List<ExamTotalModel> list = trainUserManager.pageListExamTotal(query);
         if (CollectionUtils.isEmpty(list)) {
             return new PageInfo<>(new ArrayList<>());
         }
 
         // 判断是否及格
-        for (TrainUserModel model : list) {
+        for (ExamTotalModel model : list) {
             if (StringUtils.isBlank(model.getPointStr())) {
                 model.setPointStr(String.valueOf(0));
             }
@@ -456,26 +445,26 @@ public class TrainUserServiceImpl implements TrainUserService {
     @Override
     public List<ExamExcelModel> exportExam(@RequestBody TrainUserQuery query) {
         // 不分页，但是需要根据条件查询，然后将结果导出
-        List<TrainUserModel> models = trainUserManager.exportExam(query);
+        List<ExamTotalModel> models = trainUserManager.exportExam(query);
         if (CollectionUtils.isEmpty(models)) {
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "无满足条件数据,请更换查询条件");
         }
 
         // 获取用户 id 集合
-        List<Long> userIds = models.stream().map(TrainUserModel::getUserId).distinct().collect(Collectors.toList());
+        List<Long> userIds = models.stream().map(ExamTotalModel::getUserId).distinct().collect(Collectors.toList());
         QMSUserInDeptQuery deptQuery = new QMSUserInDeptQuery();
         deptQuery.setUserIds(userIds);
         List<QMSUserInDeptModel> deptModels = userInDeptManager.listDeptByUserIdsAndDept(deptQuery);
         // 获取培训id 集合
-        List<Long> trainIds = models.stream().map(TrainUserModel::getTrainId).distinct().collect(Collectors.toList());
+        List<Long> trainIds = models.stream().map(ExamTotalModel::getTrainId).distinct().collect(Collectors.toList());
         // 查询培训关联的文件id、名称
         List<SimpleTrainFileModel> modelList = trainFilesManager.listFileInfoByTrainIds(trainIds);
 
         if (CollectionUtils.isNotEmpty(modelList)) {
             Map<Long, List<SimpleTrainFileModel>> map = modelList.stream().collect(Collectors.groupingBy(SimpleTrainFileModel::getTrainId));
             Map<Long, List<QMSUserInDeptModel>> deptMap = deptModels.stream().collect(Collectors.groupingBy(QMSUserInDeptModel::getUserId));
-            for (TrainUserModel aDo : models) {
-                aDo.setFileName(CollectionUtils.isEmpty(map.get(aDo.getTrainId())) == true ? null : map.get(aDo.getTrainId()).get(0) == null ? null : StringUtils.isBlank(map.get(aDo.getTrainId()).get(0).getFileName()) == true ? null : map.get(aDo.getTrainId()).get(0).getFileName());
+            for (ExamTotalModel aDo : models) {
+
                 if (StringUtils.isBlank(aDo.getPointStr())) {
                     aDo.setPointStr(String.valueOf(0));
                 }

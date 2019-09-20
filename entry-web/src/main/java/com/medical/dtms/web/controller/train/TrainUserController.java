@@ -6,6 +6,7 @@ import com.medical.dtms.common.login.OperatorInfo;
 import com.medical.dtms.common.login.SessionTools;
 import com.medical.dtms.common.model.exam.ExamExcelModel;
 import com.medical.dtms.common.model.exam.ExamStartModel;
+import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainExcelModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
@@ -171,9 +172,9 @@ public class TrainUserController {
      * @description 考试统计 - 查询查看（分页展示）
      **/
     @RequestMapping(value = "/train/pageListExamTotal", method = RequestMethod.POST)
-    public Result<TrainUserModel> pageListExamTotal(@RequestBody TrainUserQuery query) {
+    public Result<ExamTotalModel> pageListExamTotal(@RequestBody TrainUserQuery query) {
         checkParams(query);
-        PageInfo<TrainUserModel> info = trainUserService.pageListExamTotal(query);
+        PageInfo<ExamTotalModel> info = trainUserService.pageListExamTotal(query);
         return Result.buildSuccess(info);
     }
 

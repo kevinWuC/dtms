@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @version: TrainExcelModel$.java v 1.0,2019$年09$月09$日15:00ruanqiuhan Exp$
- * @Descrption 培训管理 - 导出 model
+ * @Descrption 考试统计 - 导出 model
  **/
 @Data
 public class ExamExcelModel {
@@ -18,9 +18,9 @@ public class ExamExcelModel {
      */
     private String deptName;
     /**
-     * 培训名称
+     * 考试名称
      */
-    private String trainName;
+    private String examName;
     /**
      * 得分
      */
