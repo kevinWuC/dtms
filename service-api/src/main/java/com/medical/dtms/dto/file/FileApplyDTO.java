@@ -104,6 +104,8 @@ public class FileApplyDTO {
     /**
      * 编写人 id
      */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long applyUserId;
     /**
      * 编写人 姓名
