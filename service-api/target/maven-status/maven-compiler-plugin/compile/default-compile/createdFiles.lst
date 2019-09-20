@@ -45,6 +45,7 @@ com\medical\dtms\feignservice\item\QMSItemDetailsService.class
 com\medical\dtms\feignservice\question\DtmsQuestionService.class
 com\medical\dtms\dto\exam\ExamQuestionsDTO.class
 com\medical\dtms\dto\exam\query\ExamPlanModelQuery.class
+com\medical\dtms\dto\exam\query\ExamUserAnswerModelQuery.class
 com\medical\dtms\feignservice\exam\ExamService.class
 com\medical\dtms\feignservice\role\QMSRoleInMenuService.class
 com\medical\dtms\feignservice\user\QMSUserInDeptService.class

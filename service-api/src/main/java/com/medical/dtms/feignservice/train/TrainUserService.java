@@ -2,6 +2,7 @@ package com.medical.dtms.feignservice.train;
 
 import com.github.pagehelper.PageInfo;
 import com.medical.dtms.common.model.exam.ExamExcelModel;
+import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainExcelModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
@@ -45,7 +46,7 @@ public interface TrainUserService {
 
     //考试
     @RequestMapping(value = "/train/pageListExamTotal", method = RequestMethod.POST)
-    PageInfo<TrainUserModel> pageListExamTotal(@RequestBody TrainUserQuery query);
+    PageInfo<ExamTotalModel> pageListExamTotal(@RequestBody TrainUserQuery query);
 
     @RequestMapping(value = "/train/exportExam", method = RequestMethod.POST)
     List<ExamExcelModel> exportExam(@RequestBody TrainUserQuery query);

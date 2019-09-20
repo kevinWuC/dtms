@@ -1,5 +1,6 @@
 package com.medical.dtms.service.manager.train;
 
+import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
@@ -149,8 +150,8 @@ public class TrainUserManager {
     /**
      * 考试统计 - 分页展示查看查询
      */
-    public List<TrainUserModel> pageListExamTotal(TrainUserQuery query) {
-        List<TrainUserModel> trainDos = trainUserMapper.pageListExamTotal(query);
+    public List<ExamTotalModel> pageListExamTotal(TrainUserQuery query) {
+        List<ExamTotalModel> trainDos = trainUserMapper.pageListExamTotal(query);
         if (CollectionUtils.isEmpty(trainDos)) {
             return new ArrayList<>();
         }
@@ -160,8 +161,8 @@ public class TrainUserManager {
     /**
      * 考试统计-导出
      */
-    public List<TrainUserModel> exportExam(TrainUserQuery query) {
-        List<TrainUserModel> trainDos = trainUserMapper.pageListExamTotal(query);
+    public List<ExamTotalModel> exportExam(TrainUserQuery query) {
+        List<ExamTotalModel> trainDos = trainUserMapper.pageListExamTotal(query);
         if (CollectionUtils.isEmpty(trainDos)) {
             return new ArrayList<>();
         }
