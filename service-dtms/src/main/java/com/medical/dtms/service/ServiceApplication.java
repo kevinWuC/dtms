@@ -12,8 +12,8 @@ import org.springframework.retry.annotation.EnableRetry;
  * @date Date : 2018年10月28日 16:01
  * @Description:
  */
-@SpringBootApplication(scanBasePackages = { "com.medical.dtms.service",
-                                            "com.medical.dtms.common" })
+@SpringBootApplication(scanBasePackages = {"com.medical.dtms.service",
+        "com.medical.dtms.common", "com.github.yeecode.objectlogger"})
 @EnableEurekaClient
 @EnableCircuitBreaker
 @MapperScan("com.medical.dtms.service.mapper")

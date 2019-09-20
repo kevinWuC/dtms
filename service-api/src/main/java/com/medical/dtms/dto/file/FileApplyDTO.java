@@ -64,8 +64,8 @@ public class FileApplyDTO {
     /**
      * 申请日期
      */
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
-    private Date applyDate;
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
+    private String applyDate;
     /**
      * 文件版本
      */
@@ -73,8 +73,8 @@ public class FileApplyDTO {
     /**
      * 生效日期
      */
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
-    private Date effectDate;
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
+    private String effectDate;
     /**
      * 原文件的申请/编制部门id
      */
@@ -134,8 +134,8 @@ public class FileApplyDTO {
     /**
      * 审批日期
      */
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
-    private Date approverDate;
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
+    private String approverDate;
     /**
      * 审核结果
      */

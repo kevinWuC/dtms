@@ -10,9 +10,9 @@
         <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
         <result column="file_type_id" jdbcType="BIGINT" property="fileTypeId"/>
         <result column="apply_type" jdbcType="BIGINT" property="applyType"/>
-        <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate"/>
+        <result column="apply_date" jdbcType="VARCHAR" property="applyDate"/>
         <result column="file_version" jdbcType="VARCHAR" property="fileVersion"/>
-        <result column="effect_date" jdbcType="TIMESTAMP" property="effectDate"/>
+        <result column="effect_date" jdbcType="VARCHAR" property="effectDate"/>
         <result column="apply_dept_id" jdbcType="BIGINT" property="applyDeptId"/>
         <result column="apply_dept_name" jdbcType="VARCHAR" property="applyDeptName"/>
         <result column="make_dept_id" jdbcType="BIGINT" property="makeDeptId"/>
@@ -25,7 +25,7 @@
         <result column="approver_user_id" jdbcType="VARCHAR" property="approverUserId"/>
         <result column="approver_user_name" jdbcType="VARCHAR" property="approverUserName"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
-        <result column="approver_date" jdbcType="TIMESTAMP" property="approverDate"/>
+        <result column="approver_date" jdbcType="VARCHAR" property="approverDate"/>
         <result column="result" jdbcType="BIT" property="result"/>
         <result column="is_finish" jdbcType="BIT" property="isFinish"/>
         <result column="before_change" jdbcType="VARCHAR" property="beforeChange"/>
@@ -118,13 +118,13 @@
                 apply_type = #{applyType,jdbcType=BIGINT},
             </if>
             <if test="applyDate != null">
-                apply_date = #{applyDate,jdbcType=TIMESTAMP},
+                apply_date = #{applyDate,jdbcType=VARCHAR},
             </if>
             <if test="fileVersion != null">
                 file_version = #{fileVersion,jdbcType=VARCHAR},
             </if>
             <if test="effectDate != null">
-                effect_date = #{effectDate,jdbcType=TIMESTAMP},
+                effect_date = #{effectDate,jdbcType=VARCHAR},
             </if>
             <if test="applyDeptId != null">
                 apply_dept_id = #{applyDeptId,jdbcType=BIGINT},
@@ -163,7 +163,7 @@
                 content = #{content,jdbcType=VARCHAR},
             </if>
             <if test="approverDate != null">
-                approver_date = #{approverDate,jdbcType=TIMESTAMP},
+                approver_date = #{approverDate,jdbcType=VARCHAR},
             </if>
             <if test="result != null">
                 result = #{result,jdbcType=BIT},

@@ -1,5 +1,6 @@
 package com.medical.dtms.service.manager.file;
 
+import com.github.yeecode.objectlogger.client.service.LogClient;
 import com.medical.dtms.common.model.file.ApplyCheckModel;
 import com.medical.dtms.common.model.file.FileApplyDetailModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
@@ -21,6 +22,8 @@ public class FileApplyManager {
 
     @Autowired
     private FileApplyMapper applyMapper;
+    @Autowired
+    private LogClient logClient;
 
     /**
      * 添加申请
