@@ -1,11 +1,7 @@
 package com.medical.dtms.service.mapper.qms;
 
-import com.medical.dtms.common.model.syslog.QMSSysLogsModel;
-import com.medical.dtms.dto.log.query.QMSSysLogsQuery;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface QMSSysLogsMapper {
@@ -20,6 +16,4 @@ public interface QMSSysLogsMapper {
     int updateByPrimaryKeySelective(QMSSysLogsDO record);
 
     int updateByPrimaryKey(QMSSysLogsDO record);
-
-    List<QMSSysLogsModel> pageListSysLogs(QMSSysLogsQuery query);
 }
