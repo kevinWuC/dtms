@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.medical.dtms.service.mapper.exam.ExamUserPlanModelMapper">
-  <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="biz_id" jdbcType="BIGINT" property="examUserPlanModelId" />
-    <result column="is_finish" jdbcType="BIT" property="isFinish" />
-    <result column="exam_time" jdbcType="INTEGER" property="examTime" />
-    <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId" />
-    <result column="exam_id" jdbcType="BIGINT" property="examId" />
-    <result column="is_start" jdbcType="BIT" property="isStart" />
-    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
-    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
-    <result column="exam_duration" jdbcType="INTEGER" property="examDuration" />
-    <result column="total_points" jdbcType="INTEGER" property="totalPoints" />
-    <result column="pass_points" jdbcType="INTEGER" property="passPoints" />
-    <result column="user_id" jdbcType="VARCHAR" property="userId" />
-    <result column="base_total_points" jdbcType="INTEGER" property="baseTotalPoints" />
-    <result column="is_mark" jdbcType="BIT" property="isMark" />
-    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
-    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
-    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
-    <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
-    <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
-  </resultMap>
-  
-  <resultMap id="DtoResultMap" type="com.medical.dtms.dto.exam.ExamUserPlanModelDTO">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="biz_id" jdbcType="BIGINT" property="examUserPlanModelId" />
-    <result column="is_finish" jdbcType="BIT" property="isFinish" />
-    <result column="is_begin" jdbcType="BIT" property="isBegin" />
-    <result column="exam_time" jdbcType="INTEGER" property="examTime" />
-    <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId" />
-    <result column="exam_id" jdbcType="BIGINT" property="examId" />
-    <result column="exam_plan_name" jdbcType="VARCHAR" property="examPlanName" />
-    <result column="is_start" jdbcType="BIT" property="isStart" />
-    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
-    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
-    <result column="exam_duration" jdbcType="INTEGER" property="examDuration" />
-    <result column="total_points" jdbcType="INTEGER" property="totalPoints" />
-    <result column="pass_points" jdbcType="INTEGER" property="passPoints" />
-    <result column="user_id" jdbcType="VARCHAR" property="userId" />
-    <result column="base_total_points" jdbcType="INTEGER" property="baseTotalPoints" />
-    <result column="is_mark" jdbcType="BIT" property="isMark" />
-    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
-    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
-    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
-    <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
-    <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
-  </resultMap>
-  
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="examUserPlanModelId"/>
+        <result column="is_finish" jdbcType="BIT" property="isFinish"/>
+        <result column="exam_time" jdbcType="INTEGER" property="examTime"/>
+        <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId"/>
+        <result column="exam_id" jdbcType="BIGINT" property="examId"/>
+        <result column="is_start" jdbcType="BIT" property="isStart"/>
+        <result column="start_date" jdbcType="TIMESTAMP" property="startDate"/>
+        <result column="end_date" jdbcType="TIMESTAMP" property="endDate"/>
+        <result column="exam_duration" jdbcType="INTEGER" property="examDuration"/>
+        <result column="total_points" jdbcType="INTEGER" property="totalPoints"/>
+        <result column="pass_points" jdbcType="INTEGER" property="passPoints"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="base_total_points" jdbcType="INTEGER" property="baseTotalPoints"/>
+        <result column="is_mark" jdbcType="BIT" property="isMark"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId"/>
+        <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.medical.dtms.dto.exam.ExamUserPlanModelDTO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="examUserPlanModelId"/>
+        <result column="is_finish" jdbcType="BIT" property="isFinish"/>
+        <result column="is_begin" jdbcType="BIT" property="isBegin"/>
+        <result column="exam_time" jdbcType="INTEGER" property="examTime"/>
+        <result column="exam_plan_id" jdbcType="BIGINT" property="examPlanId"/>
+        <result column="exam_id" jdbcType="BIGINT" property="examId"/>
+        <result column="exam_plan_name" jdbcType="VARCHAR" property="examPlanName"/>
+        <result column="is_start" jdbcType="BIT" property="isStart"/>
+        <result column="start_date" jdbcType="TIMESTAMP" property="startDate"/>
+        <result column="end_date" jdbcType="TIMESTAMP" property="endDate"/>
+        <result column="exam_duration" jdbcType="INTEGER" property="examDuration"/>
+        <result column="total_points" jdbcType="INTEGER" property="totalPoints"/>
+        <result column="pass_points" jdbcType="INTEGER" property="passPoints"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="base_total_points" jdbcType="INTEGER" property="baseTotalPoints"/>
+        <result column="is_mark" jdbcType="BIT" property="isMark"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId"/>
+        <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
       biz_id, is_finish,is_begin, exam_time, exam_plan_id, exam_id, is_start, start_date, end_date,
     exam_duration, total_points, pass_points, user_id, base_total_points, is_mark,is_deleted, create_date,
     create_user_id, create_user_name, modify_date, modify_user_id, modify_user_name
   </sql>
-  
-  <insert id="insertExamUserPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO">
+
+    <insert id="insertExamUserPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO">
     insert into tb_dtms_exam_user_plan_model (  biz_id, is_finish,
       exam_time, exam_plan_id, exam_id, 
       is_start, start_date, end_date, 
@@ -78,139 +78,180 @@
       )
   </insert>
 
-  <delete id="deleteByExamPlanId" parameterType="java.lang.Long">
+    <delete id="deleteByExamPlanId" parameterType="java.lang.Long">
    		update tb_dtms_exam_user_plan_model
    		set is_deleted = 1
    		where exam_plan_id =#{examPlanId}
    </delete>
 
-  <insert id="insertBatchExamUserPlanModel" parameterType="java.util.List">
-    insert into tb_dtms_exam_user_plan_model (  biz_id, is_finish, is_begin,
-      exam_time, exam_plan_id, exam_id, 
-      is_start, start_date, end_date, 
-      exam_duration, total_points, pass_points, 
-      user_id, base_total_points, is_mark,is_deleted,
-      create_date, create_user_id, create_user_name, 
-      modify_date, modify_user_id, modify_user_name
-      )
-    values 
-    <foreach collection="list" item="item" index="index" separator=",">
-    	(  #{item.examUserPlanModelId,jdbcType=BIGINT}, 0, 0,
-      #{item.examTime,jdbcType=TIMESTAMP}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examId,jdbcType=BIGINT}, 
-      0, #{item.startDate,jdbcType=TIMESTAMP}, #{item.endDate,jdbcType=TIMESTAMP}, 
-      #{item.examDuration,jdbcType=INTEGER}, #{item.totalPoints,jdbcType=INTEGER}, #{item.passPoints,jdbcType=INTEGER}, 
-      #{item.userId,jdbcType=VARCHAR}, #{item.baseTotalPoints,jdbcType=INTEGER}, 0, 0,
-      NOW(), #{item.createUserId,jdbcType=VARCHAR}, #{item.createUserName,jdbcType=VARCHAR}, 
-      NOW(), #{item.modifyUserId,jdbcType=VARCHAR}, #{item.modifyUserName,jdbcType=VARCHAR}
-      )
-    </foreach>
-  </insert>
-   
-  <update id="updateExamUserPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO">
-    update tb_dtms_exam_user_plan_model
-    <set>
-   		 modify_date = NOW(),
-      <if test="isFinish != null">
-        is_finish = #{isFinish,jdbcType=BIT},
-      </if>
-      <if test="isBegin != null">
-        is_begin = #{isBegin,jdbcType=BIT},
-      </if>
-      <if test="examTime != null">
-        exam_time = #{examTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="examPlanId != null">
-        exam_plan_id = #{examPlanId,jdbcType=BIGINT},
-      </if>
-      <if test="examId != null">
-        exam_id = #{examId,jdbcType=BIGINT},
-      </if>
-      <if test="isStart != null">
-        is_start = #{isStart,jdbcType=BIT},
-      </if>
-      <if test="startDate != null">
-        start_date = #{startDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endDate != null">
-        end_date = #{endDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="examDuration != null">
-        exam_duration = #{examDuration,jdbcType=INTEGER},
-      </if>
-      <if test="totalPoints != null">
-        total_points = #{totalPoints,jdbcType=INTEGER},
-      </if>
-      <if test="passPoints != null">
-        pass_points = #{passPoints,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=VARCHAR},
-      </if>
-      <if test="baseTotalPoints != null">
-        base_total_points = #{baseTotalPoints,jdbcType=INTEGER},
-      </if>
-      <if test="isMark != null">
-        is_mark = #{isMark,jdbcType=BIT},
-      </if>
-      <if test="modifyUserId != null">
-        modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="modifyUserName != null">
-        modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where biz_id = #{examUserPlanModelId,jdbcType=BIGINT}
-  </update>
-   
-   
-   <update id="updateStart"  >
-    update tb_dtms_exam_user_plan_model
-    <set>
-   		 modify_date = NOW(),
-        is_start = 1,
-    </set>
-    where exam_plan_id = #{examPlanId,jdbcType=BIGINT}
-  </update>
+    <delete id="deleteBatchByCondition" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update tb_dtms_exam_user_plan_model
+            set is_deleted = 1, modify_date = NOW(),
+            modify_user_id = #{item.modifyUserId,jdbcType=BIGINT},
+            modify_user_name = #{item.modifyUserName,jdbcType=VARCHAR}
+            where exam_plan_id =#{item.examPlanId,jdbcType=BIGINT}
+            and user_id = #{item.userId,jdbcType=BIGINT}
+        </foreach>
+    </delete>
 
-   
-   <select id="listExamUserPlanByQuery" parameterType="com.medical.dtms.dto.exam.query.ExamPlanModelQuery"  resultMap="DtoResultMap">
-  	select  userPlan.biz_id, userPlan.is_finish, userPlan.exam_time, userPlan.exam_plan_id, 
-  	userPlan.exam_id, userPlan.is_start, userPlan.start_date, userPlan.end_date, 
-    userPlan.exam_duration, userPlan.total_points, userPlan.pass_points, userPlan.user_id, 
-    userPlan.base_total_points, userPlan.is_mark, 
-	plan.exam_plan_name ,plan.create_user_name
-  	from tb_dtms_exam_user_plan_model userPlan 
-  	left join tb_dtms_exam_plan_model plan on userPlan.exam_plan_id = plan.biz_id
-  	where plan.is_deleted = 0 
-  	and userPlan.user_id = #{userId,jdbcType=BIGINT}
-  	<if test="examPlanName != null and examPlanName !=''">
-  		and  plan.exam_plan_name like concat(concat('%',#{examPlanName}),'%')
-  	</if>
-     ORDER BY
-     userPlan.create_date DESC
-  </select>
-
-  <select id="listExamUserPlanByQueryForMark" parameterType="com.medical.dtms.dto.exam.query.ExamPlanModelQuery"  resultMap="DtoResultMap">
-    select  userPlan.biz_id, userPlan.is_finish, userPlan.exam_time, userPlan.exam_plan_id,
-    userPlan.exam_id, userPlan.is_start, userPlan.start_date, userPlan.end_date,
-    userPlan.exam_duration, userPlan.total_points, userPlan.pass_points, userPlan.user_id,
-    userPlan.base_total_points, userPlan.is_mark,
-    plan.exam_plan_name ,plan.create_user_name
-    from tb_dtms_exam_user_plan_model userPlan
-    left join tb_dtms_exam_plan_model plan on userPlan.exam_plan_id = plan.biz_id
-    where plan.is_deleted = 0
-    <if test="examPlanName != null and examPlanName !=''">
-      and  plan.exam_plan_name like concat(concat('%',#{examPlanName}),'%')
-    </if>
-    <if test="isMark != null">
-      and  userPlan.is_mark = #{isMark,jdbcType=BIT}
-    </if>
-    ORDER BY
-    userPlan.create_date DESC
-  </select>
+    <insert id="insertBatchExamUserPlanModel" parameterType="java.util.List">
+        insert into tb_dtms_exam_user_plan_model ( biz_id, is_finish, is_begin,
+        exam_time, exam_plan_id, exam_id,
+        is_start, start_date, end_date,
+        exam_duration, total_points, pass_points,
+        user_id, base_total_points, is_mark,is_deleted,
+        create_date, create_user_id, create_user_name,
+        modify_date, modify_user_id, modify_user_name
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.examUserPlanModelId,jdbcType=BIGINT}, 0, 0,
+            #{item.examTime,jdbcType=TIMESTAMP}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examId,jdbcType=BIGINT},
+            0, #{item.startDate,jdbcType=TIMESTAMP}, #{item.endDate,jdbcType=TIMESTAMP},
+            #{item.examDuration,jdbcType=INTEGER}, #{item.totalPoints,jdbcType=INTEGER},
+            #{item.passPoints,jdbcType=INTEGER},
+            #{item.userId,jdbcType=VARCHAR}, #{item.baseTotalPoints,jdbcType=INTEGER}, 0, 0,
+            NOW(), #{item.createUserId,jdbcType=VARCHAR}, #{item.createUserName,jdbcType=VARCHAR},
+            NOW(), #{item.modifyUserId,jdbcType=VARCHAR}, #{item.modifyUserName,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
 
 
-  <select id="selectExamUserPlanModelByBizId" parameterType="java.lang.Long"  resultMap="DtoResultMap">
+    <insert id="insertBatchExamUserPlanModelForAfresh" parameterType="java.util.List">
+        insert into tb_dtms_exam_user_plan_model ( biz_id, is_finish, is_begin,
+        exam_time, exam_plan_id, exam_id,
+        is_start, start_date, end_date,
+        exam_duration, total_points, pass_points,
+        user_id, base_total_points, is_mark,is_deleted,
+        create_date, create_user_id, create_user_name,
+        modify_date, modify_user_id, modify_user_name
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.examUserPlanModelId,jdbcType=BIGINT}, 0, 0,
+            #{item.examTime,jdbcType=TIMESTAMP}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examId,jdbcType=BIGINT},
+            1, #{item.startDate,jdbcType=TIMESTAMP}, #{item.endDate,jdbcType=TIMESTAMP},
+            #{item.examDuration,jdbcType=INTEGER}, #{item.totalPoints,jdbcType=INTEGER},
+            #{item.passPoints,jdbcType=INTEGER},
+            #{item.userId,jdbcType=VARCHAR}, #{item.baseTotalPoints,jdbcType=INTEGER}, 0, 0,
+            NOW(), #{item.createUserId,jdbcType=VARCHAR}, #{item.createUserName,jdbcType=VARCHAR},
+            NOW(), #{item.modifyUserId,jdbcType=VARCHAR}, #{item.modifyUserName,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateExamUserPlanModel" parameterType="com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO">
+        update tb_dtms_exam_user_plan_model
+        <set>
+            modify_date = NOW(),
+            <if test="isFinish != null">
+                is_finish = #{isFinish,jdbcType=BIT},
+            </if>
+            <if test="isBegin != null">
+                is_begin = #{isBegin,jdbcType=BIT},
+            </if>
+            <if test="examTime != null">
+                exam_time = #{examTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="examPlanId != null">
+                exam_plan_id = #{examPlanId,jdbcType=BIGINT},
+            </if>
+            <if test="examId != null">
+                exam_id = #{examId,jdbcType=BIGINT},
+            </if>
+            <if test="isStart != null">
+                is_start = #{isStart,jdbcType=BIT},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="examDuration != null">
+                exam_duration = #{examDuration,jdbcType=INTEGER},
+            </if>
+            <if test="totalPoints != null">
+                total_points = #{totalPoints,jdbcType=INTEGER},
+            </if>
+            <if test="passPoints != null">
+                pass_points = #{passPoints,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="baseTotalPoints != null">
+                base_total_points = #{baseTotalPoints,jdbcType=INTEGER},
+            </if>
+            <if test="isMark != null">
+                is_mark = #{isMark,jdbcType=BIT},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyUserName != null">
+                modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where biz_id = #{examUserPlanModelId,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="updateStart">
+        update tb_dtms_exam_user_plan_model
+        <set>
+            modify_date = NOW(),
+            is_start = 1,
+        </set>
+        where exam_plan_id = #{examPlanId,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="listExamUserPlanByQuery" parameterType="com.medical.dtms.dto.exam.query.ExamPlanModelQuery"
+            resultMap="DtoResultMap">
+        select userPlan.biz_id, userPlan.is_finish, userPlan.exam_time, userPlan.exam_plan_id,
+        userPlan.exam_id, userPlan.is_start, userPlan.start_date, userPlan.end_date,
+        userPlan.exam_duration, userPlan.total_points, userPlan.pass_points, userPlan.user_id,
+        userPlan.base_total_points, userPlan.is_mark,
+        plan.exam_plan_name ,plan.create_user_name
+        from tb_dtms_exam_user_plan_model userPlan
+        left join tb_dtms_exam_plan_model plan on userPlan.exam_plan_id = plan.biz_id
+        where plan.is_deleted = 0
+        and userPlan.is_start = 1
+        and userPlan.user_id = #{userId,jdbcType=BIGINT}
+        <if test="examPlanName != null and examPlanName !=''">
+            and plan.exam_plan_name like concat(concat('%',#{examPlanName}),'%')
+        </if>
+        ORDER BY
+        userPlan.create_date DESC
+    </select>
+
+    <select id="listExamUserPlanByQueryForMark" parameterType="com.medical.dtms.dto.exam.query.ExamPlanModelQuery"
+            resultMap="DtoResultMap">
+        select userPlan.biz_id, userPlan.is_finish, userPlan.exam_time, userPlan.exam_plan_id,
+        userPlan.exam_id, userPlan.is_start, userPlan.start_date, userPlan.end_date,
+        userPlan.exam_duration, userPlan.total_points, userPlan.pass_points, userPlan.user_id,
+        userPlan.base_total_points, userPlan.is_mark,
+        plan.exam_plan_name ,plan.create_user_name
+        from tb_dtms_exam_user_plan_model userPlan
+        left join tb_dtms_exam_plan_model plan on userPlan.exam_plan_id = plan.biz_id
+        where plan.is_deleted = 0
+        and userPlan.is_start = 1
+        and userPlan.is_finish =1
+        <if test="examPlanName != null and examPlanName !=''">
+            and plan.exam_plan_name like concat(concat('%',#{examPlanName}),'%')
+        </if>
+        <if test="isMark != null">
+            and userPlan.is_mark = #{isMark,jdbcType=BIT}
+        </if>
+        ORDER BY
+        userPlan.create_date DESC
+    </select>
+
+
+    <select id="selectExamUserPlanModelByBizId" parameterType="java.lang.Long" resultMap="DtoResultMap">
     select  userPlan.biz_id, userPlan.is_finish,userPlan.is_begin , userPlan.exam_time, userPlan.exam_plan_id,
     userPlan.exam_id, userPlan.is_start, userPlan.start_date, userPlan.end_date,
     userPlan.exam_duration, userPlan.total_points, userPlan.pass_points, userPlan.user_id,
