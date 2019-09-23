@@ -15,6 +15,7 @@ import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import com.medical.dtms.service.mapper.qms.QMSUserMapper;
+import com.medical.dtms.logclient.service.LogClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,8 @@ public class QMSUserManager {
     private OperateManager operateManager;
     @Autowired
     private SysLoginLogManager loginLogManager;
-//    @Autowired
-//    private LogClient logClient;
+    @Autowired
+    private LogClient logClient;
 
 
     /**
@@ -85,21 +86,33 @@ public class QMSUserManager {
     public Integer updateUser(QMSUserDTO dto) {
 
         BaseUserQuery query = new BaseUserQuery();
-        query.setBizId(dto.getBizId());
+        query.setUserId(dto.getBizId());
         QMSUserDTO oldUser = getUserByCondition(query);
         QMSUserDO newUser = BeanConvertUtils.convert(dto, QMSUserDO.class);
+        // 获取表名
+        String tableName = operateManager.getTableName(newUser.getClass());
+        String ip = loginLogManager.getIpByUserId(dto.getModifierId());
 
-//        logClient.logObject(
-//                oldUser.getBizId().intValue(),
-//                oldUser.getModifier(),
-//                OperationTypeEnum.OPERATION_TYPE_UPDATE.getName(),
-//                "FileApplyDTO",
-//                null,
-//                "用户管理",
-//                oldUser,
-//                newUser
-//        );
+        String comment = "用户管理";
 
+        logClient.logObject(
+                // 对象主键
+                oldUser.getBizId().toString(),
+                // 操作人
+                oldUser.getModifier(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_UPDATE.getName(),
+                // 本次操作的别名，这里是操作的表名
+                tableName,
+                // 本次操作的额外描述，这里记录为操作人的ip
+                ip,
+                // 备注，这里是操作模块名
+                comment,
+                // 旧值
+                oldUser,
+                // 新值
+                newUser
+        );
         return userMapper.updateByPrimaryKeySelective(newUser);
     }
 

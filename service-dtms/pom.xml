@@ -66,6 +66,12 @@
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>2.1.5</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.medical.dtms</groupId>
+            <artifactId>dtms-logclient</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

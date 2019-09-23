@@ -1,0 +1,5 @@
+yeecode:
+  objectLogger:
+    serverAddress: 47.98.142.153:9009
+    businessAppName: entry-web
+    autoLogAttributes: false

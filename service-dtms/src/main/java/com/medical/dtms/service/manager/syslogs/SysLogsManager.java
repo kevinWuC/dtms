@@ -4,9 +4,13 @@ import com.medical.dtms.common.model.syslog.QMSSysLogsModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.log.QMSSysLogsDTO;
 import com.medical.dtms.dto.log.query.QMSSysLogsQuery;
+import com.medical.dtms.logclient.model.AttributeModel;
+import com.medical.dtms.logclient.model.OperationModel;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.dataobject.user.QMSUserDO;
 import com.medical.dtms.service.manager.table.OperateManager;
+import com.medical.dtms.service.mapper.logserver.AttributeMapper;
+import com.medical.dtms.service.mapper.logserver.OperationMapper;
 import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,10 @@ public class SysLogsManager {
 
     @Autowired
     private QMSSysLogsMapper qmsSysLogsMapper;
+    @Autowired
+    private OperationMapper operationMapper;
+    @Autowired
+    private AttributeMapper attributeMapper;
 
     /**
      * 系统日志--新增日志
@@ -43,5 +51,13 @@ public class SysLogsManager {
         return qmsSysLogsMapper.pageListSysLogs(query);
     }
 
+
+    public Integer addOperationModel(OperationModel model) {
+        return operationMapper.add(model);
+    }
+
+    public Integer addBatchAttribute(List<AttributeModel> attributeModelList) {
+        return attributeMapper.addBatch(attributeModelList);
+    }
 
 }

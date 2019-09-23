@@ -12,6 +12,7 @@
         <module>discovery</module>
         <module>service-api</module>
         <module>entry-web</module>
+        <module>dtms-logclient</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -33,12 +34,6 @@
     </properties>
 
     <dependencies>
-        <!-- ObjectLoggerClient -->
-        <dependency>
-            <groupId>com.github.yeecode.objectLogger</groupId>
-            <artifactId>ObjectLoggerClient</artifactId>
-            <version>3.0.0</version>
-        </dependency>
         <!--web支持-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -153,6 +148,12 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>0.9.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.medical.dtms</groupId>
+                <artifactId>dtms-logclient</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

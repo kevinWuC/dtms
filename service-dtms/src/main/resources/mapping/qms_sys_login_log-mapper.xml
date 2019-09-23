@@ -151,6 +151,6 @@
         from
         <include refid="table_name"/>
         where is_deleted = 0
-        and creator_id = #{userId}
+        and any_value(creator_id) = #{userId}
     </select>
 </mapper>

@@ -8,6 +8,9 @@ import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.log.query.QMSSysLogsQuery;
 import com.medical.dtms.feignservice.syslogs.SysLogsService;
 import com.medical.dtms.common.model.syslog.QMSSysLogsModel;
+import com.medical.dtms.logclient.model.AttributeModel;
+import com.medical.dtms.logclient.model.OperationModel;
+import com.medical.dtms.logclient.service.LogServer;
 import com.medical.dtms.service.manager.syslogs.QMSSysLogDetailsManager;
 import com.medical.dtms.service.manager.syslogs.SysLogsManager;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +37,8 @@ public class SysLogsServiceImpl implements SysLogsService {
     private QMSSysLogDetailsManager detailsManager;
     @Autowired
     private IdGenerator idGenerator;
+    @Autowired
+    private LogServer logServer;
 
     /**
      * 系统日志 - 操作日志列表分页查询
@@ -56,6 +61,33 @@ public class SysLogsServiceImpl implements SysLogsService {
     }
 
     /**
+     * 插入日志
+     */
+    @Override
+    public Boolean addSysLog(String logJsonString) {
+        try {
+            OperationModel operationModel = logServer.resolveOperationModel(logJsonString);
+            logsManager.addOperationModel(operationModel);
+            Integer operationId = operationModel.getId();
+
+            List<AttributeModel> attributeModelList = operationModel.getAttributeModelList();
+            for (AttributeModel attributeModel : attributeModelList) {
+                attributeModel.setId(null);
+                attributeModel.setOperationId(operationId);
+            }
+
+            if (!org.springframework.util.CollectionUtils.isEmpty(attributeModelList)) {
+                logsManager.addBatchAttribute(attributeModelList);
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("插入日志失败", e);
+            return false;
+        }
+    }
+
+
+    /**
      * 根据 系统日志 id 查询 系统操作日志明细
      *
      * @param query
@@ -69,6 +101,4 @@ public class SysLogsServiceImpl implements SysLogsService {
         }
         return list;
     }
-
-
 }

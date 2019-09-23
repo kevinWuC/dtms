@@ -13,7 +13,7 @@ import org.springframework.retry.annotation.EnableRetry;
  * @Description:
  */
 @SpringBootApplication(scanBasePackages = {"com.medical.dtms.service",
-        "com.medical.dtms.common", "com.github.yeecode.objectlogger"})
+        "com.medical.dtms.common", "com.medical.dtms.logclient"})
 @EnableEurekaClient
 @EnableCircuitBreaker
 @MapperScan("com.medical.dtms.service.mapper")
