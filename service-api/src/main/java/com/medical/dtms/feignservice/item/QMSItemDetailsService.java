@@ -27,4 +27,7 @@ public interface QMSItemDetailsService {
 
     @RequestMapping(value = "/detail/pageListQMSItemDetails", method = RequestMethod.POST)
     PageInfo<QMSItemDetailsModel> pageListQMSItemDetails(@RequestBody QMSItemDetailsQuery query);
+
+    @RequestMapping(value = "/detail/ListQMSItemDetails", method = RequestMethod.POST)
+    QMSItemDetailsDTO queryQMSItemDetails(@RequestBody String itemsName);
 }

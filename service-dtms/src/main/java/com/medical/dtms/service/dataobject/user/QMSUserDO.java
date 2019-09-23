@@ -2,8 +2,6 @@ package com.medical.dtms.service.dataobject.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.yeecode.objectlogger.client.annotation.LogTag;
-import com.github.yeecode.objectlogger.client.handler.BuiltinTypeHandler;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
@@ -31,37 +29,37 @@ public class QMSUserDO {
     /**
      * 用户账号
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String account;
     /**
      * 用户姓名
      */
-    @LogTag(alias = "dspName", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "dspName", builtinType = BuiltinTypeHandler.NORMAL)
     private String dspName;
     /**
      * 部门ID
      */
-    @LogTag(alias = "deptId", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "deptId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long deptId;
     /**
      * 角色ID
      */
-    @LogTag(alias = "roleId", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "roleId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long roleId;
     /**
      * 密码
      */
-    @LogTag(alias = "passWord", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "passWord", builtinType = BuiltinTypeHandler.NORMAL)
     private String passWord;
     /**
      * 是否启用 true 是 false 否
      */
-    @LogTag(alias = "allowEnable", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "allowEnable", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEnable;
     /**
      * 排序码
      */
-    @LogTag(alias = "sortCode", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "sortCode", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
     /**
      * 登录次数
@@ -78,22 +76,22 @@ public class QMSUserDO {
     /**
      * 电话
      */
-    @LogTag(alias = "mobile", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "mobile", builtinType = BuiltinTypeHandler.NORMAL)
     private String mobile;
     /**
      * 邮箱
      */
-    @LogTag(alias = "email", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "email", builtinType = BuiltinTypeHandler.NORMAL)
     private String email;
     /**
      * QQ
      */
-    @LogTag(alias = "qq", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "qq", builtinType = BuiltinTypeHandler.NORMAL)
     private String qq;
     /**
      * 微信
      */
-    @LogTag(alias = "wx", builtinType = BuiltinTypeHandler.NORMAL)
+//    @LogTag(alias = "wx", builtinType = BuiltinTypeHandler.NORMAL)
     private String wx;
     /**
      * false-未删除  true-删除

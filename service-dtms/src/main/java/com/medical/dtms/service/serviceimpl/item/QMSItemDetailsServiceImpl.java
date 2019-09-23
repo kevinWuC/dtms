@@ -156,4 +156,14 @@ public class QMSItemDetailsServiceImpl implements QMSItemDetailsService {
         }
         return new PageInfo<>(dos);
     }
+
+    /**
+     * 根据数据字段查询详情
+     * @param itemsName
+     * @return
+     */
+    @Override
+    public QMSItemDetailsDTO queryQMSItemDetails(@RequestBody String itemsName) {
+        return detailsManager.queryQMSItemDetails(itemsName);
+    }
 }

@@ -33,10 +33,11 @@
     </properties>
 
     <dependencies>
+        <!-- ObjectLoggerClient -->
         <dependency>
-            <groupId>com.github.yeecode.objectlogger</groupId>
+            <groupId>com.github.yeecode.objectLogger</groupId>
             <artifactId>ObjectLoggerClient</artifactId>
-            <version>3.0.1</version>
+            <version>3.0.0</version>
         </dependency>
         <!--web支持-->
         <dependency>

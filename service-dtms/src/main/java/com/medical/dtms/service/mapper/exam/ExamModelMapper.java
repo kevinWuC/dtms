@@ -52,6 +52,14 @@ public interface ExamModelMapper {
     ExamDetailModel getExamByExamId(@Param("examId") Long examId);
 
     /**
+     * 查询详情(返回实体类)
+     *
+     * @param examId
+     * @return
+     */
+    ExamModelDO getExamByExamIds(@Param("examId") Long examId);
+
+    /**
      * 删除
      * 
      * @param examId

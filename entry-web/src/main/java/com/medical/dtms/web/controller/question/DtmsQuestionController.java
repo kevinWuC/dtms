@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.medical.dtms.dto.item.QMSItemDetailsDTO;
+import com.medical.dtms.feignservice.item.QMSItemDetailsService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +47,8 @@ public class DtmsQuestionController {
 
     @Autowired
     private DtmsQuestionService questionService;
+    @Autowired
+    private QMSItemDetailsService qmsItemDetailsService;
 
     /**
      * 新增试题
@@ -215,8 +219,22 @@ public class DtmsQuestionController {
             questionsDTOs = BeanConvertUtils.convertList(list, DtmsQuestionsDTO.class);
             //获取用户信息
             OperatorInfo operatorInfo = SessionTools.getOperator();
-
             for (DtmsQuestionsDTO questionsDTO : questionsDTOs) {
+                QMSItemDetailsDTO qmsItemDetailsDTO1 = qmsItemDetailsService.queryQMSItemDetails(questionsDTO.getExamTypeId());
+                if (qmsItemDetailsDTO1 == null){
+                    log.error("培训类别"+questionsDTO.getExamTypeId()+"在数据库中未找到，请重新填写");
+                    return new Result<>(ErrorCodeEnum.PARAM_ERROR.getErrorCode(), false, "培训类别"+questionsDTO.getExamTypeId()+"在数据库中未找到，请重新填写");
+                }
+                QMSItemDetailsDTO qmsItemDetailsDTO2 = qmsItemDetailsService.queryQMSItemDetails(questionsDTO.getQuestionsBankTypeId());
+                if (qmsItemDetailsDTO2 == null){
+                    log.error("试题库类别"+questionsDTO.getQuestionsBankTypeId()+"在数据库中未找到，请重新填写");
+                    return new Result<>(ErrorCodeEnum.PARAM_ERROR.getErrorCode(), false, "试题库类别"+questionsDTO.getQuestionsBankTypeId()+"在数据库中未找到，请重新填写");
+                }
+                QMSItemDetailsDTO qmsItemDetailsDTO3 = qmsItemDetailsService.queryQMSItemDetails(questionsDTO.getQuestionsTypeId());
+                if (qmsItemDetailsDTO3 == null){
+                    log.error("试题类别"+questionsDTO.getQuestionsTypeId()+"在数据库中未找到，请重新填写");
+                    return new Result<>(ErrorCodeEnum.PARAM_ERROR.getErrorCode(), false, "试题类别"+questionsDTO.getQuestionsTypeId()+"在数据库中未找到，请重新填写");
+                }
                 questionsDTO.setCreateUserId(operatorInfo.getBizId());
                 questionsDTO.setCreateUserName(operatorInfo.getDspName());
                 questionsDTO.setModifyUserId(operatorInfo.getBizId());

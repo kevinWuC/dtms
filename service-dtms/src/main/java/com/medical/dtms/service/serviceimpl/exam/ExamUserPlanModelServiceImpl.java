@@ -239,7 +239,7 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
                 }
                 dtos.add(dto);
             }
-            if (CollectionUtils.isNotEmpty(dtos)){
+            if (CollectionUtils.isNotEmpty(dtos)) {
                 userAnswerModelManager.updateBatchExamUserAnswerModel(dtos);
             }
         }
@@ -347,9 +347,9 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
             for (ExamSubmintQuestionQuery submitQuestion : submitQuestions) {
                 questionDTO = questionManager.getQuestionById(submitQuestion.getQuestionsId());
                 qmsItemDetailsQuery = new QMSItemDetailsQuery();
-                qmsItemDetailsQuery.setBizId(questionDTO.getQuestionsTypeId());
+                qmsItemDetailsQuery.setBizId(Long.parseLong(questionDTO.getQuestionsTypeId()));
                 qmsItemDetailsDTO = qmsItemDetailsManager.getQMSItemDetailsByCondition(qmsItemDetailsQuery);
-                questionsTypeId = questionDTO.getQuestionsTypeId();
+                questionsTypeId = Long.parseLong(questionDTO.getQuestionsTypeId());
                 if (null != questionDTO && null != questionsTypeId
                         && !QuestionTypeNameEnum.TYPE_SINGLE_CHOICE_QUESTION.getName().equals(qmsItemDetailsDTO.getItemName())
                         && !QuestionTypeNameEnum.TYPE_MULTIPLE_CHOICES_QUESTION.getName().equals(qmsItemDetailsDTO.getItemName())
@@ -366,7 +366,7 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
                     dtos.add(dto);
                 }
             }
-            if (CollectionUtils.isNotEmpty(dtos)){
+            if (CollectionUtils.isNotEmpty(dtos)) {
                 userAnswerModelManager.updateBatchExamUserAnswerModel(dtos);
             }
         }
@@ -378,12 +378,11 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
 
     /**
      * 重新发起考试
-     *
      */
     @Override
     public Boolean afreshExamPlan(@RequestBody ExamUserAfreshPlanQuery query) {
         List<ExamUserPlanModelDTO> list = query.getAfreshExamUserList();
-        if (CollectionUtils.isEmpty(list)){
+        if (CollectionUtils.isEmpty(list)) {
             log.error("暂无补考人员");
             throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "暂无补考人员");
         }
