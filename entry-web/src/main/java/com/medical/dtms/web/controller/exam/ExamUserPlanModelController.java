@@ -11,6 +11,7 @@ import com.medical.dtms.common.login.OperatorInfo;
 import com.medical.dtms.common.login.SessionTools;
 import com.medical.dtms.common.model.exam.ExamStartModel;
 import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
+import com.medical.dtms.dto.exam.query.ExamUserAfreshPlanQuery;
 import com.medical.dtms.common.resp.Result;
 import com.medical.dtms.dto.exam.ExamUserPlanModelDTO;
 import com.medical.dtms.dto.exam.query.ExamPlanModelQuery;
@@ -119,7 +120,6 @@ public class ExamUserPlanModelController {
         if (null == query || null == query.getExamId()
                 || null == query.getExamPlanId()
                 || null == query.getExamUserPlanId()
-                || null == query.getUserId()
                 || CollectionUtils.isEmpty(query.getQuestions())
                ) {
             log.error("缺少参数");
@@ -129,6 +129,7 @@ public class ExamUserPlanModelController {
         OperatorInfo info = SessionTools.getOperator();
         query.setModifier(info.getDspName());
         query.setModifierId(info.getUserId());
+        query.setUserId(info.getBizId());
         examUserPlanModelService.submitExamAnswer(query);
 
         return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "提交成功", true);
@@ -150,6 +151,52 @@ public class ExamUserPlanModelController {
         return Result.buildSuccess(exam);
     }
 
+    /**
+     * 提交阅卷结果
+     *
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/examUserPlan/submitExamMarkResult", method = RequestMethod.POST)
+    public Result<Boolean> submitExamMarkResult(@RequestBody ExamSubmitAnswerQuery query){
+        if (null == query || null == query.getExamId()
+                || null == query.getExamPlanId()
+                || null == query.getExamUserPlanId()
+                || CollectionUtils.isEmpty(query.getQuestions())
+        ) {
+            log.error("缺少参数");
+            throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "缺少参数");
+        }
+        //获取用户信息
+        OperatorInfo info = SessionTools.getOperator();
+        query.setModifier(info.getDspName());
+        query.setModifierId(info.getUserId());
+        query.setUserId(info.getBizId());
+        examUserPlanModelService.submitExamMarkResult(query);
+        return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "提交成功", true);
+    }
 
+    /**
+     * 重新发起考试
+     *
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/examUserPlan/afreshExamPlan", method = RequestMethod.POST)
+    public Result<Boolean> afreshExamPlan(@RequestBody ExamUserAfreshPlanQuery query){
+        if (CollectionUtils.isEmpty(query.getAfreshExamUserList())){
+            log.error("暂未选择补考人员信息");
+            throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "暂未选择补考人员信息");
+        }
+
+        OperatorInfo info = SessionTools.getOperator();
+        query.setCreateUserId(info.getBizId());
+        query.setModifyUserId(info.getBizId());
+        query.setCreateUserName(info.getDspName());
+        query.setModifyUserName(info.getDspName());
+
+        examUserPlanModelService.afreshExamPlan(query);
+        return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "已重新发起考试", true);
+    }
 
 }

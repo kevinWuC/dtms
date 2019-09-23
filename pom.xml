@@ -33,6 +33,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.yeecode.objectlogger</groupId>
+            <artifactId>ObjectLoggerClient</artifactId>
+            <version>3.0.1</version>
+        </dependency>
         <!--web支持-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
