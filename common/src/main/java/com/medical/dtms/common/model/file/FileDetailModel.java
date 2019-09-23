@@ -144,6 +144,7 @@ public class FileDetailModel {
      * 文件存储名称和或路径
      */
     private String fileContent;
+    private List<SimpleFileAttachmentModel> fileContentList;
     /**
      * 会签人1
      */
