@@ -1,23 +1,17 @@
 package com.medical.dtms.service.manager.user;
 
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
-import com.medical.dtms.common.login.OperatorInfo;
-import com.medical.dtms.common.login.SessionTools;
 import com.medical.dtms.common.model.dropdown.DropDownModel;
 import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
 import com.medical.dtms.common.model.user.SimpleUserModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
-import com.medical.dtms.common.util.DateUtils;
 import com.medical.dtms.common.util.IdGenerator;
-import com.medical.dtms.dto.log.QMSSysLogsDTO;
 import com.medical.dtms.dto.user.QMSUserDTO;
 import com.medical.dtms.dto.user.query.BaseUserQuery;
 import com.medical.dtms.common.model.user.QMSUserModel;
-import com.medical.dtms.feignservice.syslogs.SysLoginLogService;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.dataobject.user.QMSUserDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
-import com.medical.dtms.service.manager.syslogs.SysLogsManager;
 import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import com.medical.dtms.service.mapper.qms.QMSUserMapper;
@@ -25,7 +19,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +40,8 @@ public class QMSUserManager {
     private OperateManager operateManager;
     @Autowired
     private SysLoginLogManager loginLogManager;
-
+//    @Autowired
+//    private LogClient logClient;
 
 
     /**
@@ -67,7 +61,7 @@ public class QMSUserManager {
     public Integer insert(QMSUserDTO dto) {
         QMSUserDO aDo = BeanConvertUtils.convert(dto, QMSUserDO.class);
         int num = userMapper.insert(aDo);
-        if (num == 1){
+        if (num == 1) {
             //新增日志记录
             QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
             qmsSysLogsDO.setBizId(idGenerator.nextId());
@@ -89,8 +83,24 @@ public class QMSUserManager {
      * 用户管理 - 编辑用户
      */
     public Integer updateUser(QMSUserDTO dto) {
-        QMSUserDO aDo = BeanConvertUtils.convert(dto, QMSUserDO.class);
-        return userMapper.updateByPrimaryKeySelective(aDo);
+
+        BaseUserQuery query = new BaseUserQuery();
+        query.setBizId(dto.getBizId());
+        QMSUserDTO oldUser = getUserByCondition(query);
+        QMSUserDO newUser = BeanConvertUtils.convert(dto, QMSUserDO.class);
+
+//        logClient.logObject(
+//                oldUser.getBizId().intValue(),
+//                oldUser.getModifier(),
+//                OperationTypeEnum.OPERATION_TYPE_UPDATE.getName(),
+//                "FileApplyDTO",
+//                null,
+//                "用户管理",
+//                oldUser,
+//                newUser
+//        );
+
+        return userMapper.updateByPrimaryKeySelective(newUser);
     }
 
     /**
