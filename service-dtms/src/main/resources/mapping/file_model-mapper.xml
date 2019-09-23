@@ -90,6 +90,7 @@
             file.year_audit_cycle AS yearAuditCycle,
             file.annual_verification_dept_id AS annualVerificationDeptId,
             dep.dept_name AS annualVerificationDeptName,
+             file.file_content AS fileContent,
             file.signator1_id AS signator1Id,
             file.signator2_id AS signator2Id,
             file.approver_id AS approverId
