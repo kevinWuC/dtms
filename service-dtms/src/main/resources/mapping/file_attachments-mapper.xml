@@ -102,10 +102,12 @@
         )
         values
         <foreach collection="list" item="file" separator=",">
+           (
             #{file.id,jdbcType=BIGINT}, #{file.bizId,jdbcType=BIGINT}, #{file.fileId,jdbcType=BIGINT},
             #{file.fileName,jdbcType=VARCHAR}, #{file.filePath,jdbcType=VARCHAR},0,
             #{file.creator,jdbcType=VARCHAR}, #{file.creatorId,jdbcType=VARCHAR}, NOW(),
             #{file.modifier,jdbcType=VARCHAR}, #{file.modifierId,jdbcType=VARCHAR}, NOW()
+            )
         </foreach>
     </insert>
 
