@@ -344,7 +344,7 @@
     <!-- 考试统计 - 分页展示查询查看  -->
     <select id="pageListExamTotal" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
             resultType="com.medical.dtms.common.model.exam.ExamTotalModel">
-        select usr.dsp_name AS dspName,tusr.user_id AS userId,
+        select usr.dsp_name AS dspName,tusr.user_id AS userId,usr.dept_id AS deptId,
         config.exam_name AS examName,tusr.train_id AS trainId,config.pass_point AS passPoint,
         tusr.point_str AS pointStr,config.total_point AS totalPoint,tusr.finish_time AS finishTime
         from tb_dtms_train_user tusr

@@ -71,4 +71,10 @@ public class ExamTotalModel {
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long trainId;
+    /**
+     * 部门id
+     */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long deptId;
 }

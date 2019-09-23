@@ -32,7 +32,7 @@ public class TrainUserQuery {
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
-    private Long depId;
+    private Long deptId;
     /**
      * 培训id
      */
