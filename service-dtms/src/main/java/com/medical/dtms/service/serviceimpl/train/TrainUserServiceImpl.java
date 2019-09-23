@@ -67,10 +67,10 @@ public class TrainUserServiceImpl implements TrainUserService {
     public PageInfo<TrainUserModel> pageListTrainUser(@RequestBody TrainUserQuery query) {
         // 处理部门
         List<QMSUserInDeptModel> deptModels = new ArrayList<>();
-        if (null != query.getDepId()) {
+        if (null != query.getDeptId()) {
             // 根据人员id 查询部门名称
             QMSUserInDeptQuery deptQuery = new QMSUserInDeptQuery();
-            deptQuery.setDeptId(query.getDepId());
+            deptQuery.setDeptId(query.getDeptId());
             deptQuery.setUserOrDept(Constants.USER);
             deptModels = userInDeptManager.listDeptByUserIdsAndDept(deptQuery);
             if (CollectionUtils.isEmpty(deptModels)) {
@@ -392,10 +392,10 @@ public class TrainUserServiceImpl implements TrainUserService {
     public PageInfo<ExamTotalModel> pageListExamTotal(@RequestBody TrainUserQuery query) {
         // 处理部门
         List<QMSUserInDeptModel> deptModels = new ArrayList<>();
-        if (null != query.getDepId()) {
+        if (null != query.getDeptId()) {
             // 根据人员id 查询部门名称
             QMSUserInDeptQuery deptQuery = new QMSUserInDeptQuery();
-            deptQuery.setDeptId(query.getDepId());
+            deptQuery.setDeptId(query.getDeptId());
             deptQuery.setUserOrDept(Constants.USER);
             deptModels = userInDeptManager.listDeptByUserIdsAndDept(deptQuery);
             if (CollectionUtils.isEmpty(deptModels)) {
