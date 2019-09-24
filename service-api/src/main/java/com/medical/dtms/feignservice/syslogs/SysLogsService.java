@@ -23,4 +23,7 @@ public interface SysLogsService {
 
     @RequestMapping(value = "/syslog/listQMSSysLogDetails", method = RequestMethod.POST)
     List<QMSSysLogDetailsModel> listQMSSysLogDetails(@RequestBody QMSSysLogsQuery query);
+
+    @RequestMapping(value = "/syslog/addSysLog")
+    Boolean addSysLog(String logJsonString);
 }

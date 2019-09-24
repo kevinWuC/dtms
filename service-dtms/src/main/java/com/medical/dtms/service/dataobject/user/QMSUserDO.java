@@ -2,10 +2,10 @@ package com.medical.dtms.service.dataobject.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.yeecode.objectlogger.client.annotation.LogTag;
-import com.github.yeecode.objectlogger.client.handler.BuiltinTypeHandler;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.logclient.annotation.LogTag;
+import com.medical.dtms.logclient.handler.BuiltinTypeHandler;
 import lombok.Data;
 
 import javax.persistence.Table;

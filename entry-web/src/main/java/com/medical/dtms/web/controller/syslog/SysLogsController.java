@@ -54,6 +54,13 @@ public class SysLogsController {
         return Result.buildSuccess(list);
     }
 
+    @RequestMapping(value = "/syslog/addSysLog")
+    public Result<Boolean> addSysLog(String logJsonString){
+        logsService.addSysLog(logJsonString);
+        return Result.buildSuccess();
+    }
+
+
 
     /**
      * 分页参数校验

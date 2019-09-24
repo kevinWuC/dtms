@@ -2,8 +2,6 @@ package com.medical.dtms.service.dataobject.file;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.yeecode.objectlogger.client.annotation.LogTag;
-import com.github.yeecode.objectlogger.client.handler.BuiltinTypeHandler;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
@@ -33,104 +31,84 @@ public class FileApplyDO {
     /**
      * 文件编号
      */
-    @LogTag(alias = "fileNo", builtinType = BuiltinTypeHandler.NORMAL)
     private String fileNo;
     /**
      * 文件名
      */
-    @LogTag(alias = "fileName", builtinType = BuiltinTypeHandler.NORMAL)
     private String fileName;
     /**
      * 文件类别id
      */
-    @LogTag(alias = "fileTypeId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long fileTypeId;
     /**
      * 申请类别id
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
-    @LogTag(alias = "applyType", builtinType = BuiltinTypeHandler.NORMAL)
     private Long applyType;
     /**
      * 文件报批类型 1 文件新增 2 文件修改 3 文件归档 4 未知
      */
-    @LogTag(alias = "fileApplyType", builtinType = BuiltinTypeHandler.NORMAL)
     private Integer fileApplyType;
     /**
      * 申请日期
      */
-    @LogTag(alias = "applyDate", builtinType = BuiltinTypeHandler.NORMAL)
     private String applyDate;
     /**
      * 文件版本
      */
-    @LogTag(alias = "fileVersion", builtinType = BuiltinTypeHandler.NORMAL)
     private String fileVersion;
     /**
      * 生效日期
      */
-    @LogTag(alias = "effectDate", builtinType = BuiltinTypeHandler.NORMAL)
     private String effectDate;
     /**
      * 申请部门
      */
-    @LogTag(alias = "applyDeptId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long applyDeptId;
     /**
      * 申请部门
      */
-    @LogTag(alias = "applyDeptName", builtinType = BuiltinTypeHandler.NORMAL)
     private String applyDeptName;
     /**
      * 本次申请的制定部门 id
      */
-    @LogTag(alias = "makeDeptId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long makeDeptId;
     /**
      * 本次申请的制定部门 name
      */
-    @LogTag(alias = "makeDeptName", builtinType = BuiltinTypeHandler.NORMAL)
     private String makeDeptName;
     /**
      * 修改原因id
      */
-    @LogTag(alias = "applyReasonId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long applyReasonId;
     /**
      * 编写人 id
      */
-    @LogTag(alias = "applyUserId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long applyUserId;
     /**
      * 编写人 姓名
      */
-    @LogTag(alias = "applyUserName", builtinType = BuiltinTypeHandler.NORMAL)
     private String applyUserName;
     /**
      * 审核人id
      */
-    @LogTag(alias = "auditUserId", builtinType = BuiltinTypeHandler.NORMAL)
     private String auditUserId;
     /**
      * 审核人姓名
      */
-    @LogTag(alias = "auditUserName", builtinType = BuiltinTypeHandler.NORMAL)
     private String auditUserName;
     /**
      * 审批人id
      */
-    @LogTag(alias = "approverUserId", builtinType = BuiltinTypeHandler.NORMAL)
     private String approverUserId;
     /**
      * 审批人姓名
      */
-    @LogTag(alias = "approverUserName", builtinType = BuiltinTypeHandler.NORMAL)
     private String approverUserName;
     /**
      * 修改内容
      */
-    @LogTag(alias = "content", builtinType = BuiltinTypeHandler.NORMAL)
     private String content;
     /**
      * 审批日期
@@ -139,12 +117,10 @@ public class FileApplyDO {
     /**
      * 审核结果
      */
-    @LogTag(alias = "result", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean result;
     /**
      * 是否结束
      */
-    @LogTag(alias = "isFinish", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isFinish;
     /**
      * 变更前

@@ -11,10 +11,7 @@ import com.medical.dtms.common.enumeration.file.FileApplyTypeEnum;
 import com.medical.dtms.common.enumeration.file.FileStatusEnum;
 import com.medical.dtms.common.enumeration.operate.SubmitTypeEnum;
 import com.medical.dtms.common.enumeration.result.LogResultEnum;
-import com.medical.dtms.common.model.file.ArchiveOrInvalidModel;
-import com.medical.dtms.common.model.file.BackFileModel;
-import com.medical.dtms.common.model.file.FileDetailModel;
-import com.medical.dtms.common.model.file.FileModel;
+import com.medical.dtms.common.model.file.*;
 import com.medical.dtms.common.model.user.SimpleUserModel;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.file.FileApproveLogDTO;
@@ -390,44 +387,56 @@ public class FileServiceImpl implements FileService {
     }
 
     /**
-    *
-    * @description  文件报批详情回显
-    * @param  [query]
-    * @return com.medical.dtms.common.model.file.FileDetailModel
-    **/
+     * @param [query]
+     * @return com.medical.dtms.common.model.file.FileDetailModel
+     * @description 文件报批详情回显
+     **/
     @Override
     public FileDetailModel selectByPrimaryKey(@RequestBody FileModelQuery query) {
         FileDetailModel model = fileManger.selectByPrimaryKey(query.getBizId());
-        if (null == model){
-            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(),"该条记录不存在");
+        if (null == model) {
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "该条记录不存在");
         }
-        if (StringUtils.isNotBlank(model.getSignator1Id())){
+        if (StringUtils.isNotBlank(model.getSignator1Id())) {
             List<SimpleUserModel> signator1Id = JSONArray.parseArray(model.getSignator1Id(), SimpleUserModel.class);
             model.setSignator1(signator1Id);
         }
-        if (StringUtils.isNotBlank(model.getSignator2Id())){
+        if (StringUtils.isNotBlank(model.getSignator2Id())) {
             List<SimpleUserModel> signator2Id = JSONArray.parseArray(model.getSignator2Id(), SimpleUserModel.class);
             model.setSignator2(signator2Id);
         }
-        if (StringUtils.isNotBlank(model.getApproverId())){
+        if (StringUtils.isNotBlank(model.getApproverId())) {
             List<SimpleUserModel> approverId = JSONArray.parseArray(model.getApproverId(), SimpleUserModel.class);
             model.setApproverList(approverId);
+        }
+        if (StringUtils.isNotBlank(model.getFileContent())) {
+            List<String> urls = Arrays.asList(StringUtils.split(model.getFileContent(), ","));
+            List<SimpleFileAttachmentModel> list = new ArrayList<>();
+            SimpleFileAttachmentModel attachmentModel;
+            for (String url : urls) {
+                attachmentModel = new SimpleFileAttachmentModel();
+                attachmentModel.setFileUrl(url);
+                attachmentModel.setFileName(url.substring(url.lastIndexOf("/")).replace("/", ""));
+                list.add(attachmentModel);
+            }
+            model.setFileContentList(list);
+        } else {
+            model.setFileContentList(new ArrayList<>());
         }
 
         return model;
     }
 
     /**
-    *
-    * @description
-    * @param  [query]
-    * @return java.util.List<com.medical.dtms.common.model.file.ArchiveOrInvalidModel>
-    **/
+     * @param [query]
+     * @return java.util.List<com.medical.dtms.common.model.file.ArchiveOrInvalidModel>
+     * @description
+     **/
     @Override
     public List<ArchiveOrInvalidModel> exportArchiveOrInvalidFile(@RequestBody FileModelQuery query) {
         List<ArchiveOrInvalidModel> models = fileManger.queryListArchiveOrInvalidFile(query);
         if (CollectionUtils.isEmpty(models)) {
-            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(),"无满足条件的数据");
+            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "无满足条件的数据");
         }
         return models;
     }
