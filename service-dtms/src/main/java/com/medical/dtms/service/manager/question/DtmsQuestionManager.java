@@ -9,10 +9,13 @@ import java.util.List;
 
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.util.IdGenerator;
+import com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
+import com.medical.dtms.service.mapper.qms.QMSSysLogDetailsMapper;
 import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,8 @@ public class DtmsQuestionManager {
     private SysLoginLogManager sysLoginLogManager;
     @Autowired
     private QMSSysLogsMapper qmsSysLogsMapper;
+    @Autowired
+    private QMSSysLogDetailsMapper qmsSysLogDetailsMapper;
 
     /**
      * 新增试题
@@ -87,6 +92,8 @@ public class DtmsQuestionManager {
      */
     public Boolean updateQuestion(DtmsQuestionsDTO questionsDTO) {
         DtmsQuestionsDO questionsDO = BeanConvertUtils.convert(questionsDTO, DtmsQuestionsDO.class);
+        //查询没更新之前的信息
+        DtmsQuestionsDO questionById = questionMapper.getQuestionById(questionsDTO.getBizId());
         Integer num = questionMapper.updateQuestion(questionsDO);
         if (num == 1){
             //新增修改日志记录
@@ -103,10 +110,141 @@ public class DtmsQuestionManager {
             qmsSysLogsDO.setOperationIp(sysLoginLogManager.getIpByUserId(String.valueOf(questionsDO.getCreateUserId())));
             qmsSysLogsDO.setGmtModified(new Date());
             qmsSysLogsDO.setCreator(questionsDO.getCreateUserName());
+            if (questionsDO.getDeleted() == false){
+                boolean b = addSysLogDetails(questionById, questionsDO);
+            }
             qmsSysLogsMapper.insert(qmsSysLogsDO);
         }
         return num > 0 ? true : false;
     }
+
+    private boolean addSysLogDetails(DtmsQuestionsDO questionById,DtmsQuestionsDO questionsDO){
+        boolean isSuccess = false;
+        if (questionById.getExamTypeId() != questionsDO.getExamTypeId()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("ExamTypeId");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(questionsDO.getExamTypeId()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(questionById.getExamTypeId()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (questionById.getQuestionsBankTypeId() != questionsDO.getQuestionsBankTypeId()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("QuestionsBankTypeId");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(questionsDO.getQuestionsBankTypeId()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(questionById.getQuestionsBankTypeId()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (questionById.getQuestionsTypeId() != questionsDO.getQuestionsTypeId()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("QuestionsTypeId");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(questionsDO.getQuestionsTypeId()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(questionById.getQuestionsTypeId()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (StringUtils.equals(questionById.getQuestionTitle(), questionsDO.getQuestionTitle())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("QuestionTitle");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(questionsDO.getQuestionTitle()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(questionById.getQuestionTitle()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (StringUtils.equals(questionById.getQuestionContent(), questionsDO.getQuestionContent())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("QuestionContent");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(questionsDO.getQuestionContent()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(questionById.getQuestionContent()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+
+        if (StringUtils.equals(questionById.getAnswer(), questionsDO.getAnswer())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("Answer");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(questionsDO.getAnswer()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(questionById.getAnswer()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+
+        if (StringUtils.equals(questionById.getUseDeptId(), questionsDO.getUseDeptId())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("UseDeptId");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(questionsDO.getUseDeptId()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(questionById.getUseDeptId()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(questionsDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(questionsDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        return isSuccess;
+
+    }
+
 
     /**
      * 查询试题详情

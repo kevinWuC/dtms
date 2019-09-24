@@ -47,7 +47,7 @@ public class ExamModelManager {
     /**
      * 新增
      * 
-     * @param examModelDO
+     * @param
      * @return
      */
     public Boolean insertExam(ExamModelDTO examModelDTO) {
@@ -73,7 +73,7 @@ public class ExamModelManager {
     /**
      * 修改
      * 
-     * @param examModelDO
+     * @param
      * @return
      */
     public Boolean updateExam(ExamModelDTO examModelDTO) {
@@ -117,6 +117,9 @@ public class ExamModelManager {
             qmsSysLogDetailsDO.setIsDeleted(false);
             qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
             qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
             qmsSysLogDetailsDO.setGmtCreated(new Date());
             int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
             isSuccess = num == 1 ? true : false;
@@ -131,6 +134,9 @@ public class ExamModelManager {
             qmsSysLogDetailsDO.setIsDeleted(false);
             qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
             qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
             qmsSysLogDetailsDO.setGmtCreated(new Date());
             int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
             isSuccess = num == 1 ? true : false;
@@ -145,6 +151,9 @@ public class ExamModelManager {
             qmsSysLogDetailsDO.setIsDeleted(false);
             qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
             qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
             qmsSysLogDetailsDO.setGmtCreated(new Date());
             int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
             isSuccess = num == 1 ? true : false;
@@ -159,6 +168,9 @@ public class ExamModelManager {
             qmsSysLogDetailsDO.setIsDeleted(false);
             qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
             qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
             qmsSysLogDetailsDO.setGmtCreated(new Date());
             int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
             isSuccess = num == 1 ? true : false;
