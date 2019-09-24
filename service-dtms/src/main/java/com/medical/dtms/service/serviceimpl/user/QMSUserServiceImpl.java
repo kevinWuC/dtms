@@ -491,6 +491,21 @@ public class QMSUserServiceImpl implements QMSUserService {
         return menuModels;
     }
 
+    /**
+    * 人员列表
+    * @param query
+    * @return
+    **/
+    @Override
+    public PageInfo<QMSUserModel> listUsersInfo(@RequestBody BaseUserQuery query) {
+        PageHelper.startPage(query.getPageNo(), query.getPageSize());
+        List<QMSUserModel> models = userManager.listUsersInfo(query);
+        if (CollectionUtils.isNotEmpty(models)) {
+            return new PageInfo<>(models);
+        }
+        return new PageInfo<>(new ArrayList<>());
+    }
+
 
     /**
      * 密码加密

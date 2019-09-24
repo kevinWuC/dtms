@@ -27,5 +27,7 @@ public interface QMSUserMapper {
 
     List<DropDownModel> listUsers(DropDownQuery query);
 
-    List<SimpleUserModel> listUserInfos(List<Long> userIds);
+    List<QMSUserModel> listUsersInfo(BaseUserQuery query);
+
+    List<SimpleUserModel> listUserInfoByIds(List<Long> userIds);
 }

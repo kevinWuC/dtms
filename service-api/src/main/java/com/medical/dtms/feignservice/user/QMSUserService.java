@@ -50,4 +50,7 @@ public interface QMSUserService {
 
     @RequestMapping(value = "/user/listMenusByUserId", method = RequestMethod.POST)
     List<QMSMenuModel> listMenusByUserId(@RequestBody BaseUserQuery query);
+
+    @RequestMapping(value = "/user/listUsersInfo", method = RequestMethod.POST)
+    PageInfo<QMSUserModel> listUsersInfo(@RequestBody BaseUserQuery query);
 }

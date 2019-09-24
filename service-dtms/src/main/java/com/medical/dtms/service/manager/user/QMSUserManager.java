@@ -87,7 +87,7 @@ public class QMSUserManager {
 
         BaseUserQuery query = new BaseUserQuery();
         query.setUserId(dto.getBizId());
-        QMSUserDTO oldUser = getUserByCondition(query);
+        QMSUserDO oldUser = userMapper.getUserByCondition(query);
         QMSUserDO newUser = BeanConvertUtils.convert(dto, QMSUserDO.class);
         // 获取表名
         String tableName = operateManager.getTableName(newUser.getClass());
@@ -145,7 +145,14 @@ public class QMSUserManager {
      * 根据用户 ids 查询 用户信息
      */
     public List<SimpleUserModel> listUserInfos(List<Long> userIds) {
-        return userMapper.listUserInfos(userIds);
+        return userMapper.listUserInfoByIds(userIds);
+    }
+
+    /**
+     * 人员列表
+     */
+    public List<QMSUserModel> listUsersInfo(BaseUserQuery query) {
+        return userMapper.listUsersInfo(query);
     }
 
 }

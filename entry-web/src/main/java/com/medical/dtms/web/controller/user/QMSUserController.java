@@ -214,10 +214,10 @@ public class QMSUserController {
      **/
     @RequestMapping(value = "/user/listMenusByUserId", method = RequestMethod.POST)
     public Result<List<QMSMenuModel>> listMenusByUserId(@RequestBody BaseUserQuery query) {
-        if (null == query){
+        if (null == query) {
             query = new BaseUserQuery();
         }
-        if (null == query.getUserId()){
+        if (null == query.getUserId()) {
             OperatorInfo info = SessionTools.getOperator();
             query.setUserId(info.getBizId());
         }
@@ -225,6 +225,16 @@ public class QMSUserController {
         return Result.buildSuccess(list);
     }
 
+    /**
+     * @param query
+     * @return 所有人员列表
+     **/
+    @RequestMapping(value = "/user/listUsersInfo", method = RequestMethod.POST)
+    public Result<PageInfo<QMSUserModel>> listUsersInfo(@RequestBody BaseUserQuery query) {
+        checkPageParams(query);
+        PageInfo<QMSUserModel> userModels = userService.listUsersInfo(query);
+        return Result.buildSuccess(userModels);
+    }
 
     /**
      * 分页参数校验
@@ -240,6 +250,25 @@ public class QMSUserController {
         }
         if (null == query.getPageSize()) {
             query.setPageSize(10);
+        }
+        query.setDspName(StringUtils.isBlank(query.getDspName()) == true ? null : query.getDspName().replace("%", "\\\\%"));
+        query.setAccount(StringUtils.isBlank(query.getAccount()) == true ? null : query.getAccount().replace("%", "\\\\%"));
+    }
+
+    /**
+     * 分页参数校验
+     *
+     * @param query
+     */
+    private void checkPageParams(BaseUserQuery query) {
+        if (null == query) {
+            query = new BaseUserQuery();
+        }
+        if (null == query.getPageNo()) {
+            query.setPageNo(1);
+        }
+        if (null == query.getPageSize()) {
+            query.setPageSize(50);
         }
     }
 }

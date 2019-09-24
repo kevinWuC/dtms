@@ -234,20 +234,23 @@ public class FileApprovalServiceImpl implements FileApprovalService {
                 List<SimpleUserModel> signator2;
                 List<SimpleUserModel> approverList;
 
-                signator1 = userManager.listUserInfos(dto.getSignator1());
-                if (CollectionUtils.isEmpty(signator1)) {
-                    signator1 = JSONArray.parseArray(file.getSignator1Id(), SimpleUserModel.class);
-                }
+//                signator1 = userManager.listUserInfos(file.getSignator1());
+//                if (CollectionUtils.isEmpty(signator1)) {
+//
+//                }
+                signator1 = JSONArray.parseArray(file.getSignator1Id(), SimpleUserModel.class);
 
-                signator2 = signator1 = userManager.listUserInfos(dto.getSignator2());
-                if (CollectionUtils.isEmpty(signator2)) {
-                    signator2 = JSONArray.parseArray(file.getSignator2Id(), SimpleUserModel.class);
-                }
+//                signator2 = userManager.listUserInfos(file.getSignator2());
+//                if (CollectionUtils.isEmpty(signator2)) {
+//
+//                }
+                signator2 = JSONArray.parseArray(file.getSignator2Id(), SimpleUserModel.class);
 
-                approverList = userManager.listUserInfos(dto.getApproverList());
-                if (CollectionUtils.isEmpty(approverList)) {
-                    approverList = JSONArray.parseArray(file.getApproverId(), SimpleUserModel.class);
-                }
+//                approverList = userManager.listUserInfos(file.getApproverList());
+//                if (CollectionUtils.isEmpty(approverList)) {
+//
+//                }
+                approverList = JSONArray.parseArray(file.getApproverId(), SimpleUserModel.class);
 
                 List<Long> signator1UserIds = signator1.stream().map(SimpleUserModel::getUserId).collect(Collectors.toList());
                 List<Long> signator2UserIds = signator2.stream().map(SimpleUserModel::getUserId).collect(Collectors.toList());

@@ -176,16 +176,4 @@ public class DropDownController {
             query.setPageSize(10);
         }
     }
-
-    /**
-     * 冲突代码
-     */
-    private void showConflict() {
-        System.out.println("---------------------------------");
-        System.out.println("我只是一个路过的假面骑士 给我记好了……");
-        System.out.println("冲突……");
-        System.out.println("我只是一个路过的假面骑士 给我记好了……");
-        System.out.println("---------------------------------");
-    }
-
 }

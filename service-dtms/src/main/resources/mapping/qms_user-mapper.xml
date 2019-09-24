@@ -196,7 +196,7 @@
     </select>
 
     <!-- 根据 id 查询数据-->
-    <select id="listUserInfos" parameterType="java.util.List"
+    <select id="listUserInfoByIds" parameterType="java.util.List"
             resultType="com.medical.dtms.common.model.user.SimpleUserModel">
         select
         biz_id AS userId,dsp_name AS userName
@@ -207,5 +207,21 @@
         <foreach collection="list" item="bizId" open="(" close=")" index="index" separator=",">
             #{bizId}
         </foreach>
+    </select>
+
+    <!-- 人员列表-->
+    <select id="listUsersInfo" resultType="com.medical.dtms.common.model.user.QMSUserModel"
+            parameterType="com.medical.dtms.dto.user.query.BaseUserQuery">
+        select distinct(biz_id) AS userId,dsp_name AS userName
+        FROM
+        <include refid="table_name"/>
+        where is_deleted = 0
+        <if test="account != null and account !=''">
+            and account like CONCAT(CONCAT('%/',#{account}),'%') ESCAPE '/'
+        </if>
+        <if test="dspName != null and dspName !=''">
+            and dsp_name like CONCAT(CONCAT('%/',#{dspName}),'%') ESCAPE '/'
+        </if>
+        order by any_value(gmt_created) desc
     </select>
 </mapper>

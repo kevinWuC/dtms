@@ -30,7 +30,7 @@ public class HttpUtil {
         try {
             List<NameValuePair> paramsList = new ArrayList<>();
             paramsList.add(new BasicNameValuePair("logJsonString", jsonString));
-            sendPost(objectLoggerConfig.getServerAddress() + "/entry-web/syslog/addSysLog", paramsList);
+            sendPost("http://" + objectLoggerConfig.getServerAddress() + "/entry-web/syslog/addSysLog", paramsList);
         } catch (Exception ex) {
             log.error("sendLog error!", ex);
         }
