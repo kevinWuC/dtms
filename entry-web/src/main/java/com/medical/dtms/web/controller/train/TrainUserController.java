@@ -18,6 +18,7 @@ import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.feignservice.train.TrainUserService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -90,6 +91,7 @@ public class TrainUserController {
     @RequestMapping(value = "/train/listTrainTimely", method = RequestMethod.POST)
     public Result<PageInfo<TrainUserModel>> listTrainTimely(@RequestBody TrainUserQuery query) {
         checkParams(query);
+
         PageInfo<TrainUserModel> pageInfo = trainUserService.listTrainTimely(query);
         return Result.buildSuccess(pageInfo);
     }

@@ -4,15 +4,19 @@ import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.train.TrainConfigModel;
 import com.medical.dtms.common.model.train.TrainConfigQueryModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
+import com.medical.dtms.common.util.DateUtils;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.train.TrainConfigDTO;
 import com.medical.dtms.dto.train.query.TrainConfigQuery;
+import com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.dataobject.train.TrainConfigDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
+import com.medical.dtms.service.mapper.qms.QMSSysLogDetailsMapper;
 import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import com.medical.dtms.service.mapper.train.TrainConfigMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +40,8 @@ public class TrainConfigManager {
     private OperateManager operateManager;
     @Autowired
     private SysLoginLogManager loginLogManager;
+    @Autowired
+    private QMSSysLogDetailsMapper qmsSysLogDetailsMapper;
 
     /**
      * 培训配置 - 新增
@@ -95,6 +101,8 @@ public class TrainConfigManager {
      **/
     public Integer updateByPrimaryKeySelective(TrainConfigDTO dto) {
         TrainConfigDO aDo = BeanConvertUtils.convert(dto, TrainConfigDO.class);
+        //查询没有修改之前的数据
+        TrainConfigDO trainConfigDO = trainConfigMapper.selectByPrimaryKey(dto.getBizId());
         int num = trainConfigMapper.updateByPrimaryKeySelective(aDo);
         if (num == 1){
             //新增修改日志记录
@@ -109,8 +117,214 @@ public class TrainConfigManager {
             qmsSysLogsDO.setModifier(aDo.getModifier());
             qmsSysLogsDO.setModifierId(aDo.getModifierId());
             int insert = qmsSysLogsMapper.insert(qmsSysLogsDO);
+            addSysLogDetails(trainConfigDO,aDo);
         }
         return num;
+    }
+
+
+    /**
+     * 添加日志详情
+     * @param trainConfigDO
+     * @param aDo
+     * @return
+     */
+    private boolean addSysLogDetails(TrainConfigDO trainConfigDO,TrainConfigDO aDo){
+        boolean isSuccess = false;
+        if (!StringUtils.equals(trainConfigDO.getTrainName(),aDo.getTrainName())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("TrainName");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(aDo.getTrainName());
+            qmsSysLogDetailsDO.setOldValue(trainConfigDO.getTrainName());
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+
+        if (!StringUtils.equals(trainConfigDO.getTrainDescription(),aDo.getTrainDescription())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("TrainDescription");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(aDo.getTrainDescription());
+            qmsSysLogDetailsDO.setOldValue(trainConfigDO.getTrainDescription());
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+
+        if ((trainConfigDO.getStartDate()).getTime() != (aDo.getStartDate()).getTime()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("StartDate");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(DateUtils.format(aDo.getStartDate(),DateUtils.YYYYMMDDHHMMSS));
+            qmsSysLogDetailsDO.setOldValue(DateUtils.format(trainConfigDO.getStartDate(),DateUtils.YYYYMMDDHHMMSS));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+
+        if ((trainConfigDO.getEndDate()).getTime() != (aDo.getEndDate()).getTime()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("EndDate");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(DateUtils.format(aDo.getEndDate(),DateUtils.YYYYMMDDHHMMSS));
+            qmsSysLogDetailsDO.setOldValue(DateUtils.format(trainConfigDO.getEndDate(),DateUtils.YYYYMMDDHHMMSS));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+
+        if (trainConfigDO.getIsStart() != aDo.getIsStart()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("IsStart");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(aDo.getIsStart()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(trainConfigDO.getIsStart()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (!StringUtils.equals(trainConfigDO.getAnswer(),aDo.getAnswer())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("Answer");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(aDo.getAnswer());
+            qmsSysLogDetailsDO.setOldValue(trainConfigDO.getAnswer());
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+
+        if (!StringUtils.equals(trainConfigDO.getTrainInfo(),aDo.getTrainInfo())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("TrainInfo");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(aDo.getTrainInfo());
+            qmsSysLogDetailsDO.setOldValue(trainConfigDO.getTrainInfo());
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (!StringUtils.equals(trainConfigDO.getExamName(),aDo.getExamName())) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("ExamName");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(aDo.getExamName());
+            qmsSysLogDetailsDO.setOldValue(trainConfigDO.getExamName());
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (trainConfigDO.getPassPoint() != aDo.getPassPoint()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("PassPoint");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(aDo.getPassPoint()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(trainConfigDO.getPassPoint()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (trainConfigDO.getTotalPoint() != aDo.getTotalPoint()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("TotalPoint");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(aDo.getTotalPoint()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(trainConfigDO.getTotalPoint()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        if (trainConfigDO.getReadFen() != aDo.getReadFen()) {
+            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
+            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
+            qmsSysLogDetailsDO.setFieldName("ReadFen");
+            /*qmsSysLogDetailsDO1.setFieldText();*/
+            qmsSysLogDetailsDO.setNewValue(String.valueOf(aDo.getReadFen()));
+            qmsSysLogDetailsDO.setOldValue(String.valueOf(trainConfigDO.getReadFen()));
+            qmsSysLogDetailsDO.setIsDeleted(false);
+            qmsSysLogDetailsDO.setCreator(aDo.getModifier());
+            qmsSysLogDetailsDO.setCreatorId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setModifier(aDo.getModifier());
+            qmsSysLogDetailsDO.setModifierId(String.valueOf(aDo.getModifierId()));
+            qmsSysLogDetailsDO.setGmtModified(new Date());
+            qmsSysLogDetailsDO.setGmtCreated(new Date());
+            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
+            isSuccess = num == 1 ? true : false;
+        }
+        return isSuccess;
+
     }
 
     /**
@@ -139,6 +353,7 @@ public class TrainConfigManager {
             qmsSysLogsDO.setModifier(aDo.getModifier());
             qmsSysLogsDO.setModifierId(aDo.getModifierId());
             int insert = qmsSysLogsMapper.insert(qmsSysLogsDO);
+
         }
         return num;
     }
