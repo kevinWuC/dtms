@@ -2,6 +2,7 @@ package com.medical.dtms.feignservice.user;
 
 import com.github.pagehelper.PageInfo;
 import com.medical.dtms.common.eception.BizException;
+import com.medical.dtms.common.model.user.QMSUserInRoleModel;
 import com.medical.dtms.dto.user.QMSUserDTO;
 import com.medical.dtms.dto.user.QMSUserInDeptDTO;
 import com.medical.dtms.dto.user.QMSUserInJobsDTO;
@@ -14,6 +15,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -53,4 +55,7 @@ public interface QMSUserService {
 
     @RequestMapping(value = "/user/listUsersInfo", method = RequestMethod.POST)
     PageInfo<QMSUserModel> listUsersInfo(@RequestBody BaseUserQuery query);
+
+    @RequestMapping(value = "/user/listRoleInfoByUserId", method = RequestMethod.POST)
+    List<QMSUserInRoleModel> listRoleInfoByUserId(@RequestParam("bizId") Long bizId);
 }

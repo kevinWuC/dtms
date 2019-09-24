@@ -42,8 +42,8 @@ public class HttpUtil {
             HttpPost post = new HttpPost(url);
             StringEntity entity = new UrlEncodedFormEntity(nameValuePairList, "UTF-8");
             post.setEntity(entity);
-            post.setHeader(new BasicHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8"));
-            post.setHeader(new BasicHeader("Accept", "text/plain;charset=utf-8"));
+            post.setHeader(new BasicHeader("Content-Type", "application/json; charset=utf-8"));
+            post.setHeader(new BasicHeader("Accept", "application/json;charset=utf-8"));
             response = client.execute(post);
             int statusCode = response.getStatusLine().getStatusCode();
             if (200 == statusCode) {

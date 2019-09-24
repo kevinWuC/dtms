@@ -8,6 +8,8 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 /**
  * @version： DropDownService.java v 1.0, 2019年09月04日 11:20 wuxuelin Exp$
  * @Description
@@ -34,7 +36,7 @@ public interface DropDownService {
     PageInfo<DropDownModel> listYears(@RequestBody DropDownQuery query);
 
     @RequestMapping(value = "/dropdown/listRolesInFileModel")
-    PageInfo<DropDownModel> listRolesInFileModel(@RequestBody DropDownQuery query);
+    List<DropDownModel> listRolesInFileModel(@RequestBody DropDownQuery query);
 
     @RequestMapping(value = "/dropdown/listAllFileTypes")
     PageInfo<DropDownModel> listAllFileTypes(@RequestBody DropDownQuery query);

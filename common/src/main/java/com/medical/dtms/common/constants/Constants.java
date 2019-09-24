@@ -86,4 +86,8 @@ public class Constants {
      */
     public static final String PASS = "年审通过";
     public static final String FAIL = "年审未通过,需要修改文件";
+    /**
+     * 管理员
+     */
+    public static final String ADMIN = "管理员";
 }

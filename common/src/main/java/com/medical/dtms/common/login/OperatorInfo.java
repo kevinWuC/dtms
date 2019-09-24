@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.common.model.menu.QMSMenuModel;
 import com.medical.dtms.common.model.user.QMSUserInRoleModel;
 import lombok.Data;
 
@@ -47,4 +48,8 @@ public class OperatorInfo implements Serializable {
      * 用户角色 list
      */
     private List<QMSUserInRoleModel> roleList;
+    /**
+     * 用户所用有的菜单 list
+     */
+    private List<QMSMenuModel> menuLists;
 }

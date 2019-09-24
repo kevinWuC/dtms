@@ -7,6 +7,7 @@ import com.medical.dtms.common.model.dept.QMSDeptInJobModel;
 import com.medical.dtms.common.model.dept.QMSDeptModel;
 import com.medical.dtms.common.model.job.QMSJobsModel;
 import com.medical.dtms.common.model.job.SimpleQMSJobsModel;
+import com.medical.dtms.common.model.menu.QMSMenuModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
@@ -53,6 +54,7 @@ public class QMSDeptServiceImpl implements QMSDeptService {
     public Boolean addQMSDept(@RequestBody QMSDeptDTO deptDTO) {
         // 根据编号 做唯一性校验
         QMSDeptQuery query = new QMSDeptQuery();
+        query.setParentId(deptDTO.getParentId());
         query.setCode(deptDTO.getCode());
         QMSDeptDTO dto = qmsDeptManager.getQMSDeptByCode(query);
         if (null != dto) {
@@ -157,7 +159,6 @@ public class QMSDeptServiceImpl implements QMSDeptService {
         }
 
         List<QMSDeptModel> models = qmsDeptManager.listQMSDept(query);
-
         if (CollectionUtils.isEmpty(models)) {
             return new ArrayList<>();
         }
@@ -172,6 +173,20 @@ public class QMSDeptServiceImpl implements QMSDeptService {
             }
             model.setLastOrNot(false);
             model.setList(list);
+
+            if (CollectionUtils.isNotEmpty(list)){
+                for (QMSDeptModel deptModel : list) {
+                    query.setParentId(deptModel.getBizId());
+                    List<QMSDeptModel> childMenu = qmsDeptManager.listQMSDept(query);
+                    if (CollectionUtils.isEmpty(childMenu)) {
+                        deptModel.setLastOrNot(true);
+                        deptModel.setList(new ArrayList<>());
+                        continue;
+                    }
+                    deptModel.setLastOrNot(false);
+                    deptModel.setList(childMenu);
+                }
+            }
         }
 
         return models;

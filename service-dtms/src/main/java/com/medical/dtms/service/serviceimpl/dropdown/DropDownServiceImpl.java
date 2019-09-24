@@ -134,10 +134,12 @@ public class DropDownServiceImpl implements DropDownService {
      * @description 分配角色 下拉
      **/
     @Override
-    public PageInfo<DropDownModel> listRolesInFileModel(@RequestBody DropDownQuery query) {
-        PageHelper.startPage(query.getPageNo(), query.getPageSize());
+    public List<DropDownModel> listRolesInFileModel(@RequestBody DropDownQuery query) {
         List<DropDownModel> models = queryManager.listRolesInFileModel(query);
-        return getDropDownModels(models);
+        if (CollectionUtils.isEmpty(models)) {
+            return new ArrayList<>();
+        }
+        return models;
     }
 
     /**
@@ -214,9 +216,6 @@ public class DropDownServiceImpl implements DropDownService {
         }
         return new PageInfo<>(dos);
     }
-
-
-
 
     /**
      * 返回数据

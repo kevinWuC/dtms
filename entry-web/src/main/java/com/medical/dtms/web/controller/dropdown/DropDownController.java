@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 /**
  * @version： DropDownController.java v 1.0, 2019年09月04日 11:06 wuxuelin Exp$
@@ -117,9 +119,9 @@ public class DropDownController {
      * @description 分配角色下拉框
      **/
     @RequestMapping(value = "/dropdown/listRolesInFileModel")
-    public Result<PageInfo<DropDownModel>> listRolesInFileModel(@RequestBody DropDownQuery query) {
-        checkParams(query);
-        PageInfo<DropDownModel> pageInfo = dropDownService.listRolesInFileModel(query);
+    public Result<List<DropDownModel>> listRolesInFileModel(@RequestBody DropDownQuery query) {
+//        checkParams(query);
+        List<DropDownModel> pageInfo = dropDownService.listRolesInFileModel(query);
         return Result.buildSuccess(pageInfo);
     }
 
@@ -160,6 +162,7 @@ public class DropDownController {
     }
 
 
+
     /**
      * 分页参数校验
      *
@@ -173,7 +176,7 @@ public class DropDownController {
             query.setPageNo(1);
         }
         if (null == query.getPageSize()) {
-            query.setPageSize(10);
+            query.setPageSize(50);
         }
     }
 }

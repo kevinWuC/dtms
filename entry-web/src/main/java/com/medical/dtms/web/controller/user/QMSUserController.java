@@ -61,7 +61,6 @@ public class QMSUserController {
 
         // 保存登录信息到 登录日志表
         String address = ipAddressManager.getCityAddress(request);
-        System.out.println("address： -- -- -- - - - " + address);
 
         QMSSysLoginLogDTO logDTO = new QMSSysLoginLogDTO();
         logDTO.setCreateDate(new Date());

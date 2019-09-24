@@ -42,6 +42,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sun.misc.BASE64Encoder;
 
@@ -444,7 +445,7 @@ public class QMSUserServiceImpl implements QMSUserService {
         model.setDeptName(deptDTO == null ? null : deptDTO.getDeptName() == null ? null : deptDTO.getDeptName());
 
         // 查询用户所拥有的角色
-        List<QMSUserInRoleModel> roleInfo = userInRoleManager.listRoleInfoByUserId(user.getBizId());
+        List<QMSUserInRoleModel> roleInfo = listRoleInfoByUserId(user.getBizId());
 
         // 查询用户默认角色
         QMSRoleQuery roleQuery = new QMSRoleQuery();
@@ -457,8 +458,24 @@ public class QMSUserServiceImpl implements QMSUserService {
 
         model.setRoleList(roleInfo);
 
+        // 查询菜单
+        if (CollectionUtils.isNotEmpty(roleInfo)) {
+            List<QMSMenuModel> menuModels = getQmsMenuModelsByRole(roleInfo);
+
+            model.setMenuLists(menuModels);
+        }
         return model;
     }
+
+    /**
+     * @param bizId
+     * @return 查询人员所拥有的角色
+     **/
+    @Override
+    public List<QMSUserInRoleModel> listRoleInfoByUserId(@RequestParam("bizId") Long bizId) {
+        return userInRoleManager.listRoleInfoByUserId(bizId);
+    }
+
 
     /**
      * @param [query]
@@ -475,27 +492,16 @@ public class QMSUserServiceImpl implements QMSUserService {
         }
 
         // 查询菜单信息
-        List<Long> roleIds = roleInfo.stream().map(QMSUserInRoleModel::getRoleId).distinct().collect(Collectors.toList());
-        List<QMSMenuModel> menuModels = roleInMenuManager.listMenuByRole(roleIds);
-        if (CollectionUtils.isNotEmpty(menuModels)) {
-            for (QMSMenuModel model : menuModels) {
-                QMSMenuQuery menuQuery = new QMSMenuQuery();
-                menuQuery.setParentId(model.getBizId());
-                List<QMSMenuModel> models = menuService.listQMSMenus(menuQuery);
-                if (CollectionUtils.isEmpty(models)) {
-                    continue;
-                }
-                model.setList(models);
-            }
-        }
+        List<QMSMenuModel> menuModels = getQmsMenuModelsByRole(roleInfo);
         return menuModels;
     }
 
     /**
-    * 人员列表
-    * @param query
-    * @return
-    **/
+     * 人员列表
+     *
+     * @param query
+     * @return
+     **/
     @Override
     public PageInfo<QMSUserModel> listUsersInfo(@RequestBody BaseUserQuery query) {
         PageHelper.startPage(query.getPageNo(), query.getPageSize());
@@ -524,6 +530,26 @@ public class QMSUserServiceImpl implements QMSUserService {
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
         }
         return newPassWord;
+    }
+
+    /**
+     * 根据角色查询菜单
+     */
+    private List<QMSMenuModel> getQmsMenuModelsByRole(List<QMSUserInRoleModel> roleInfo) {
+        List<Long> roleIds = roleInfo.stream().map(QMSUserInRoleModel::getRoleId).distinct().collect(Collectors.toList());
+        List<QMSMenuModel> menuModels = roleInMenuManager.listMenuByRole(roleIds);
+        if (CollectionUtils.isNotEmpty(menuModels)) {
+            for (QMSMenuModel menuModel : menuModels) {
+                QMSMenuQuery menuQuery = new QMSMenuQuery();
+                menuQuery.setParentId(menuModel.getBizId());
+                List<QMSMenuModel> models = menuService.listQMSMenus(menuQuery);
+                if (CollectionUtils.isEmpty(models)) {
+                    continue;
+                }
+                menuModel.setList(models);
+            }
+        }
+        return menuModels;
     }
 
 }
