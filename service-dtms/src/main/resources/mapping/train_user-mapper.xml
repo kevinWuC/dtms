@@ -103,7 +103,7 @@
     <!-- 培训统计 - 分页展示培训用户数据  -->
     <select id="pageListTrainUser" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
             resultType="com.medical.dtms.common.model.train.TrainUserModel">
-        select usr.dsp_name AS dspName,tusr.user_id AS userId,file.file_id AS fileId,
+        select usr.dsp_name AS dspName,tusr.user_id AS userId,file.file_id AS fileId,usr.dept_id AS deptId,
         tusr.train_name AS trainName,tusr.train_id AS trainId,config.pass_point AS passPoint,
         tusr.point_str AS pointStr,config.total_point AS totalPoint,tusr.finish_time AS finishTime
         from tb_dtms_train_user tusr
@@ -135,6 +135,15 @@
         </if>
         <if test="bizId != null">
             and tusr.biz_id = #{bizId}
+        </if>
+        <if test="dspName != null and dspName !=''">
+            and dsp_name like CONCAT(CONCAT('%/',#{dspName}),'%') ESCAPE '/'
+        </if>
+        <if test="deptId != null and deptId !=''">
+            and dept_id like CONCAT(CONCAT('%/',#{deptId}),'%') ESCAPE '/'
+        </if>
+        <if test="trainName != null and trainName !=''">
+            and train_name like CONCAT(CONCAT('%/',#{trainName}),'%') ESCAPE '/'
         </if>
         order by any_value(tusr.gmt_created) desc
     </select>
@@ -374,6 +383,15 @@
         </if>
         <if test="bizId != null">
             and tusr.biz_id = #{bizId}
+        </if>
+        <if test="dspName != null and dspName !=''">
+            and dsp_name like CONCAT(CONCAT('%/',#{dspName}),'%') ESCAPE '/'
+        </if>
+        <if test="deptId != null and deptId !=''">
+            and dept_id like CONCAT(CONCAT('%/',#{deptId}),'%') ESCAPE '/'
+        </if>
+        <if test="examName != null and examName !=''">
+            and exam_name like CONCAT(CONCAT('%/',#{examName}),'%') ESCAPE '/'
         </if>
         order by any_value(tusr.gmt_created) desc
     </select>
