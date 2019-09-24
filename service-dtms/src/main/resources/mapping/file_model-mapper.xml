@@ -507,6 +507,12 @@
         where file.is_deleted = 0
         and details.is_deleted = 0
         and file.biz_id  not in (select file_id from tb_dtms_train_files where train_id = #{trainId,jdbcType=BIGINT} and is_deleted=0)
+        <if test="fileTypeId != null">
+            and  details.biz_id like concat(concat('%',#{fileTypeId}),'%')
+        </if>
+        <if test="fileName != null">
+            and  file.file_name like concat(concat('%',#{fileName}),'%')
+        </if>
         order by file.gmt_created desc
     </select>
 
@@ -523,6 +529,12 @@
         and details.is_deleted = 0
         and files.is_deleted = 0
         and files.train_id = #{trainId,jdbcType=BIGINT}
+        <if test="fileTypeId != null">
+            and  details.biz_id like concat(concat('%',#{fileTypeId}),'%')
+        </if>
+        <if test="fileName != null">
+            and  file.file_name like concat(concat('%',#{fileName}),'%')
+        </if>
         order by files.gmt_created desc
     </select>
 

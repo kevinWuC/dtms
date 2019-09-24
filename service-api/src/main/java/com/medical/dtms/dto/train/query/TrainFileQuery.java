@@ -32,6 +32,16 @@ public class TrainFileQuery {
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long fileId;
     /**
+     * 文件类型ID
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long fileTypeId;
+    /**
+     * 文件名称
+     **/
+    private String fileName;
+    /**
      * 当前页码
      */
     private Integer pageNo;
