@@ -4,8 +4,15 @@
  */
 package com.medical.dtms.service.manager.question;
 
+import java.util.Date;
 import java.util.List;
 
+import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
+import com.medical.dtms.common.util.IdGenerator;
+import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
+import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
+import com.medical.dtms.service.manager.table.OperateManager;
+import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +32,14 @@ import com.medical.dtms.service.mapper.question.DtmsQuestionsMapper;
 public class DtmsQuestionManager {
     @Autowired
     private DtmsQuestionsMapper questionMapper;
+    @Autowired
+    private IdGenerator idGenerator;
+    @Autowired
+    private OperateManager operateManager;
+    @Autowired
+    private SysLoginLogManager sysLoginLogManager;
+    @Autowired
+    private QMSSysLogsMapper qmsSysLogsMapper;
 
     /**
      * 新增试题
@@ -35,6 +50,19 @@ public class DtmsQuestionManager {
     public Boolean saveQuestion(DtmsQuestionsDTO questionsDTO) {
         DtmsQuestionsDO questionsDO = BeanConvertUtils.convert(questionsDTO, DtmsQuestionsDO.class);
         Integer num = questionMapper.saveQuestion(questionsDO);
+        if (num == 1){
+            //新增修改日志记录
+            QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
+            qmsSysLogsDO.setBizId(idGenerator.nextId());
+            qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_INSERT.getType());
+            qmsSysLogsDO.setTableName(operateManager.getTableName(questionsDO.getClass()));
+            qmsSysLogsDO.setBusinessName(operateManager.getTableComment(questionsDO.getClass()));
+            qmsSysLogsDO.setObjectId(String.valueOf(questionsDO.getBizId()));
+            qmsSysLogsDO.setOperationIp(sysLoginLogManager.getIpByUserId(String.valueOf(questionsDO.getCreateUserId())));
+            qmsSysLogsDO.setGmtCreated(new Date());
+            qmsSysLogsDO.setCreator(questionsDO.getCreateUserName());
+            qmsSysLogsMapper.insert(qmsSysLogsDO);
+        }
         return num > 0 ? true : false;
     }
 
@@ -54,12 +82,29 @@ public class DtmsQuestionManager {
     /**
      * 修改试题
      * 
-     * @param questionsDO
+     * @param questionsDTO
      * @return
      */
     public Boolean updateQuestion(DtmsQuestionsDTO questionsDTO) {
         DtmsQuestionsDO questionsDO = BeanConvertUtils.convert(questionsDTO, DtmsQuestionsDO.class);
         Integer num = questionMapper.updateQuestion(questionsDO);
+        if (num == 1){
+            //新增修改日志记录
+            QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
+            qmsSysLogsDO.setBizId(idGenerator.nextId());
+            if (questionsDO.getDeleted() ==true) {
+                qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_DELETE.getType());
+            }else {
+                qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_UPDATE.getType());
+            }
+            qmsSysLogsDO.setTableName(operateManager.getTableName(questionsDO.getClass()));
+            qmsSysLogsDO.setBusinessName(operateManager.getTableComment(questionsDO.getClass()));
+            qmsSysLogsDO.setObjectId(String.valueOf(questionsDO.getBizId()));
+            qmsSysLogsDO.setOperationIp(sysLoginLogManager.getIpByUserId(String.valueOf(questionsDO.getCreateUserId())));
+            qmsSysLogsDO.setGmtModified(new Date());
+            qmsSysLogsDO.setCreator(questionsDO.getCreateUserName());
+            qmsSysLogsMapper.insert(qmsSysLogsDO);
+        }
         return num > 0 ? true : false;
     }
 
