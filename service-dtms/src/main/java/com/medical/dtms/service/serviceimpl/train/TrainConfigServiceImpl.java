@@ -111,11 +111,6 @@ public class TrainConfigServiceImpl implements TrainConfigService {
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "该培训已被删除，无法操作");
         }
 
-        // 未被删除
-        // 校验能否被删除
-        if (null != dto.getIsStart() && dto.getIsStart()) {
-            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "已启动培训项目不能编辑");
-        }
 
         //删除与文件的关联
         TrainFileQuery fileQuery = new TrainFileQuery();
