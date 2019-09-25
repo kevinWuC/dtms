@@ -9,10 +9,7 @@ import com.medical.dtms.feignservice.syslogs.SysLogsService;
 import com.medical.dtms.common.model.syslog.QMSSysLogsModel;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -55,7 +52,7 @@ public class SysLogsController {
     }
 
     @RequestMapping(value = "/syslog/addSysLog")
-    public String addSysLog(String logJsonString) {
+    public String addSysLog(@RequestParam("logJsonString") String logJsonString) {
         logsService.addSysLog(logJsonString);
         return "success";
     }

@@ -97,7 +97,7 @@ public class QMSUserManager {
 
         logClient.logObject(
                 // 对象主键
-                oldUser.getBizId().toString(),
+                oldUser.getBizId(),
                 // 操作人
                 oldUser.getModifier(),
                 // 操作类型

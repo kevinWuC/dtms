@@ -16,7 +16,7 @@ import java.util.List;
 
 public class LogObjectTask{
     private BaseExtendedTypeHandler baseExtendedTypeHandler;
-    private String objectId;
+    private Long objectId;
     private String operator;
     private String operationName;
     private String operationAlias;
@@ -28,7 +28,7 @@ public class LogObjectTask{
     private HttpUtil httpUtil;
 
 
-    public LogObjectTask(String objectId, String operator, String operationName, String operationAlias,
+    public LogObjectTask(Long objectId, String operator, String operationName, String operationAlias,
                          String extraWords, String comment,
                          Object oldObject, Object newObject, ObjectLoggerConfig objectLoggerConfig,
                          HttpUtil httpUtil, BaseExtendedTypeHandler baseExtendedTypeHandler) {
@@ -76,7 +76,7 @@ public class LogObjectTask{
                 }
             }
             if (!operationModel.getAttributeModelList().isEmpty()) {
-                httpUtil.sendLog(new Gson().toJson(operationModel));
+                httpUtil.sendLog(operationModel);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

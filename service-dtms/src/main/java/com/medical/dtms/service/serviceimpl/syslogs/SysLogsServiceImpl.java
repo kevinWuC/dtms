@@ -2,6 +2,7 @@ package com.medical.dtms.service.serviceimpl.syslogs;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.syslog.QMSSysLogDetailsModel;
 import com.medical.dtms.common.util.IdGenerator;
@@ -15,12 +16,15 @@ import com.medical.dtms.service.manager.syslogs.QMSSysLogDetailsManager;
 import com.medical.dtms.service.manager.syslogs.SysLogsManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -64,20 +68,20 @@ public class SysLogsServiceImpl implements SysLogsService {
      * 插入日志
      */
     @Override
-    public Boolean addSysLog(String logJsonString) {
+    public Boolean addSysLog(@RequestParam("logJsonString") String logJsonString) {
         try {
-            OperationModel operationModel = logServer.resolveOperationModel(logJsonString);
+            OperationModel operationModel = resolveOperationModel(logJsonString);
             logsManager.addOperationModel(operationModel);
             Integer operationId = operationModel.getId();
 
             List<AttributeModel> attributeModelList = operationModel.getAttributeModelList();
-            for (AttributeModel attributeModel : attributeModelList) {
-                attributeModel.setId(null);
-                attributeModel.setOperationId(operationId);
-            }
-
-            if (!org.springframework.util.CollectionUtils.isEmpty(attributeModelList)) {
-                logsManager.addBatchAttribute(attributeModelList);
+            if (CollectionUtils.isNotEmpty(attributeModelList)) {
+                List<AttributeModel> newList = attributeModelList.stream().filter(attributeModel -> StringUtils.isNotBlank(attributeModel.getNewValue())).collect(Collectors.toList());
+                for (AttributeModel attributeModel : newList) {
+                    attributeModel.setId(null);
+                    attributeModel.setOperationId(operationId);
+                }
+                logsManager.addBatchAttribute(newList);
             }
             return true;
         } catch (Exception e) {
@@ -100,5 +104,12 @@ public class SysLogsServiceImpl implements SysLogsService {
             return new ArrayList<>();
         }
         return list;
+    }
+
+    /**
+     * json串转对象
+     */
+    private OperationModel resolveOperationModel(String operationModelString) {
+        return new Gson().fromJson(operationModelString, OperationModel.class);
     }
 }

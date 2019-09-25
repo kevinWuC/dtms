@@ -8,6 +8,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,5 +26,5 @@ public interface SysLogsService {
     List<QMSSysLogDetailsModel> listQMSSysLogDetails(@RequestBody QMSSysLogsQuery query);
 
     @RequestMapping(value = "/syslog/addSysLog")
-    Boolean addSysLog(String logJsonString);
+    Boolean addSysLog(@RequestParam("logJsonString") String logJsonString);
 }

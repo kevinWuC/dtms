@@ -15,20 +15,11 @@ public class ObjectLoggerConfig {
     /**
      * 业务模块所在的服务器地址 和 端口号
      */
-//    @Value("${yeecode.objectLogger.serverAddress}")
+    @Value("${yeecode.objectLogger.serverAddress}")
     private String serverAddress;
     /**
      * 是否自动比较属性值的变化
      */
     @Value("${yeecode.objectLogger.autoLogAttributes}")
     private String autoLogAttributes;
-
-    // TODO
-    public String getServerAddress() {
-        return serverAddress;
-    }
-
-    public void setServerAddress(String serverAddress) {
-        this.serverAddress = serverAddress;
-    }
 }

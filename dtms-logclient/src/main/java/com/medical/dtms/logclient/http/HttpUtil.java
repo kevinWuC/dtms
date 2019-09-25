@@ -1,7 +1,10 @@
 package com.medical.dtms.logclient.http;
 
 
+import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.medical.dtms.logclient.config.ObjectLoggerConfig;
+import com.medical.dtms.logclient.model.OperationModel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -26,11 +29,13 @@ public class HttpUtil {
     @Autowired(required = false)
     private ObjectLoggerConfig objectLoggerConfig;
 
-    public synchronized void sendLog(String jsonString) {
+    public synchronized void sendLog(OperationModel model) {
         try {
             List<NameValuePair> paramsList = new ArrayList<>();
-            paramsList.add(new BasicNameValuePair("logJsonString", jsonString));
-            sendPost("http://" + objectLoggerConfig.getServerAddress() + "/entry-web/syslog/addSysLog", paramsList);
+            paramsList.add(new BasicNameValuePair("logJsonString", new Gson().toJson(model)));
+            String ip = model.getExtraWords();
+            String port = objectLoggerConfig.getServerAddress().substring(objectLoggerConfig.getServerAddress().lastIndexOf(":")).replace(":", "");
+            sendPost("http://" + ip + ":" + port + "/syslog/addSysLog", paramsList);
         } catch (Exception ex) {
             log.error("sendLog error!", ex);
         }
@@ -42,8 +47,9 @@ public class HttpUtil {
             HttpPost post = new HttpPost(url);
             StringEntity entity = new UrlEncodedFormEntity(nameValuePairList, "UTF-8");
             post.setEntity(entity);
-            post.setHeader(new BasicHeader("Content-Type", "application/json; charset=utf-8"));
-            post.setHeader(new BasicHeader("Accept", "application/json;charset=utf-8"));
+            post.setHeader(new BasicHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8"));
+            post.setHeader(new BasicHeader("Accept", "text/plain;charset=utf-8"));
+            post.setHeader(new BasicHeader("menuUrl", "/syslog/addSysLog"));
             response = client.execute(post);
             int statusCode = response.getStatusLine().getStatusCode();
             if (200 == statusCode) {
