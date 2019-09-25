@@ -50,7 +50,11 @@ public class UserLoginModel implements Serializable {
      */
     private List<QMSUserInRoleModel> roleList;
     /**
-     * 用户所用有的菜单 list
+     * 用户所拥有的菜单 list
      */
     private List<QMSMenuModel> menuLists;
+    /**
+     * 用户所拥有的菜单  urls
+     */
+    private List<String> menuUrls;
 }

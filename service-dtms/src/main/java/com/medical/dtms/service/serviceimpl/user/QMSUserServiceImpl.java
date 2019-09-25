@@ -6,11 +6,9 @@ import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.syslog.BaseSimpleUserModel;
 import com.medical.dtms.common.model.syslog.SimpleLogInLogModel;
-import com.medical.dtms.common.model.syslog.SysLoginLogModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
-import com.medical.dtms.dto.log.QMSSysLogsDTO;
 import com.medical.dtms.dto.menu.query.QMSMenuQuery;
 import com.medical.dtms.dto.role.QMSRoleDTO;
 import com.medical.dtms.dto.role.query.QMSRoleQuery;
@@ -30,7 +28,6 @@ import com.medical.dtms.service.manager.dept.QMSDeptManager;
 import com.medical.dtms.service.manager.role.QMSRoleInMenuManager;
 import com.medical.dtms.service.manager.role.QMSRoleManager;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
-import com.medical.dtms.service.manager.syslogs.SysLogsManager;
 import com.medical.dtms.service.manager.user.QMSUserInDeptManager;
 import com.medical.dtms.service.manager.user.QMSUserInJobsManager;
 import com.medical.dtms.service.manager.user.QMSUserInRoleManager;
@@ -72,8 +69,6 @@ public class QMSUserServiceImpl implements QMSUserService {
     private QMSUserInDeptManager userInDeptManager;
     @Autowired
     private QMSRoleInMenuManager roleInMenuManager;
-    @Autowired
-    private SysLogsManager sysLogsManager;
     @Autowired
     private QMSMenuService menuService;
     @Autowired
@@ -461,8 +456,12 @@ public class QMSUserServiceImpl implements QMSUserService {
         // 查询菜单
         if (CollectionUtils.isNotEmpty(roleInfo)) {
             List<QMSMenuModel> menuModels = getQmsMenuModelsByRole(roleInfo);
-
             model.setMenuLists(menuModels);
+
+            if (CollectionUtils.isNotEmpty(menuModels)) {
+                List<String> menuUrls = menuModels.stream().map(QMSMenuModel::getNavigateUrl).distinct().collect(Collectors.toList());
+                model.setMenuUrls(menuUrls);
+            }
         }
         return model;
     }
@@ -533,7 +532,7 @@ public class QMSUserServiceImpl implements QMSUserService {
     }
 
     /**
-     * 根据角色查询菜单
+     * 根据角色查询菜单（子父级结构）
      */
     private List<QMSMenuModel> getQmsMenuModelsByRole(List<QMSUserInRoleModel> roleInfo) {
         List<Long> roleIds = roleInfo.stream().map(QMSUserInRoleModel::getRoleId).distinct().collect(Collectors.toList());
