@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class OperationForm {
-    private String id;
+    private Long id;
 
     private String appName;
 
@@ -14,7 +14,7 @@ public class OperationForm {
 
     private String operator;
 
-    private String operationName;
+    private Integer operationName;
 
     private String operationAlias;
 

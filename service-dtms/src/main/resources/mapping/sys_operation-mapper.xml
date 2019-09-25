@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.logserver.OperationMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.logclient.model.OperationModel">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="app_name" jdbcType="VARCHAR" property="appName"/>
+        <result column="object_name" jdbcType="VARCHAR" property="objectName"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+        <result column="operation_name" jdbcType="INTEGER" property="operationName"/>
+        <result column="operation_alias" jdbcType="VARCHAR" property="operationAlias"/>
+        <result column="extra_words" jdbcType="VARCHAR" property="extraWords"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="operation_time" jdbcType="TIMESTAMP" property="operationTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, app_name, object_name, object_id, operator, operation_name, operation_alias,
+    extra_words, comment, operation_time
+  </sql>
+
+    <sql id="table_name">
+        tb_dtms_sys_operation
+    </sql>
+
+
+    <select id="queryByFilter" parameterType="com.medical.dtms.logclient.model.OperationModel"
+            resultType="com.medical.dtms.logclient.model.OperationModel">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="id != null">
+                `id`=#{id}
+            </if>
+            <if test="appName != null">
+                AND app_name = #{appName,jdbcType=VARCHAR}
+            </if>
+            <if test="objectName != null">
+                AND object_name = #{objectName,jdbcType=VARCHAR}
+            </if>
+            <if test="objectId != null">
+                AND object_id = #{objectId,jdbcType=BIGINT}
+            </if>
+            <if test="operator != null">
+                AND operator = #{operator,jdbcType=VARCHAR}
+            </if>
+            <if test="operationName != null">
+                AND operation_name = #{operationName,jdbcType=INTEGER}
+            </if>
+            <if test="operationAlias != null">
+                AND operation_alias = #{operationAlias,jdbcType=VARCHAR}
+            </if>
+            <if test="extraWords != null">
+                AND extra_words = #{extraWords,jdbcType=VARCHAR}
+            </if>
+            <if test="comment != null">
+                AND comment = #{comment,jdbcType=VARCHAR}
+            </if>
+            <if test="operationTime != null">
+                AND operation_time = #{operationTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        ORDER BY `operation_time` desc
+    </select>
+
+    <!--  添加操作记录-->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.medical.dtms.logclient.model.OperationModel">
+        INSERT INTO
+        <include refid="table_name"/>
+        (
+        `app_name`,`object_name`,`object_id`,`operator`,`operation_name`,
+        `operation_alias`,`extra_words`,`comment`,`operation_time`
+        )
+        VALUES
+        (
+        #{appName},#{objectName},#{objectId},#{operator},#{operationName},
+        #{operationAlias},#{extraWords},#{comment},#{operationTime}
+        )
+    </insert>
+
+    <!-- 分页展示系统日志-->
+    <select id="pageListSysLogs" parameterType="com.medical.dtms.dto.log.query.QMSSysLogsQuery"
+            resultType="com.medical.dtms.common.model.syslog.QMSSysLogsModel">
+        select
+        id AS bizId,operation_time AS operateDate,operation_name AS operationType,
+        operation_alias AS tableName,object_id AS domainKey,comment AS businessName,
+        extra_words AS operationIp,operator AS operationUser
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="beginTime != null and endTime == null">
+                AND operation_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="beginTime == null and endTime != null">
+                AND operation_time  <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                AND #{beginTime,jdbcType=TIMESTAMP} <![CDATA[ <= ]]> operation_time <![CDATA[ <= ]]>
+                #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="operationType != null">
+                AND operation_name = #{operationType,jdbcType=INTEGER}
+            </if>
+            <if test="businessName != null and businessName != ''">
+                AND comment like concat(concat('%',#{businessName,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="operationUser != null and operationUser != ''">
+                and operator like concat(concat('%',#{operationUser,jdbcType=VARCHAR}),'%')
+            </if>
+        </where>
+        order by operation_time desc
+    </select>
+
+
+</mapper>

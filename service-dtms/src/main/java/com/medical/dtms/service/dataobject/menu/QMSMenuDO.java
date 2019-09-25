@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.logclient.annotation.LogTag;
+import com.medical.dtms.logclient.handler.BuiltinTypeHandler;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -31,58 +33,72 @@ public class QMSMenuDO {
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Long parentId;
     /**
      * 模块编号
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String code;
     /**
      * 模块名称
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String fullName;
     /**
      * 描述
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String description;
     /**
      * 菜单图标
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String img;
     /**
      * 类别
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String category;
     /**
      * 导航Url
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String navigateUrl;
     /**
      * 链接目标
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String target;
     /**
      * 是否展开 true - 是 false - 否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isUnfold;
     /**
      * 允许编辑 true - 是 false - 否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEdit;
     /**
      * 允许删除 true - 是 false - 否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowDelete;
     /**
      * 是否有效 true - 是 false - 否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean enabled;
     /**
      * 排序码
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
     /**
      * 删除 true - 是 false - 否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建人

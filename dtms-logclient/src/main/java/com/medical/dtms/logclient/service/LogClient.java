@@ -39,7 +39,7 @@ public class LogClient {
      * @param oldObject      required,the object before operation
      * @param newObject      required,the object after operation
      */
-    public void logObject(Long objectId, String operator, String operationName, String operationAlias,
+    public void logObject(Long objectId, String operator, Integer operationName, String operationAlias,
                           String extraWords, String comment,
                           Object oldObject, Object newObject) {
         try {
@@ -68,7 +68,7 @@ public class LogClient {
      *                               optional: oldValue，newValue,diffValue
      */
     public void logAttributes(String objectName, Long objectId,
-                              String operator, String operationName, String operationAlias,
+                              String operator, Integer operationName, String operationAlias,
                               String extraWords, String comment,
                               List<BaseAttributeModel> baseAttributeModelList) {
         try {

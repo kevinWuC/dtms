@@ -5,14 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.syslog.QMSSysLogDetailsModel;
-import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.log.query.QMSSysLogsQuery;
 import com.medical.dtms.feignservice.syslogs.SysLogsService;
 import com.medical.dtms.common.model.syslog.QMSSysLogsModel;
 import com.medical.dtms.logclient.model.AttributeModel;
 import com.medical.dtms.logclient.model.OperationModel;
-import com.medical.dtms.logclient.service.LogServer;
-import com.medical.dtms.service.manager.syslogs.QMSSysLogDetailsManager;
 import com.medical.dtms.service.manager.syslogs.SysLogsManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,12 +34,6 @@ public class SysLogsServiceImpl implements SysLogsService {
 
     @Autowired
     private SysLogsManager logsManager;
-    @Autowired
-    private QMSSysLogDetailsManager detailsManager;
-    @Autowired
-    private IdGenerator idGenerator;
-    @Autowired
-    private LogServer logServer;
 
     /**
      * 系统日志 - 操作日志列表分页查询
@@ -72,7 +63,7 @@ public class SysLogsServiceImpl implements SysLogsService {
         try {
             OperationModel operationModel = resolveOperationModel(logJsonString);
             logsManager.addOperationModel(operationModel);
-            Integer operationId = operationModel.getId();
+            Long operationId = operationModel.getId();
 
             List<AttributeModel> attributeModelList = operationModel.getAttributeModelList();
             if (CollectionUtils.isNotEmpty(attributeModelList)) {
@@ -99,7 +90,7 @@ public class SysLogsServiceImpl implements SysLogsService {
      **/
     @Override
     public List<QMSSysLogDetailsModel> listQMSSysLogDetails(@RequestBody QMSSysLogsQuery query) {
-        List<QMSSysLogDetailsModel> list = detailsManager.listQMSSysLogDetails(query);
+        List<QMSSysLogDetailsModel> list = logsManager.listQMSSysLogDetails(query);
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();
         }

@@ -89,7 +89,7 @@ public class OperateManager {
                 }
             }
         } catch (SQLException e) {
-            log.error("获取表备注名", e);
+            log.error("获取表备注名失败", e);
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
         }
         return tableComment;

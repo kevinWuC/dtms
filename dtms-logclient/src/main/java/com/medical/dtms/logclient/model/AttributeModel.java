@@ -1,8 +1,8 @@
 package com.medical.dtms.logclient.model;
 
 public class AttributeModel extends BaseAttributeModel {
-    private Integer id;
-    private Integer operationId;
+    private Long id;
+    private Long operationId;
 
     public AttributeModel() {
     }
@@ -16,19 +16,19 @@ public class AttributeModel extends BaseAttributeModel {
         this.setDiffValue(baseAttributeModel.getDiffValue());
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getOperationId() {
+    public Long getOperationId() {
         return operationId;
     }
 
-    public void setOperationId(Integer operationId) {
+    public void setOperationId(Long operationId) {
         this.operationId = operationId;
     }
 }

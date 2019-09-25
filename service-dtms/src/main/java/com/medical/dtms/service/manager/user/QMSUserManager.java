@@ -101,7 +101,7 @@ public class QMSUserManager {
                 // 操作人
                 oldUser.getModifier(),
                 // 操作类型
-                OperationTypeEnum.OPERATION_TYPE_UPDATE.getName(),
+                dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
                 // 本次操作的别名，这里是操作的表名
                 tableName,
                 // 本次操作的额外描述，这里记录为操作人的ip

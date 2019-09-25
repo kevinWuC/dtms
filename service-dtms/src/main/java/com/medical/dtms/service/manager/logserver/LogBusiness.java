@@ -35,7 +35,7 @@ public class LogBusiness {
         try {
             OperationModel operationModel = logServer.resolveOperationModel(logJsonString);
             operationMapper.add(operationModel);
-            Integer operationId = operationModel.getId();
+            Long operationId = operationModel.getId();
 
             List<AttributeModel> attributeModelList = operationModel.getAttributeModelList();
             for (AttributeModel attributeModel : attributeModelList) {
@@ -58,7 +58,7 @@ public class LogBusiness {
         try {
             OperationModel operationFilterModel = new OperationModel();
             if (operationForm.getId() != null) {
-                operationFilterModel.setId(Integer.parseInt(operationForm.getId()));
+                operationFilterModel.setId(operationForm.getId());
             }
             operationFilterModel.setAppName(operationForm.getAppName());
             operationFilterModel.setObjectName(operationForm.getObjectName());
@@ -69,10 +69,10 @@ public class LogBusiness {
             List<OperationModel> operationModelList = operationMapper.queryByFilter(operationFilterModel);
 
             if (!CollectionUtils.isEmpty(operationModelList)) {
-                List<Integer> operationIdList = operationModelList.stream().map(OperationModel::getId).collect(Collectors.toList());
+                List<Long> operationIdList = operationModelList.stream().map(OperationModel::getId).collect(Collectors.toList());
                 List<AttributeModel> attributeModelList = attributeMapper.queryByOperationIdList(operationIdList);
                 if (!CollectionUtils.isEmpty(attributeModelList)) {
-                    Map<Integer, List<AttributeModel>> attributeModelMap = new HashMap<>();
+                    Map<Long, List<AttributeModel>> attributeModelMap = new HashMap<>();
                     for (AttributeModel attributeModel : attributeModelList) {
                         attributeModelMap.putIfAbsent(attributeModel.getOperationId(), new ArrayList<>());
                         attributeModelMap.get(attributeModel.getOperationId()).add(attributeModel);

@@ -98,6 +98,7 @@ public class QMSUserDO {
     /**
      * false-未删除  true-删除
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建人

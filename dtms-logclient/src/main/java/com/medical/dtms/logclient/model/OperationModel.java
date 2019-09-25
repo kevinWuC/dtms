@@ -8,12 +8,12 @@ import java.util.List;
 
 @Data
 public class OperationModel {
-    private Integer id;
+    private Long id;
     private String appName;
     private String objectName;
     private Long objectId;
     private String operator;
-    private String operationName;
+    private Integer operationName;
     private String operationAlias;
     private String extraWords;
     private String comment;
@@ -24,7 +24,7 @@ public class OperationModel {
     }
 
     public OperationModel(String appName, String objectName, Long objectId, String operator,
-                          String operationName, String operationAlias, String extraWords,
+                          Integer operationName, String operationAlias, String extraWords,
                           String comment, Date operationTime) {
         this.appName = appName;
         this.objectName = objectName;

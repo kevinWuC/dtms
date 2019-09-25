@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @version： SysLoginLogManager.java v 1.0, 2019年08月20日 16:02 huangshuaiqaun Exp$
- * @Description
+ * @Description 登录日志
  **/
 @Service
 public class SysLoginLogManager {
@@ -73,8 +73,10 @@ public class SysLoginLogManager {
         return qmsSysLoginLogMapper.listUserLastVisitAndVisitTime(userIds);
     }
 
-    /** 根据用户 id 获取 ip*/
-    public String getIpByUserId(String userId){
+    /**
+     * 根据用户 id 获取 ip
+     */
+    public String getIpByUserId(String userId) {
         if (StringUtils.isBlank(userId)) {
             throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "用户id 为空");
         }

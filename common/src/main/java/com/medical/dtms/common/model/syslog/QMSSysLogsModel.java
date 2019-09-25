@@ -31,7 +31,7 @@ public class QMSSysLogsModel {
      */
     private Integer operationType;
     /**
-     * 操作类型
+     * 操作类型name
      */
     private String operationName;
     /**
@@ -41,7 +41,9 @@ public class QMSSysLogsModel {
     /**
      * 对象主键值
      */
-    private String domainKey;
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long domainKey;
     /**
      * 操作模块
      */

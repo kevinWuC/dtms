@@ -1,6 +1,5 @@
 package com.medical.dtms.logclient.task;
 
-import com.google.gson.Gson;
 import com.medical.dtms.logclient.config.ObjectLoggerConfig;
 import com.medical.dtms.logclient.http.HttpUtil;
 import com.medical.dtms.logclient.model.BaseAttributeModel;
@@ -14,7 +13,7 @@ public class LogAttributesTask implements Runnable {
     private String objectName;
     private Long objectId;
     private String operator;
-    private String operationName;
+    private Integer operationName;
     private String operationAlias;
     private String extraWords;
     private String comment;
@@ -22,7 +21,7 @@ public class LogAttributesTask implements Runnable {
 
     private List<BaseAttributeModel> baseAttributeModelList;
 
-    public LogAttributesTask(String objectName, Long objectId, String operator, String operationName, String operationAlias,
+    public LogAttributesTask(String objectName, Long objectId, String operator, Integer operationName, String operationAlias,
                              String extraWords, String comment,
                              List<BaseAttributeModel> baseAttributeModelList, ObjectLoggerConfig objectLoggerConfig, HttpUtil httpUtil) {
         this.objectName = objectName;

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.medical.dtms.service.mapper.logserver.AttributeMapper">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.logclient.model.AttributeModel">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="operation_id" jdbcType="BIGINT" property="operationId"/>
+        <result column="attribute_type" jdbcType="VARCHAR" property="attributeType"/>
+        <result column="attribute_name" jdbcType="VARCHAR" property="attributeName"/>
+        <result column="attribute_alias" jdbcType="VARCHAR" property="attributeAlias"/>
+        <result column="old_value" jdbcType="VARCHAR" property="oldValue"/>
+        <result column="new_value" jdbcType="VARCHAR" property="newValue"/>
+        <result column="diff_value" jdbcType="VARCHAR" property="diffValue"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, operation_id, attribute_type, attribute_name, attribute_alias, old_value, new_value,
+    diff_value
+  </sql>
+
+    <sql id="table_name">
+        tb_dtms_sys_attribute
+    </sql>
+
+    <select id="queryByOperationIdList" resultType="com.medical.dtms.logclient.model.AttributeModel">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        <include refid="table_name"/>
+        WHERE operation_id IN
+        <foreach item="operationId" collection="list" open="("
+                 separator="," close=")">
+            #{operationId}
+        </foreach>
+    </select>
+
+    <select id="queryByFilter" parameterType="com.medical.dtms.logclient.model.AttributeModel"
+            resultType="com.medical.dtms.logclient.model.AttributeModel">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="id != null">
+                `id`=#{id}
+            </if>
+            <if test="operationId != null">
+                AND operation_id = #{operationId,jdbcType=BIGINT}
+            </if>
+            <if test="attributeType != null">
+                AND attribute_type = #{attributeType,jdbcType=VARCHAR}
+            </if>
+            <if test="attributeName != null">
+                AND attribute_name = #{attributeName,jdbcType=VARCHAR}
+            </if>
+            <if test="attributeAlias != null">
+                AND attribute_alias = #{attributeAlias,jdbcType=VARCHAR}
+            </if>
+            <if test="oldValue != null">
+                AND old_value = #{oldValue,jdbcType=VARCHAR}
+            </if>
+            <if test="newValue != null">
+                AND new_value = #{newValue,jdbcType=VARCHAR}
+            </if>
+            <if test="diffValue != null">
+                AND diff_value = #{diffValue,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量新增-->
+    <insert id="addBatch" useGeneratedKeys="true" parameterType="java.util.List">
+        INSERT INTO
+        <include refid="table_name"/>
+        (
+        `operation_id`,`attribute_type`,`attribute_name`,`attribute_alias`,
+        `old_value`,`new_value`,`diff_value`
+        )
+        VALUES
+        <foreach collection="attributeModelList" item="item" index="index" separator=",">
+            (
+            #{item.operationId},#{item.attributeType},#{item.attributeName},#{item.attributeAlias},
+            #{item.oldValue},#{item.newValue},#{item.diffValue}
+            )
+        </foreach>
+    </insert>
+
+    <!--  查询操作日志明细-->
+    <select id="listQMSSysLogDetails" parameterType="com.medical.dtms.dto.log.query.QMSSysLogsQuery"
+            resultType="com.medical.dtms.common.model.syslog.QMSSysLogDetailsModel">
+        select
+        attribute_name AS fieldName,
+        attribute_alias AS fieldText,
+        new_value AS newValue,
+        old_value AS oldValue
+        FROM
+        <include refid="table_name"/>
+        where operation_id = #{logId,jdbcType=BIGINT}
+    </select>
+</mapper>

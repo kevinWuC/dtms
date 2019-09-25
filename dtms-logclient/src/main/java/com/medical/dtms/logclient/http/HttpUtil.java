@@ -1,7 +1,6 @@
 package com.medical.dtms.logclient.http;
 
 
-import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.medical.dtms.logclient.config.ObjectLoggerConfig;
 import com.medical.dtms.logclient.model.OperationModel;

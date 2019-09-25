@@ -51,6 +51,12 @@ public class SysLogsController {
         return Result.buildSuccess(list);
     }
 
+    /**
+     * 添加系统日志
+     *
+     * @param logJsonString
+     * @return java.lang.String
+     **/
     @RequestMapping(value = "/syslog/addSysLog")
     public String addSysLog(@RequestParam("logJsonString") String logJsonString) {
         logsService.addSysLog(logJsonString);

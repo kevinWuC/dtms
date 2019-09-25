@@ -1,6 +1,5 @@
 package com.medical.dtms.logclient.task;
 
-import com.google.gson.Gson;
 import com.medical.dtms.logclient.config.ObjectLoggerConfig;
 import com.medical.dtms.logclient.handler.BaseExtendedTypeHandler;
 import com.medical.dtms.logclient.handler.BuiltinTypeHandler;
@@ -18,7 +17,7 @@ public class LogObjectTask{
     private BaseExtendedTypeHandler baseExtendedTypeHandler;
     private Long objectId;
     private String operator;
-    private String operationName;
+    private Integer operationName;
     private String operationAlias;
     private String extraWords;
     private String comment;
@@ -28,7 +27,7 @@ public class LogObjectTask{
     private HttpUtil httpUtil;
 
 
-    public LogObjectTask(Long objectId, String operator, String operationName, String operationAlias,
+    public LogObjectTask(Long objectId, String operator, Integer operationName, String operationAlias,
                          String extraWords, String comment,
                          Object oldObject, Object newObject, ObjectLoggerConfig objectLoggerConfig,
                          HttpUtil httpUtil, BaseExtendedTypeHandler baseExtendedTypeHandler) {
