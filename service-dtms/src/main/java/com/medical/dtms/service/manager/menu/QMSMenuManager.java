@@ -61,13 +61,7 @@ public class QMSMenuManager {
         QMSMenuDO oldMenu = menuMapper.getQMSMenuByCondition(query);
 
         QMSMenuDO newMenu = BeanConvertUtils.convert(menuDTO, QMSMenuDO.class);
-
-        // 获取表名
-        String tableName = operateManager.getTableName(newMenu.getClass());
         String ip = loginLogManager.getIpByUserId(menuDTO.getModifierId());
-
-        String comment = "菜单管理";
-
         // 记录日志
         logClient.logObject(
                 // 对象主键
@@ -77,11 +71,11 @@ public class QMSMenuManager {
                 // 操作类型
                 menuDTO.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : menuDTO.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
                 // 本次操作的别名，这里是操作的表名
-                tableName,
+                operateManager.getTableName(newMenu.getClass()),
                 // 本次操作的额外描述，这里记录为操作人的ip
                 ip,
                 // 备注，这里是操作模块名
-                comment,
+                "菜单管理",
                 // 旧值
                 oldMenu,
                 // 新值

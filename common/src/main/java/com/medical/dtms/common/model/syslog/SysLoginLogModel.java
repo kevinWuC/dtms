@@ -16,7 +16,7 @@ import java.util.Date;
 @Data
 public class SysLoginLogModel {
 
-
+    private Long id;
     /**
      * 发生时间
      */

@@ -147,7 +147,7 @@
             resultType="com.medical.dtms.common.model.syslog.SysLoginLogModel">
         select
         ip_address AS ipAddress,
-        MAX(create_date) AS createDate
+        MAX(id) AS id
         from
         <include refid="table_name"/>
         where is_deleted = 0

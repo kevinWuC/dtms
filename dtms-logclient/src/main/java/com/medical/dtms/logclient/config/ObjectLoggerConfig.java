@@ -1,25 +1,46 @@
 package com.medical.dtms.logclient.config;
 
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-@Data
 public class ObjectLoggerConfig {
     /**
      * 业务模块名
      */
-    @Value("${yeecode.objectLogger.businessAppName}")
-    private String businessAppName;
+//    @Value("${logClient.moduleName}")
+    private String businessAppName = "entry-web";
     /**
      * 业务模块所在的服务器地址 和 端口号
      */
-    @Value("${yeecode.objectLogger.serverAddress}")
-    private String serverAddress;
+//    @Value("${logClient.serverAddr}")
+    private String serverAddress = "127.0.0.1:9009";
     /**
      * 是否自动比较属性值的变化
      */
-    @Value("${yeecode.objectLogger.autoLogAttributes}")
-    private String autoLogAttributes;
+//    @Value("${logClient.autoLogAttr}")
+    private String autoLogAttributes = "false";
+
+    public String getBusinessAppName() {
+        return businessAppName;
+    }
+
+    public void setBusinessAppName(String businessAppName) {
+        this.businessAppName = businessAppName;
+    }
+
+    public String getServerAddress() {
+        return serverAddress;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public String getAutoLogAttributes() {
+        return autoLogAttributes;
+    }
+
+    public void setAutoLogAttributes(String autoLogAttributes) {
+        this.autoLogAttributes = autoLogAttributes;
+    }
 }
