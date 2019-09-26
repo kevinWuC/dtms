@@ -1,10 +1,14 @@
 package com.medical.dtms.service.manager.role;
 
+import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.role.QMSRoleDTO;
 import com.medical.dtms.dto.role.query.QMSRoleQuery;
 import com.medical.dtms.common.model.role.QMSRoleModel;
+import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.dataobject.role.QMSRoleDO;
+import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
+import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.qms.QMSRoleMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,12 @@ public class QMSRoleManager {
 
     @Autowired
     private QMSRoleMapper roleMapper;
+    @Autowired
+    private OperateManager operateManager;
+    @Autowired
+    private SysLoginLogManager loginLogManager;
+    @Autowired
+    private LogClient logClient;
 
     /**
      * 角色管理 - 条件查询角色数据
@@ -46,8 +56,33 @@ public class QMSRoleManager {
      * 角色管理 - 编辑
      */
     public Integer updateRole(QMSRoleDTO dto) {
-        QMSRoleDO aDo = BeanConvertUtils.convert(dto, QMSRoleDO.class);
-        return roleMapper.updateByPrimaryKeySelective(aDo);
+
+        QMSRoleQuery query = new QMSRoleQuery();
+        query.setBizId(dto.getBizId());
+        QMSRoleDO oldRole = roleMapper.getRoleByCondition(query);
+
+        QMSRoleDO newRole = BeanConvertUtils.convert(dto, QMSRoleDO.class);
+
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                oldRole.getBizId(),
+                // 操作人
+                oldRole.getModifier(),
+                // 操作类型
+                dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newRole.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(dto.getModifierId()),
+                // 备注，这里是操作模块名
+                "菜单管理",
+                // 旧值
+                oldRole,
+                // 新值
+                newRole
+        );
+        return roleMapper.updateByPrimaryKeySelective(newRole);
     }
 
     /**
@@ -62,7 +97,7 @@ public class QMSRoleManager {
      */
     public List<QMSRoleModel> listQMSRoles(QMSRoleQuery query) {
         List<QMSRoleModel> roleDOS = roleMapper.listQMSRoles(query);
-        if (CollectionUtils.isEmpty(roleDOS)){
+        if (CollectionUtils.isEmpty(roleDOS)) {
             return new ArrayList<>();
         }
         return roleDOS;

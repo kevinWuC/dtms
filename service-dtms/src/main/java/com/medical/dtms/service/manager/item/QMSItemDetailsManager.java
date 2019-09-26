@@ -1,5 +1,6 @@
 package com.medical.dtms.service.manager.item;
 
+import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.dropdown.DropDownDetailsModel;
 import com.medical.dtms.common.model.dropdown.DropDownModel;
 import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
@@ -8,12 +9,16 @@ import com.medical.dtms.common.model.question.QuestionItemModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.item.QMSItemDetailsDTO;
 import com.medical.dtms.dto.item.query.QMSItemDetailsQuery;
+import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.dataobject.item.QMSItemDetailsDO;
+import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
+import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.qms.QMSItemDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 /**
  * @version： QMSItemDetailsManager.java v 1.0, 2019年08月14日 18:08 wuxuelin Exp$
  * @Description
@@ -23,11 +28,17 @@ public class QMSItemDetailsManager {
 
     @Autowired
     private QMSItemDetailsMapper detailsMapper;
+    @Autowired
+    private OperateManager operateManager;
+    @Autowired
+    private SysLoginLogManager loginLogManager;
+    @Autowired
+    private LogClient logClient;
 
     /**
      * 根据数据字典表主键查询关联的 下拉列表
      **/
-    public List<DropDownDetailsModel> listTypeDetailsName(Long itemsId){
+    public List<DropDownDetailsModel> listTypeDetailsName(Long itemsId) {
         return detailsMapper.listTypeDetailsName(itemsId);
     }
 
@@ -82,8 +93,34 @@ public class QMSItemDetailsManager {
      * 字典明细表 - 编辑功能
      */
     public Integer updateQMSItemDetails(QMSItemDetailsDTO detailsDTO) {
-        QMSItemDetailsDO aDo = BeanConvertUtils.convert(detailsDTO, QMSItemDetailsDO.class);
-        return detailsMapper.updateByPrimaryKeySelective(aDo);
+
+        QMSItemDetailsQuery query = new QMSItemDetailsQuery();
+        query.setBizId(detailsDTO.getBizId());
+        QMSItemDetailsDO oldDetail = detailsMapper.getQMSItemDetailsByCondition(query);
+
+        QMSItemDetailsDO newDetail = BeanConvertUtils.convert(detailsDTO, QMSItemDetailsDO.class);
+
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                oldDetail.getBizId(),
+                // 操作人
+                oldDetail.getModifier(),
+                // 操作类型
+                detailsDTO.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : detailsDTO.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDetail.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(detailsDTO.getModifierId()),
+                // 备注，这里是操作模块名
+                "菜单管理",
+                // 旧值
+                oldDetail,
+                // 新值
+                newDetail
+        );
+
+        return detailsMapper.updateByPrimaryKeySelective(newDetail);
     }
 
     /**
@@ -96,6 +133,7 @@ public class QMSItemDetailsManager {
     public List<QuestionItemModel> listDetailsByItemsIdForQuestion(Long itemsId) {
         return detailsMapper.listDetailsByItemsIdForQuestion(itemsId);
     }
+
     /**
      * 我的培训 - 试题类型id转name
      */

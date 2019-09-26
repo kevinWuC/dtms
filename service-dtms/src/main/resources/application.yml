@@ -15,7 +15,7 @@ mybatis:
 zuul:
   max:
     host:
-      connections: 500
+      connections: 5000
   host:
     connect-timeout-millis: 60000
     socket-timeout-millis: 60000

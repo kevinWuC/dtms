@@ -153,7 +153,7 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
             UsageOfTablesModel model = list.get(offset + i);
             newList.add(model);
         }
-        totalCount = Long.valueOf(newList.size());
+        totalCount = Long.valueOf(list.size());
 
         return new Paginator<>(query.getPageNo(), query.getPageSize(), totalCount,newList);
     }

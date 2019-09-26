@@ -62,17 +62,18 @@ public class SysLogsServiceImpl implements SysLogsService {
     public Boolean addSysLog(@RequestParam("logJsonString") String logJsonString) {
         try {
             OperationModel operationModel = resolveOperationModel(logJsonString);
-            logsManager.addOperationModel(operationModel);
-            Long operationId = operationModel.getId();
-
             List<AttributeModel> attributeModelList = operationModel.getAttributeModelList();
             if (CollectionUtils.isNotEmpty(attributeModelList)) {
                 List<AttributeModel> newList = attributeModelList.stream().filter(attributeModel -> StringUtils.isNotBlank(attributeModel.getNewValue())).collect(Collectors.toList());
-                for (AttributeModel attributeModel : newList) {
-                    attributeModel.setId(null);
-                    attributeModel.setOperationId(operationId);
+                if (CollectionUtils.isNotEmpty(newList)){
+                    logsManager.addOperationModel(operationModel);
+                    Long operationId = operationModel.getId();
+                    for (AttributeModel attributeModel : newList) {
+                        attributeModel.setId(null);
+                        attributeModel.setOperationId(operationId);
+                    }
+                    logsManager.addBatchAttribute(newList);
                 }
-                logsManager.addBatchAttribute(newList);
             }
             return true;
         } catch (Exception e) {

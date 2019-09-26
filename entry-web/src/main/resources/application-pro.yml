@@ -14,7 +14,7 @@ spring:
       max-idle: 10 # 连接池最大空闲连接
       min-idle: 1 # 连接池最小空闲连接
       max-wait: -1
-    timeout: 10000
+    timeout: 60000
 # 服务注册配置
 eureka:
   instance:

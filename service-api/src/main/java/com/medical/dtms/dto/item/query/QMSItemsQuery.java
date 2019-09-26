@@ -27,4 +27,10 @@ public class QMSItemsQuery {
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long parentId;
+    /**
+     * 业务主键
+     */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long bizId;
 }
