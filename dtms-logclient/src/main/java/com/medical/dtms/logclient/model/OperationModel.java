@@ -11,7 +11,7 @@ public class OperationModel {
     private Long id;
     private String appName;
     private String objectName;
-    private Long objectId;
+    private String objectId;
     private String operator;
     private Integer operationName;
     private String operationAlias;
@@ -23,7 +23,7 @@ public class OperationModel {
     public OperationModel() {
     }
 
-    public OperationModel(String appName, String objectName, Long objectId, String operator,
+    public OperationModel(String appName, String objectName, String objectId, String operator,
                           Integer operationName, String operationAlias, String extraWords,
                           String comment, Date operationTime) {
         this.appName = appName;

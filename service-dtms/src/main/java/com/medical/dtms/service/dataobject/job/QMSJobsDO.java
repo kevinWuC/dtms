@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.logclient.annotation.LogTag;
+import com.medical.dtms.logclient.handler.BuiltinTypeHandler;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -29,46 +31,57 @@ public class QMSJobsDO {
     /**
      * 职位名称
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String jobName;
     /**
      * 允许查询 true-是 false-否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowQuery;
     /**
      * 允许只读 true-是 false-否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowRead;
     /**
      * 允许编辑 true-是 false-否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEdit;
     /**
      * 允许启用 true-是 false-否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEnable;
     /**
      * 允许冻结 true-是 false-否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowFreeze;
     /**
      * 允许删除 true-是 false-否
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowDelete;
     /**
      * 排序码
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
     /**
      * 部门id
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String deptId;
     /**
      * 部门名称
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String deptName;
     /**
      * 删除标记:true-删除，false-正常
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建用户

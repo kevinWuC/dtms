@@ -41,9 +41,7 @@ public class QMSSysLogsModel {
     /**
      * 对象主键值
      */
-    @JsonDeserialize(using = LongJsonDeserializer.class)
-    @JsonSerialize(using = LongJsonSerializer.class)
-    private Long domainKey;
+    private String domainKey;
     /**
      * 操作模块
      */

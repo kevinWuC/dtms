@@ -66,9 +66,9 @@ public class QMSRoleManager {
         // 记录日志
         logClient.logObject(
                 // 对象主键
-                oldRole.getBizId(),
+                String.valueOf(oldRole.getBizId()),
                 // 操作人
-                oldRole.getModifier(),
+                dto.getModifier(),
                 // 操作类型
                 dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
                 // 本次操作的别名，这里是操作的表名

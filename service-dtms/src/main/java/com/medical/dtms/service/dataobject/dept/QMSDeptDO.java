@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.logclient.annotation.LogTag;
+import com.medical.dtms.logclient.handler.BuiltinTypeHandler;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -32,38 +34,47 @@ public class QMSDeptDO {
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Long parentId;
     /**
      * 部门名称
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String deptName;
     /**
      * 部门代码
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String code;
     /**
      * 部门层次
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String deptLevel;
     /**
      * 允许有效
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEnable;
     /**
      * 允许冻结
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowFreeze;
     /**
      * 允许删除
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowDelete;
     /**
      * 排序码
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
     /**
      * 删除标记:0-正常，1-删除
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建用户

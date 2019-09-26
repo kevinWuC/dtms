@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.logclient.annotation.LogTag;
+import com.medical.dtms.logclient.handler.BuiltinTypeHandler;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -21,23 +23,23 @@ public class QMSItemDetailsDO {
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long bizId;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Long itemsId;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String itemName;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String itemCode;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String description;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean enabled;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEdit;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowDelete;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
-
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
 
     private String creator;

@@ -92,9 +92,9 @@ public class QMSDeptManager {
         // 记录日志
         logClient.logObject(
                 // 对象主键
-                oldDept.getBizId(),
+                String.valueOf(oldDept.getBizId()),
                 // 操作人
-                oldDept.getModifier(),
+                dto.getModifier(),
                 // 操作类型
                 dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
                 // 本次操作的别名，这里是操作的表名

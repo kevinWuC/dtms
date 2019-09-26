@@ -51,6 +51,8 @@ public class DateUtils {
 
     public static final String YYYYMMD235959 = "yyyy-MM-dd 23:59:59";
 
+    public static final String yyyyMMddHHmmssSSS = "yyyyMMddHHmmssSSS";
+
     public static final String YYYY_MM_DD_HH_mm_ss = "yyyy/m/dd HH:mm:ss";
 
     /**

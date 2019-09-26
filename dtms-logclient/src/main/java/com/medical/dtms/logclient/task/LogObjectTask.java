@@ -15,7 +15,7 @@ import java.util.List;
 
 public class LogObjectTask{
     private BaseExtendedTypeHandler baseExtendedTypeHandler;
-    private Long objectId;
+    private String objectId;
     private String operator;
     private Integer operationName;
     private String operationAlias;
@@ -27,7 +27,7 @@ public class LogObjectTask{
     private HttpUtil httpUtil;
 
 
-    public LogObjectTask(Long objectId, String operator, Integer operationName, String operationAlias,
+    public LogObjectTask(String objectId, String operator, Integer operationName, String operationAlias,
                          String extraWords, String comment,
                          Object oldObject, Object newObject, ObjectLoggerConfig objectLoggerConfig,
                          HttpUtil httpUtil, BaseExtendedTypeHandler baseExtendedTypeHandler) {
@@ -49,31 +49,33 @@ public class LogObjectTask{
             OperationModel operationModel = new OperationModel(objectLoggerConfig.getBusinessAppName(), oldObject.getClass().getSimpleName(),
                     objectId, operator, operationName, operationAlias, extraWords, comment, new Date());
 
-            // handle attributes of operation
-            Class modelClazz = newObject.getClass();
-            Class oldModelClazz = oldObject.getClass();
-            if (oldModelClazz.equals(modelClazz)) {
-                ClazzWrapper clazzWrapper = new ClazzWrapper(modelClazz); // issue #1
-                List<Field> fieldList = clazzWrapper.getFieldList();
-                for (Field field : fieldList) {
-                    field.setAccessible(true);
-                    FieldWrapper fieldWrapper = new FieldWrapper(field, field.get(oldObject), field.get(newObject));
-                    if (fieldWrapper.isWithLogTag() || "true".equals(objectLoggerConfig.getAutoLogAttributes())) {
-                        if (!nullableEquals(fieldWrapper.getOldValue(), fieldWrapper.getNewValue())) {
-                            BaseAttributeModel baseAttributeModel;
-                            if (fieldWrapper.isWithExtendedType()) {
-                                baseAttributeModel = handleExtendedTypeItem(fieldWrapper);
-                            } else {
-                                baseAttributeModel = handleBuiltinTypeItem(fieldWrapper);
-                            }
+            if (null != newObject && null != oldObject){
+                Class modelClazz = newObject.getClass();
+                Class oldModelClazz = oldObject.getClass();
+                if (oldModelClazz.equals(modelClazz)) {
+                    ClazzWrapper clazzWrapper = new ClazzWrapper(modelClazz); // issue #1
+                    List<Field> fieldList = clazzWrapper.getFieldList();
+                    for (Field field : fieldList) {
+                        field.setAccessible(true);
+                        FieldWrapper fieldWrapper = new FieldWrapper(field, field.get(oldObject), field.get(newObject));
+                        if (fieldWrapper.isWithLogTag() || "true".equals(objectLoggerConfig.getAutoLogAttributes())) {
+                            if (!nullableEquals(fieldWrapper.getOldValue(), fieldWrapper.getNewValue())) {
+                                BaseAttributeModel baseAttributeModel;
+                                if (fieldWrapper.isWithExtendedType()) {
+                                    baseAttributeModel = handleExtendedTypeItem(fieldWrapper);
+                                } else {
+                                    baseAttributeModel = handleBuiltinTypeItem(fieldWrapper);
+                                }
 
-                            if (baseAttributeModel != null) {
-                                operationModel.addBaseActionItemModel(baseAttributeModel);
+                                if (baseAttributeModel != null) {
+                                    operationModel.addBaseActionItemModel(baseAttributeModel);
+                                }
                             }
                         }
                     }
                 }
             }
+
             if (!operationModel.getAttributeModelList().isEmpty()) {
                 httpUtil.sendLog(operationModel);
             }

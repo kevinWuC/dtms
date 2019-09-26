@@ -6,6 +6,7 @@ import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.datasource.BackUpInfoModel;
 import com.medical.dtms.common.model.datasource.UsageOfTablesModel;
 import com.medical.dtms.common.model.table.TableDetailModel;
+import com.medical.dtms.common.util.DateUtils;
 import com.medical.dtms.dto.datasource.QMSBackUpDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -278,8 +279,8 @@ public class OperateManager {
 
         StringBuilder sb = new StringBuilder();
         String dataBaseName = getDataBaseName();
-        String fileName = System.currentTimeMillis() + "_" + "dtms.sql";
-        sb.append("/").append("usr").append("/").append("local").append("/").append("mysql").append("/").append("bin").append("/");
+        String fileName = DateUtils.format(new Date(), DateUtils.yyyyMMddHHmmssSSS) + "_" + "dtms.sql";
+//        sb.append("/").append("usr").append("/").append("local").append("/").append("mysql").append("/").append("bin").append("/");
         sb.append("mysqldump").append(" --opt ").append(" -h ").append(host).append(" --user=").append(userName).append(" --password=").append(password).append(" --lock-all-tables=true").append(" --databases ").append(dataBaseName);
         sb.append(" --result-file=").append(sqlPath + fileName).append(" --default-character-set=utf8 ");
         String sqlUrl = "";

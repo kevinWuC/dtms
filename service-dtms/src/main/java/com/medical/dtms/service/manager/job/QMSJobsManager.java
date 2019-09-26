@@ -71,9 +71,9 @@ public class QMSJobsManager {
         // 记录日志
         logClient.logObject(
                 // 对象主键
-                oldJob.getBizId(),
+                String.valueOf(oldJob.getBizId()),
                 // 操作人
-                oldJob.getModifier(),
+                jobsDTO.getModifier(),
                 // 操作类型
                 jobsDTO.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : jobsDTO.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
                 // 本次操作的别名，这里是操作的表名

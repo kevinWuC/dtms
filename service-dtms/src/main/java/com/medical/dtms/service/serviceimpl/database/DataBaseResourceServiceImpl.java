@@ -94,7 +94,7 @@ public class DataBaseResourceServiceImpl implements DataBaseResourceService {
     /**
      * @param [query]
      * @return java.lang.Class<?>
-     * @description 执行 查询操作 TODO
+     * @description 执行 查询操作
      **/
     @Override
     public Class<?> executeQuerySql(@RequestBody DataBaseTableQuery query) {

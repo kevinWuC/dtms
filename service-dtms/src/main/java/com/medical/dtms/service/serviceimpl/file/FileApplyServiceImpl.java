@@ -111,11 +111,10 @@ public class FileApplyServiceImpl implements FileApplyService {
     }
 
     /**
-    *
-    * @description 申请回显
-    * @param  [query]
-    * @return com.medical.dtms.common.model.file.FileApplyDetailModel
-    **/
+     * @param [query]
+     * @return com.medical.dtms.common.model.file.FileApplyDetailModel
+     * @description 申请回显
+     **/
     @Override
     public FileApplyDetailModel selectByPrimaryKey(@RequestBody FileModelQuery query) {
         return applyManager.selectById(query.getBizId());
@@ -139,6 +138,8 @@ public class FileApplyServiceImpl implements FileApplyService {
 
         try {
             // 锁定文件
+            file.setModifier(dto.getCreator());
+            file.setModifierId(dto.getCreatorId());
             file.setApplyType(dto.getApplyType());
             file.setApplyStatus(Constants.LOCK);
             fileModelManager.updateFile(file);

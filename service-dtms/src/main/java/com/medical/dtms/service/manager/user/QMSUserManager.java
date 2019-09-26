@@ -93,9 +93,9 @@ public class QMSUserManager {
 
         logClient.logObject(
                 // 对象主键
-                oldUser.getBizId(),
+                String.valueOf(oldUser.getBizId()),
                 // 操作人
-                oldUser.getModifier(),
+                dto.getModifier(),
                 // 操作类型
                 dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
                 // 本次操作的别名，这里是操作的表名

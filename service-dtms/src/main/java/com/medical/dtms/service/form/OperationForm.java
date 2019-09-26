@@ -10,7 +10,7 @@ public class OperationForm {
 
     private String objectName;
 
-    private Long objectId;
+    private String objectId;
 
     private String operator;
 

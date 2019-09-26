@@ -11,7 +11,7 @@ import java.util.List;
 public class LogAttributesTask implements Runnable {
     private HttpUtil httpUtil;
     private String objectName;
-    private Long objectId;
+    private String objectId;
     private String operator;
     private Integer operationName;
     private String operationAlias;
@@ -21,7 +21,7 @@ public class LogAttributesTask implements Runnable {
 
     private List<BaseAttributeModel> baseAttributeModelList;
 
-    public LogAttributesTask(String objectName, Long objectId, String operator, Integer operationName, String operationAlias,
+    public LogAttributesTask(String objectName, String objectId, String operator, Integer operationName, String operationAlias,
                              String extraWords, String comment,
                              List<BaseAttributeModel> baseAttributeModelList, ObjectLoggerConfig objectLoggerConfig, HttpUtil httpUtil) {
         this.objectName = objectName;
