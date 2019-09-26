@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 试卷管理
- * 
+ *
  * @author shenqifeng
  * @version $Id: ExamServiceImpl.java, v 0.1 2019年9月7日 下午9:03:56 shenqifeng Exp $
  */
@@ -46,19 +46,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExamServiceImpl implements ExamService {
     @Autowired
-    private ExamModelManager         examModelManager;
+    private ExamModelManager examModelManager;
     @Autowired
-    private ExamQuestionsManager     examQuestionsManager;
+    private ExamQuestionsManager examQuestionsManager;
     @Autowired
     private ExamQuestionsTypeManager examQuestionsTypeManager;
     @Autowired
-    private IdGenerator              idGenerator;
+    private IdGenerator idGenerator;
 
     @Autowired
     private DtmsQuestionManager dtmsQuestionManager;
 
     /**
      * 新增试卷
+     *
      * @see com.medical.dtms.feignservice.exam.ExamService#insertExam(com.medical.dtms.dto.exam.ExamModelDTO)
      */
     @Override
@@ -111,6 +112,7 @@ public class ExamServiceImpl implements ExamService {
 
     /**
      * 修改试卷
+     *
      * @see com.medical.dtms.feignservice.exam.ExamService#insertExam(com.medical.dtms.dto.exam.ExamModelDTO)
      */
     @Override
@@ -175,15 +177,16 @@ public class ExamServiceImpl implements ExamService {
 
     /**
      * 删除
+     *
      * @see com.medical.dtms.feignservice.exam.ExamService#deleteExam(java.lang.Long)
      */
     @Override
     @Transactional
-    public Boolean deleteExam(@RequestParam("examId") Long examId) {
+    public Boolean deleteExam(@RequestBody ExamModelDTO detailModel) {
         //1.校验试卷是否使用中
-        ExamDetailModel model = examModelManager.getExamByExamId(examId);
+        ExamDetailModel model = examModelManager.getExamByExamId(detailModel.getExamId());
         if (null == model) {
-            log.error("试卷不存在  examId:{}", examId);
+            log.error("试卷不存在  examId:{}", detailModel.getExamId());
             throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "试卷不存在");
         }
         if (model.getIsUse()) {
@@ -192,16 +195,17 @@ public class ExamServiceImpl implements ExamService {
         }
 
         //1.删除试卷
-        examModelManager.deleteByExamId(examId);
+        examModelManager.deleteByExamId(detailModel);
         //2.删除试题类型
-        examQuestionsTypeManager.deleteByExamId(examId);
+        examQuestionsTypeManager.deleteByExamId(detailModel.getExamId());
         //3.先删除  试题a
-        examQuestionsManager.deleteByExamId(examId);
+        examQuestionsManager.deleteByExamId(detailModel.getExamId());
         return true;
     }
 
     /**
      * 分页查询
+     *
      * @see com.medical.dtms.feignservice.exam.ExamService#listExamByQuery(com.medical.dtms.dto.exam.query.ExamQuery)
      */
     @Override
@@ -214,6 +218,7 @@ public class ExamServiceImpl implements ExamService {
 
     /**
      * 详情查询
+     *
      * @see com.medical.dtms.feignservice.exam.ExamService#getExamByExamId(java.lang.Long)
      */
     @Override
@@ -227,7 +232,7 @@ public class ExamServiceImpl implements ExamService {
 
         //2.查询试题类型
         List<ExamQuestionsTypeModel> typeModels = examQuestionsTypeManager
-            .listQuestionTypeByExamId(examId);
+                .listQuestionTypeByExamId(examId);
         if (CollectionUtils.isEmpty(typeModels)) {
             return model;
         }
@@ -246,13 +251,14 @@ public class ExamServiceImpl implements ExamService {
 
     /**
      * 预览
+     *
      * @see com.medical.dtms.feignservice.exam.ExamService#listExamQuestionForPreview(java.lang.Long)
      */
     @Override
     public List<ExamQuestionsTypeModel> listExamQuestionForPreview(@RequestParam("examId") Long examId) {
         //2.查询试题类型
         List<ExamQuestionsTypeModel> typeModels = examQuestionsTypeManager
-            .listQuestionTypeByExamId(examId);
+                .listQuestionTypeByExamId(examId);
         if (CollectionUtils.isEmpty(typeModels)) {
             return typeModels;
         }
@@ -263,19 +269,19 @@ public class ExamServiceImpl implements ExamService {
                 query.setQuestionIds(Arrays.asList(typeModel.getExamQuestionString().split(",")));
                 //查询试题
                 List<DtmsQuestionsDTO> listQuestionsForPreview = dtmsQuestionManager
-                    .listQuestionsForPreview(query);
+                        .listQuestionsForPreview(query);
                 typeModel.setQuestionForPreview(BeanConvertUtils
-                    .convertList(listQuestionsForPreview, DtmsQuestionsModel.class));
+                        .convertList(listQuestionsForPreview, DtmsQuestionsModel.class));
             }
         }
         return typeModels;
     }
 
     /**
-    * 查询所有试卷
-    * 
-    * @return
-    */
+     * 查询所有试卷
+     *
+     * @return
+     */
     @Override
     public List<ExamPlanModel> listExamForPlan() {
         return examModelManager.listExamForPlan();

@@ -139,7 +139,7 @@ public class TrainConfigServiceImpl implements TrainConfigService {
         }
 
         try {
-            trainConfigManager.deleteByPrimaryKey(trainConfigDTO.getBizId());
+            trainConfigManager.deleteByPrimaryKey(trainConfigDTO);
         } catch (Exception e) {
             log.error("删除培训失败", e);
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());

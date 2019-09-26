@@ -51,7 +51,7 @@ public interface ExamService {
      * @return
      */
     @RequestMapping(value = "/exam/deleteExam", method = RequestMethod.POST)
-    Boolean deleteExam(@RequestParam("examId") Long examId);
+    Boolean deleteExam(@RequestBody ExamModelDTO detailModel);
 
     /**
      * 分页查询

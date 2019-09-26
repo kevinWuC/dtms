@@ -107,7 +107,11 @@ public class ExamController {
             throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "缺少参数");
         }
 
-        examService.deleteExam(examModelDTO.getExamId());
+        OperatorInfo operatorInfo = SessionTools.getOperator();
+
+        examModelDTO.setModifyUserId(operatorInfo.getBizId());
+        examModelDTO.setModifyUserName(operatorInfo.getDspName());
+        examService.deleteExam(examModelDTO);
 
         return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "删除成功", true);
     }

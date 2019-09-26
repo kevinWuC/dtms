@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.util.IdGenerator;
+import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
@@ -25,7 +26,7 @@ import com.medical.dtms.service.mapper.exam.ExamModelMapper;
 
 /**
  * 试卷
- * 
+ *
  * @author shenqifeng
  * @version $Id: ExamModelMapper.java, v 0.1 2019年9月7日 下午8:17:52 shenqifeng Exp $
  */
@@ -38,7 +39,9 @@ public class ExamModelManager {
     @Autowired
     private OperateManager operateManager;
     @Autowired
-    private SysLoginLogManager sysLoginLogManager;
+    private SysLoginLogManager loginLogManager;
+    @Autowired
+    private LogClient logClient;
     @Autowired
     private QMSSysLogsMapper qmsSysLogsMapper;
     @Autowired
@@ -46,14 +49,14 @@ public class ExamModelManager {
 
     /**
      * 新增
-     * 
+     *
      * @param
      * @return
      */
     public Boolean insertExam(ExamModelDTO examModelDTO) {
         ExamModelDO examModelDO = BeanConvertUtils.convert(examModelDTO, ExamModelDO.class);
         Integer num = examModelMapper.insertExam(examModelDO);
-        if (num == 1){
+        if (num == 1) {
             //新增修改日志记录
             QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
             qmsSysLogsDO.setBizId(idGenerator.nextId());
@@ -61,7 +64,7 @@ public class ExamModelManager {
             qmsSysLogsDO.setTableName(operateManager.getTableName(examModelDO.getClass()));
             qmsSysLogsDO.setBusinessName(operateManager.getTableComment(examModelDO.getClass()));
             qmsSysLogsDO.setObjectId(String.valueOf(examModelDO.getExamId()));
-            qmsSysLogsDO.setOperationIp(sysLoginLogManager.getIpByUserId(String.valueOf(examModelDO.getCreateUserId())));
+            qmsSysLogsDO.setOperationIp(loginLogManager.getIpByUserId(String.valueOf(examModelDO.getCreateUserId())));
             qmsSysLogsDO.setGmtCreated(new Date());
             qmsSysLogsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
             qmsSysLogsDO.setCreator(examModelDO.getCreateUserName());
@@ -72,130 +75,40 @@ public class ExamModelManager {
 
     /**
      * 修改
-     * 
+     *
      * @param
      * @return
      */
-    public Boolean updateExam(ExamModelDTO examModelDTO) {
-        ExamModelDO examModelDO = BeanConvertUtils.convert(examModelDTO, ExamModelDO.class);
+    public Integer updateExam(ExamModelDTO examModelDTO) {
+        ExamModelDO newDo = BeanConvertUtils.convert(examModelDTO, ExamModelDO.class);
         //查询没更新之前的信息
-        ExamModelDO examByExamIds = examModelMapper.getExamByExamIds(examModelDTO.getExamId());
-        Integer num = examModelMapper.updateExam(examModelDO);
-        if (num == 1){
-            //新增修改日志记录(tb_dtms_qms_sys_logs)
-            QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
-            qmsSysLogsDO.setBizId(idGenerator.nextId());
-            qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_UPDATE.getType());
-            qmsSysLogsDO.setTableName(operateManager.getTableName(examModelDO.getClass()));
-            qmsSysLogsDO.setBusinessName(operateManager.getTableComment(examModelDO.getClass()));
-            qmsSysLogsDO.setObjectId(String.valueOf(examModelDO.getExamId()));
-            qmsSysLogsDO.setOperationIp(sysLoginLogManager.getIpByUserId(String.valueOf(examModelDO.getModifyUserId())));
-            qmsSysLogsDO.setGmtModified(new Date());
-            qmsSysLogsDO.setModifierId(String.valueOf(examModelDO.getModifyUserId()));
-            qmsSysLogsDO.setModifier(examModelDO.getModifyUserName());
-            int insert = qmsSysLogsMapper.insert(qmsSysLogsDO);
-            boolean b = addSysLogDetails(examByExamIds, examModelDO);
-        }
-        return num > 0 ? true : false;
-    }
+        ExamModelDO oldDo = examModelMapper.getExamByExamIds(examModelDTO.getExamId());
 
-    /**
-     * 新增日志明细
-     * @param examByExamIds (旧)
-     * @param examModelDO  （新）
-     * @return
-     */
-    private boolean addSysLogDetails(ExamModelDO examByExamIds,ExamModelDO examModelDO){
-        boolean isSuccess = false;
-        if (!StringUtils.equals(examByExamIds.getExamName(),examModelDO.getExamName())) {
-            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
-            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
-            qmsSysLogDetailsDO.setFieldName("ExamName");
-            /*qmsSysLogDetailsDO1.setFieldText();*/
-            qmsSysLogDetailsDO.setNewValue(examModelDO.getExamName());
-            qmsSysLogDetailsDO.setOldValue(examByExamIds.getExamName());
-            qmsSysLogDetailsDO.setIsDeleted(false);
-            qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setGmtModified(new Date());
-            qmsSysLogDetailsDO.setGmtCreated(new Date());
-            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
-            isSuccess = num == 1 ? true : false;
-        }
-        if (examByExamIds.getExamDuration() != examModelDO.getExamDuration()) {
-            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
-            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
-            qmsSysLogDetailsDO.setFieldName("ExamDuration");
-            /*qmsSysLogDetailsDO.setFieldText();*/
-            qmsSysLogDetailsDO.setNewValue(examModelDO.getExamName());
-            qmsSysLogDetailsDO.setOldValue(examByExamIds.getExamName());
-            qmsSysLogDetailsDO.setIsDeleted(false);
-            qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setGmtModified(new Date());
-            qmsSysLogDetailsDO.setGmtCreated(new Date());
-            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
-            isSuccess = num == 1 ? true : false;
-        }
-        if (examByExamIds.getExamDuration() != examModelDO.getExamDuration()) {
-            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
-            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
-            qmsSysLogDetailsDO.setFieldName("ExamDuration");
-            /*qmsSysLogDetailsDO.setFieldText();*/
-            qmsSysLogDetailsDO.setNewValue(String.valueOf(examModelDO.getExamDuration()));
-            qmsSysLogDetailsDO.setOldValue(String.valueOf(examByExamIds.getExamDuration()));
-            qmsSysLogDetailsDO.setIsDeleted(false);
-            qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setGmtModified(new Date());
-            qmsSysLogDetailsDO.setGmtCreated(new Date());
-            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
-            isSuccess = num == 1 ? true : false;
-        }
-        if (examByExamIds.getTotalPoints() != examModelDO.getTotalPoints()) {
-            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
-            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
-            qmsSysLogDetailsDO.setFieldName("TotalPoints");
-            /*qmsSysLogDetailsDO.setFieldText();*/
-            qmsSysLogDetailsDO.setNewValue(String.valueOf(examModelDO.getTotalPoints()));
-            qmsSysLogDetailsDO.setOldValue(String.valueOf(examByExamIds.getTotalPoints()));
-            qmsSysLogDetailsDO.setIsDeleted(false);
-            qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setModifier(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setModifierId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setGmtModified(new Date());
-            qmsSysLogDetailsDO.setGmtCreated(new Date());
-            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
-            isSuccess = num == 1 ? true : false;
-        }
-        /*if (examByExamIds.getIsUse() != examModelDO.getIsUse()) {
-            QMSSysLogDetailsDO qmsSysLogDetailsDO = new QMSSysLogDetailsDO();
-            qmsSysLogDetailsDO.setBizId(idGenerator.nextId());
-            qmsSysLogDetailsDO.setFieldName("IsUse");
-            *//*qmsSysLogDetailsDO.setFieldText();*//*
-            qmsSysLogDetailsDO.setNewValue(String.valueOf(examModelDO.getIsUse()));
-            qmsSysLogDetailsDO.setOldValue(String.valueOf(examByExamIds.getIsUse()));
-            qmsSysLogDetailsDO.setIsDeleted(false);
-            qmsSysLogDetailsDO.setCreator(examModelDO.getModifyUserName());
-            qmsSysLogDetailsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogDetailsDO.setGmtCreated(new Date());
-            int num = qmsSysLogDetailsMapper.insert(qmsSysLogDetailsDO);
-            isSuccess = num == 1 ? true : false;
-        }*/
-        return isSuccess;
-
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getId()),
+                // 操作人
+                examModelDTO.getModifyUserName(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(String.valueOf(examModelDTO.getModifyUserId())),
+                // 备注，这里是操作模块名
+                "文件管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+        return examModelMapper.updateExam(newDo);
     }
 
     /**
      * 分页查询
-     * 
+     *
      * @param query
      * @return
      */
@@ -205,7 +118,7 @@ public class ExamModelManager {
 
     /**
      * 查询详情
-     * 
+     *
      * @param examId
      * @return
      */
@@ -215,33 +128,41 @@ public class ExamModelManager {
 
     /**
      * 删除
-     * 
+     *
      * @param examId
      * @return
      */
-    public Boolean deleteByExamId(Long examId) {
-        ExamModelDO  examModelDO= examModelMapper.getExamByExamIds(examId);
-        if (examModelDO != null){
-            //新增修改日志记录
-            QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
-            qmsSysLogsDO.setBizId(idGenerator.nextId());
-            qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_DELETE.getType());
-            qmsSysLogsDO.setTableName(operateManager.getTableName(examModelDO.getClass()));
-            qmsSysLogsDO.setBusinessName(operateManager.getTableComment(examModelDO.getClass()));
-            qmsSysLogsDO.setObjectId(String.valueOf(examModelDO.getExamId()));
-            qmsSysLogsDO.setOperationIp(sysLoginLogManager.getIpByUserId(String.valueOf(examModelDO.getModifyUserId())));
-            qmsSysLogsDO.setGmtModified(new Date());
-            qmsSysLogsDO.setModifierId(String.valueOf(examModelDO.getModifyUserId()));
-            qmsSysLogsDO.setModifier(examModelDO.getModifyUserName());
-            qmsSysLogsMapper.insert(qmsSysLogsDO);
-        }
-        Integer num = examModelMapper.deleteByExamId(examId);
+    public Boolean deleteByExamId(ExamModelDTO model) {
+        ExamModelDO oldDo = examModelMapper.getExamByExamIds(model.getExamId());
+        ExamModelDO newDo = BeanConvertUtils.convert(model, ExamModelDO.class);
+
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getId()),
+                // 操作人
+                model.getModifyUserName(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(String.valueOf(model.getModifyUserId())),
+                // 备注，这里是操作模块名
+                "文件管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        Integer num = examModelMapper.deleteByExamId(model.getExamId());
         return num > 0 ? true : false;
     }
 
     /**
      * 查询所有试卷
-     * 
+     *
      * @return
      */
     public List<ExamPlanModel> listExamForPlan() {

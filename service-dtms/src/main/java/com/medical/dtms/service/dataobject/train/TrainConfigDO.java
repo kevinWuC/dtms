@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.logclient.annotation.LogTag;
+import com.medical.dtms.logclient.handler.BuiltinTypeHandler;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -31,60 +33,74 @@ public class TrainConfigDO {
      **/
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Long trainTypeId;
     /**
      * 培训名称
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String trainName;
     /**
      * 培训内容
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String trainDescription;
     /**
      * 开始日期
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Date startDate;
     /**
      * 结束日期
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Date endDate;
     /**
      * 是否启用 false-不启用 true-启用
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isStart;
     /**
      * 结果
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String answer;
     /**
      * 培训信息
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String trainInfo;
     /**
      * 考试Id
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long examId;
     /**
      * 考试名称
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private String examName;
     /**
      * 及格分数
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Integer passPoint;
     /**
      * 总分
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Integer totalPoint;
     /**
      * 应培训时数
      **/
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Integer readFen;
     /**
      * 删除标记:true-删除，false-正常
      */
+    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建用户
@@ -110,6 +126,4 @@ public class TrainConfigDO {
      * 修改时间
      */
     private Date gmtModified;
-
-
 }

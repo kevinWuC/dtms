@@ -36,4 +36,8 @@ public class ExamDetailModel {
     private Boolean isPeixun;
 
     private List<ExamQuestionsTypeModel> examQuestionTypes;
+    /***/
+    private Long    modifyUserId;
+    /***/
+    private String  modifyUserName;
 }
