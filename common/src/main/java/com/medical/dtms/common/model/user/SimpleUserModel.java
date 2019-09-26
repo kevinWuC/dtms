@@ -1,5 +1,9 @@
 package com.medical.dtms.common.model.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.medical.dtms.common.convert.LongJsonDeserializer;
+import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
 /**
@@ -11,6 +15,8 @@ public class SimpleUserModel {
     /**
      * 用户id
      */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long userId;
     /**
      * 用户名

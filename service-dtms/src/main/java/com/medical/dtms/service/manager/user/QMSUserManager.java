@@ -90,10 +90,6 @@ public class QMSUserManager {
         QMSUserDO oldUser = userMapper.getUserByCondition(query);
         QMSUserDO newUser = BeanConvertUtils.convert(dto, QMSUserDO.class);
         // 获取表名
-        String tableName = operateManager.getTableName(newUser.getClass());
-        String ip = loginLogManager.getIpByUserId(dto.getModifierId());
-
-        String comment = "用户管理";
 
         logClient.logObject(
                 // 对象主键
@@ -103,11 +99,11 @@ public class QMSUserManager {
                 // 操作类型
                 dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
                 // 本次操作的别名，这里是操作的表名
-                tableName,
+                operateManager.getTableName(newUser.getClass()),
                 // 本次操作的额外描述，这里记录为操作人的ip
-                ip,
+                loginLogManager.getIpByUserId(dto.getModifierId()),
                 // 备注，这里是操作模块名
-                comment,
+                "用户管理",
                 // 旧值
                 oldUser,
                 // 新值

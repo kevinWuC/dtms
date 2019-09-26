@@ -37,6 +37,7 @@ public class LoginFilter implements Filter {
         whiteUrls.add("/user/login");
         whiteUrls.add("/user/logout");
         whiteUrls.add("/syslog/addSysLog");
+        whiteUrls.add("/file/uploadFiles");
     }
 
     @Override

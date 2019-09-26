@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.medical.dtms.common.constants.Constants;
 import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.common.enumeration.ErrorCodeEnum;
@@ -398,15 +399,15 @@ public class FileServiceImpl implements FileService {
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "该条记录不存在");
         }
         if (StringUtils.isNotBlank(model.getSignator1Id())) {
-            List<SimpleUserModel> signator1Id = JSONArray.parseArray(model.getSignator1Id(), SimpleUserModel.class);
+            List<SimpleUserModel> signator1Id = JSON.parseArray(model.getSignator1Id(), SimpleUserModel.class);
             model.setSignator1(signator1Id);
         }
         if (StringUtils.isNotBlank(model.getSignator2Id())) {
-            List<SimpleUserModel> signator2Id = JSONArray.parseArray(model.getSignator2Id(), SimpleUserModel.class);
+            List<SimpleUserModel> signator2Id = JSON.parseArray(model.getSignator2Id(), SimpleUserModel.class);
             model.setSignator2(signator2Id);
         }
         if (StringUtils.isNotBlank(model.getApproverId())) {
-            List<SimpleUserModel> approverId = JSONArray.parseArray(model.getApproverId(), SimpleUserModel.class);
+            List<SimpleUserModel> approverId = JSON.parseArray(model.getApproverId(), SimpleUserModel.class);
             model.setApproverList(approverId);
         }
         if (StringUtils.isNotBlank(model.getFileContent())) {

@@ -1,5 +1,6 @@
 package com.medical.dtms.service.manager.file;
 
+import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.dropdown.DropDownModel;
 import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
 import com.medical.dtms.common.model.file.*;
@@ -8,7 +9,10 @@ import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.file.FileModelDTO;
 import com.medical.dtms.dto.file.query.FileModelQuery;
 import com.medical.dtms.dto.train.query.TrainFileQuery;
+import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.dataobject.file.FileModelDO;
+import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
+import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.file.FileModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,12 @@ public class FileModelManager {
 
     @Autowired
     private FileModelMapper fileModelMapper;
+    @Autowired
+    private OperateManager operateManager;
+    @Autowired
+    private SysLoginLogManager loginLogManager;
+    @Autowired
+    private LogClient logClient;
 
     /**
      * 查询文件信息
@@ -45,8 +55,33 @@ public class FileModelManager {
      * 更新文件
      */
     public Integer updateFile(FileModelDTO dto) {
-        FileModelDO aDo = BeanConvertUtils.convert(dto, FileModelDO.class);
-        return fileModelMapper.updateByPrimaryKeySelective(aDo);
+        FileModelQuery query = new FileModelQuery();
+        query.setBizId(dto.getBizId());
+        FileModelDO oldFile = fileModelMapper.getFileByCondition(query);
+
+        FileModelDO newFile = BeanConvertUtils.convert(dto, FileModelDO.class);
+
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                oldFile.getBizId(),
+                // 操作人
+                oldFile.getModifier(),
+                // 操作类型
+                dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newFile.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(dto.getModifierId()),
+                // 备注，这里是操作模块名
+                "文件管理",
+                // 旧值
+                oldFile,
+                // 新值
+                newFile
+        );
+
+        return fileModelMapper.updateByPrimaryKeySelective(newFile);
     }
 
     /**

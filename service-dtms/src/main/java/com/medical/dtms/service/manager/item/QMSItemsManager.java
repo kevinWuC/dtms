@@ -85,7 +85,7 @@ public class QMSItemsManager {
                 // 本次操作的额外描述，这里记录为操作人的ip
                 loginLogManager.getIpByUserId(dto.getModifierId()),
                 // 备注，这里是操作模块名
-                "菜单管理",
+                "字典类别管理",
                 // 旧值
                 oldItem,
                 // 新值

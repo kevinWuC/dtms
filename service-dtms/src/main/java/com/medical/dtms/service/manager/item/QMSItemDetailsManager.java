@@ -113,7 +113,7 @@ public class QMSItemDetailsManager {
                 // 本次操作的额外描述，这里记录为操作人的ip
                 loginLogManager.getIpByUserId(detailsDTO.getModifierId()),
                 // 备注，这里是操作模块名
-                "菜单管理",
+                "字典类别明细管理",
                 // 旧值
                 oldDetail,
                 // 新值
