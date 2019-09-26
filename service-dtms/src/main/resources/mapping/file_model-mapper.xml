@@ -506,12 +506,13 @@
         left join tb_dtms_qms_item_details details on file.file_type_id = details.biz_id
         where file.is_deleted = 0
         and details.is_deleted = 0
-        and file.biz_id  not in (select file_id from tb_dtms_train_files where train_id = #{trainId,jdbcType=BIGINT} and is_deleted=0)
+        and file.biz_id not in (select file_id from tb_dtms_train_files where train_id = #{trainId,jdbcType=BIGINT} and
+        is_deleted=0)
         <if test="fileTypeId != null">
-            and  details.biz_id = #{fileTypeId,jdbcType=BIGINT}
+            and details.biz_id = #{fileTypeId,jdbcType=BIGINT}
         </if>
-        <if test="fileName != null and fileName !=''" >
-            and  file.file_name like concat(concat('%',#{fileName}),'%')
+        <if test="fileName != null and fileName !=''">
+            and file.file_name like concat(concat('%',#{fileName}),'%')
         </if>
         order by file.gmt_created desc
     </select>
@@ -530,10 +531,10 @@
         and files.is_deleted = 0
         and files.train_id = #{trainId,jdbcType=BIGINT}
         <if test="fileTypeId != null">
-            and  details.biz_id  #{fileTypeId,jdbcType=BIGINT}
+            and details.biz_id #{fileTypeId,jdbcType=BIGINT}
         </if>
         <if test="fileName != null and fileName !=''">
-            and  file.file_name like concat(concat('%',#{fileName}),'%')
+            and file.file_name like concat(concat('%',#{fileName}),'%')
         </if>
         order by files.gmt_created desc
     </select>
@@ -547,7 +548,7 @@
         dept.dept_name AS applyDeptName,file.file_version AS fileVersion,file.effect_date AS effectDate,
         file.creator AS applyUserName,file.approver_user_name AS approverUserName,file.auditor_name AS auditorName,
         file.allow_modify AS allowModify,file.allow_bad AS allowBad,file.apply_status AS applyStatus,
-        file.gmt_modified AS operatorDate,file.modifier AS operatorName
+        file.gmt_modified AS operatorDate,file.modifier AS operatorName,file.file_status AS fileStatus
         from
         tb_dtms_file_model file
         left join tb_dtms_qms_dept dept on file.apply_dept_id = dept.biz_id

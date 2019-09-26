@@ -67,5 +67,8 @@ public class FileApplyModel {
      * 申请状态：锁定 1，结束变为0
      */
     private Integer applyStatus;
-
+    /**
+     * 文件状态 1 未提交 2 已提交 3 生效 4 归档 5 作废 6 退回 7 待审批
+     */
+    private Integer fileStatus;
 }

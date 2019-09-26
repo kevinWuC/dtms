@@ -32,7 +32,7 @@ public class FileApplyController {
     /**
      * @param [dto]
      * @return com.medical.dtms.common.resp.Result<java.lang.Boolean>
-     * @description 申请修改/作废
+     * @description 申请修改/作废 提交按钮
      **/
     @RequestMapping(value = "/apply/addFileApply", method = RequestMethod.POST)
     public Result<Boolean> addFileApply(@RequestBody FileApplyDTO dto) {
