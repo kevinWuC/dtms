@@ -12,7 +12,7 @@ import com.medical.dtms.service.dataobject.exam.ExamQuestionsTypeDO;
 import com.medical.dtms.service.mapper.exam.ExamQuestionsTypeMapper;
 
 /**
- * 试卷与尸体类别关联
+ * 试卷与试题类别关联
  * 
  * @author shenqifeng
  * @version $Id: ExamQuestionSTypeMapper.java, v 0.1 2019年9月7日 下午8:18:43 shenqifeng Exp $

@@ -48,9 +48,9 @@ public class ExamPlanModelServiceImpl implements ExamPlanModelService {
 
     @Override
     @Transactional
-    public Boolean deleteExamPlanModel(Long examPlanModelId) {
+    public Boolean deleteExamPlanModel(@RequestBody ExamPlanModelDTO dto) {
         //校验是否被删除
-        ExamPlanModelDTO examPlanModelDTO = examPlanModelManager.getExamPlanModelById(examPlanModelId);
+        ExamPlanModelDTO examPlanModelDTO = examPlanModelManager.getExamPlanModelById(dto.getExamPlanModelId());
         if (null == examPlanModelDTO){
             log.error("考试安排不存在或已被删除");
             throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "考试安排不存在或已被删除");
@@ -58,21 +58,21 @@ public class ExamPlanModelServiceImpl implements ExamPlanModelService {
         // 未被删除
         //删除与用户的关联
         try {
-            examUserPlanModelManager.deleteByExamPlanId(examPlanModelId);
+            examUserPlanModelManager.deleteByExamPlanId(dto.getExamPlanModelId());
         } catch (Exception e) {
             log.error("删除考试安排时,删除考试安排与用户的关联失败", e);
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
         }
         //删除与用户答案的关联
         try {
-            examUserAnswerModelManager.deleteByExamPlanId(examPlanModelId);
+            examUserAnswerModelManager.deleteByExamPlanId(dto.getExamPlanModelId());
         } catch (Exception e) {
             log.error("删除考试安排时,删除考试安排与用户答案的关联失败", e);
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
         }
         //删除考试安排
         try {
-            examPlanModelManager.deleteExamPlanModelByPlanModeID(examPlanModelId);
+            examPlanModelManager.deleteExamPlanModelByPlanModeID(dto);
         } catch (Exception e) {
             log.error("删除考试安排失败", e);
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());

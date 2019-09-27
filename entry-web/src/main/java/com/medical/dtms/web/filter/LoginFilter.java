@@ -2,13 +2,10 @@ package com.medical.dtms.web.filter;
 
 import com.medical.dtms.common.constants.Constants;
 import com.medical.dtms.common.login.OperatorInfo;
-import com.medical.dtms.common.login.SessionConstants;
 import com.medical.dtms.common.login.SessionTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.*;
@@ -28,9 +25,6 @@ public class LoginFilter implements Filter {
     // 设置白名单url
     private static List<String> whiteUrls = new ArrayList<>();
 
-    @Autowired
-    private Environment ev;
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         whiteUrls.add("/");
@@ -45,6 +39,8 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String url = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
+
+        String urlPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + httpRequest.getContextPath();
 
         // 不拦截静态资源
         if (url.lastIndexOf(".") > 0) {
@@ -62,7 +58,7 @@ public class LoginFilter implements Filter {
         OperatorInfo operator = SessionTools.getOperator();
         if (null == operator) {
             log.info("用户未登录，跳转到登录页");
-            httpResponse.sendRedirect(ev.getProperty(SessionConstants.LOGIN_URL) + Constants.LOGIN);
+            httpResponse.sendRedirect(urlPath + Constants.LOGIN);
             return;
         }
 
@@ -86,7 +82,7 @@ public class LoginFilter implements Filter {
         List<String> models = operator.getMenuUrls();
         if (CollectionUtils.isEmpty(models) || !models.contains(menuUrl) && !StringUtils.equals(menuUrl, Constants.NO_PERMISSION)) {
             log.info("该用户无菜单权限,用户名:" + operator.getDspName());
-            httpResponse.sendRedirect(ev.getProperty(SessionConstants.LOGIN_URL) + Constants.NO_PERMISSION);
+            httpResponse.sendRedirect(urlPath + Constants.NO_PERMISSION);
             return;
         }
 

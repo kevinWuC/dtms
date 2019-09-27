@@ -48,7 +48,7 @@ public class ExamPlanModelController {
         OperatorInfo operatorInfo = SessionTools.getOperator();
         examPlanModelDTO.setModifyUserId(operatorInfo.getBizId());
         examPlanModelDTO.setModifyUserName(operatorInfo.getDspName());
-        examPlanModelService.deleteExamPlanModel(examPlanModelDTO.getExamPlanModelId());
+        examPlanModelService.deleteExamPlanModel(examPlanModelDTO);
         return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "删除成功", true);
     }
 

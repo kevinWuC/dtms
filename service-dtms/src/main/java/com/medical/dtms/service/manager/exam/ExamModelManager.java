@@ -6,13 +6,10 @@ import java.util.List;
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.logclient.service.LogClient;
-import com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO;
 import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
-import com.medical.dtms.service.mapper.qms.QMSSysLogDetailsMapper;
 import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -37,15 +34,13 @@ public class ExamModelManager {
     @Autowired
     private IdGenerator idGenerator;
     @Autowired
-    private OperateManager operateManager;
-    @Autowired
     private SysLoginLogManager loginLogManager;
+    @Autowired
+    private OperateManager operateManager;
     @Autowired
     private LogClient logClient;
     @Autowired
     private QMSSysLogsMapper qmsSysLogsMapper;
-    @Autowired
-    private QMSSysLogDetailsMapper qmsSysLogDetailsMapper;
 
     /**
      * 新增
@@ -97,7 +92,7 @@ public class ExamModelManager {
                 // 本次操作的额外描述，这里记录为操作人的ip
                 loginLogManager.getIpByUserId(String.valueOf(examModelDTO.getModifyUserId())),
                 // 备注，这里是操作模块名
-                "文件管理",
+                "试卷管理",
                 // 旧值
                 oldDo,
                 // 新值
@@ -135,6 +130,7 @@ public class ExamModelManager {
     public Boolean deleteByExamId(ExamModelDTO model) {
         ExamModelDO oldDo = examModelMapper.getExamByExamIds(model.getExamId());
         ExamModelDO newDo = BeanConvertUtils.convert(model, ExamModelDO.class);
+        newDo.setIsDeleted(true);
 
         // 记录日志
         logClient.logObject(
@@ -143,13 +139,13 @@ public class ExamModelManager {
                 // 操作人
                 model.getModifyUserName(),
                 // 操作类型
-                OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                OperationTypeEnum.OPERATION_TYPE_DELETE.getType(),
                 // 本次操作的别名，这里是操作的表名
                 operateManager.getTableName(newDo.getClass()),
                 // 本次操作的额外描述，这里记录为操作人的ip
                 loginLogManager.getIpByUserId(String.valueOf(model.getModifyUserId())),
                 // 备注，这里是操作模块名
-                "文件管理",
+                "试卷管理",
                 // 旧值
                 oldDo,
                 // 新值

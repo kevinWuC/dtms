@@ -120,7 +120,7 @@ public class TrainConfigManager {
                 // 本次操作的额外描述，这里记录为操作人的ip
                 loginLogManager.getIpByUserId(dto.getModifierId()),
                 // 备注，这里是操作模块名
-                "文件管理",
+                "培训配置",
                 // 旧值
                 oldDo,
                 // 新值
@@ -143,8 +143,9 @@ public class TrainConfigManager {
      **/
     public Integer deleteByPrimaryKey(TrainConfigDTO dto) {
         TrainConfigDO oldDo = trainConfigMapper.selectByPrimaryKey(dto.getBizId());
-
         TrainConfigDO newDo = BeanConvertUtils.convert(dto, TrainConfigDO.class);
+        newDo.setIsDeleted(true);
+
         // 记录日志
         logClient.logObject(
                 // 对象主键
@@ -152,13 +153,13 @@ public class TrainConfigManager {
                 // 操作人
                 dto.getModifier(),
                 // 操作类型
-                dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                OperationTypeEnum.OPERATION_TYPE_DELETE.getType(),
                 // 本次操作的别名，这里是操作的表名
                 operateManager.getTableName(newDo.getClass()),
                 // 本次操作的额外描述，这里记录为操作人的ip
                 loginLogManager.getIpByUserId(dto.getModifierId()),
                 // 备注，这里是操作模块名
-                "文件管理",
+                "培训配置",
                 // 旧值
                 oldDo,
                 // 新值

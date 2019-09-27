@@ -31,7 +31,7 @@ public interface ExamPlanModelService {
      * @return
      */
     @RequestMapping(value = "/examPlan/deleteExamPlanModel", method = RequestMethod.POST)
-    Boolean deleteExamPlanModel(@RequestParam("examPlanModelId") Long examPlanModelId);
+    Boolean deleteExamPlanModel(@RequestBody ExamPlanModelDTO examPlanModelDTO);
 
     /**
      * 新增

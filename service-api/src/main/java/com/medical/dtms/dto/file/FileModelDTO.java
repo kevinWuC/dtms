@@ -125,7 +125,11 @@ public class FileModelDTO {
     /**
      * 文件存储名称和或路径
      */
-    private String fileContent;
+    private List<String> fileContent;
+    /**
+     * 文件 路径 逗号分隔
+     */
+    private String fileContentUrl;
     /**
      * 会签人1 集合
      */

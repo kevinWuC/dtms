@@ -26,7 +26,7 @@
         <result column="is_annual_verification" jdbcType="BIT" property="isAnnualVerification"/>
         <result column="year_audit_cycle" jdbcType="INTEGER" property="yearAuditCycle"/>
         <result column="annual_verification_dept_id" jdbcType="BIGINT" property="annualVerificationDeptId"/>
-        <result column="file_content" jdbcType="VARCHAR" property="fileContent"/>
+        <result column="file_content" jdbcType="VARCHAR" property="fileContentUrl"/>
         <result column="signator1_id" jdbcType="VARCHAR" property="signator1Id"/>
         <result column="signator2_id" jdbcType="VARCHAR" property="signator2Id"/>
         <result column="approver_id" jdbcType="VARCHAR" property="approverId"/>
@@ -130,7 +130,7 @@
         #{applyUserId,jdbcType=BIGINT}, #{applyReasonId,jdbcType=BIGINT}, #{auditorId,jdbcType=BIGINT},
         #{auditorName,jdbcType=VARCHAR}, #{fileInfo,jdbcType=VARCHAR}, #{isAnnualVerification,jdbcType=BIT},
         #{yearAuditCycle,jdbcType=INTEGER}, #{annualVerificationDeptId,jdbcType=BIGINT},
-        #{fileContent,jdbcType=VARCHAR}, #{signator1Id,jdbcType=VARCHAR}, #{signator2Id,jdbcType=VARCHAR},
+        #{fileContentUrl,jdbcType=VARCHAR}, #{signator1Id,jdbcType=VARCHAR}, #{signator2Id,jdbcType=VARCHAR},
         #{approverId,jdbcType=VARCHAR}, #{fileStatus,jdbcType=INTEGER}, #{isReceived,jdbcType=BIT},
         #{receiveDate,jdbcType=TIMESTAMP}, #{receiverId,jdbcType=VARCHAR}, #{receiverName,jdbcType=VARCHAR},
         #{allowModify,jdbcType=BIT}, #{allowBad,jdbcType=BIT}, 1,
@@ -214,8 +214,8 @@
             <if test="annualVerificationDeptId != null">
                 annual_verification_dept_id = #{annualVerificationDeptId,jdbcType=BIGINT},
             </if>
-            <if test="fileContent != null">
-                file_content = #{fileContent,jdbcType=VARCHAR},
+            <if test="fileContentUrl != null">
+                file_content = #{fileContentUrl,jdbcType=VARCHAR},
             </if>
             <if test="signator1Id != null">
                 signator1_id = #{signator1Id,jdbcType=VARCHAR},

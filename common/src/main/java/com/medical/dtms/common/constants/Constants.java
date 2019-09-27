@@ -33,11 +33,11 @@ public class Constants {
     /**
      * 无权限
      */
-    public static final String NO_PERMISSION = "/noPermission";
+    public static final String NO_PERMISSION = "/noPermission.html";
     /**
      * 登录页
      */
-    public static final String LOGIN = "/login.html";
+    public static final String LOGIN = "/index.html";
     /**
      * 新增当前提交人的日志表记录 - 意见 栏
      */

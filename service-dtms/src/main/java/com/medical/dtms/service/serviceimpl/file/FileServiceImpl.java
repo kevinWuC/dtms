@@ -148,10 +148,10 @@ public class FileServiceImpl implements FileService {
             }
 
             // 如果有上传附件，则将附件保存在附件表
-            if (StringUtils.isNotBlank(dto.getFileContent())) {
+            if (CollectionUtils.isNotEmpty(dto.getFileContent())) {
                 FileAttachmentsDTO attachmentsDTO;
                 List<FileAttachmentsDTO> dtos = new ArrayList<>();
-                for (String fileUrl : Arrays.asList(StringUtils.split(dto.getFileContent(), ","))) {
+                for (String fileUrl : dto.getFileContent()) {
                     attachmentsDTO = new FileAttachmentsDTO();
                     attachmentsDTO.setBizId(idGenerator.nextId());
                     attachmentsDTO.setFileId(fileId);
@@ -169,6 +169,7 @@ public class FileServiceImpl implements FileService {
                     log.error("保存附件到附件表出错", e);
                     throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), ErrorCodeEnum.FAILED.getErrorMessage());
                 }
+                dto.setFileContentUrl(StringUtils.join(dto.getFileContent(), ","));
             }
 
             // 文件状态改为 已提交
@@ -224,6 +225,12 @@ public class FileServiceImpl implements FileService {
         if (StringUtils.equals(dto.getFileName(), file.getFileName()) && !dto.getBizId().equals(file1.getBizId())) {
             throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "文件名重复");
         }
+
+        // 如果有修改文件，则处理文件url
+        if (CollectionUtils.isNotEmpty(dto.getFileContent())){
+            dto.setFileContentUrl(StringUtils.join(dto.getFileContent(), ","));
+        }
+
 
         /** 如果是直送
          * 1. 更新当前操作用户的倒数第二条记录
