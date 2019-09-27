@@ -11,6 +11,7 @@ import com.medical.dtms.dto.item.QMSItemDetailsDTO;
 import com.medical.dtms.dto.item.query.QMSItemDetailsQuery;
 import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.dataobject.item.QMSItemDetailsDO;
+import com.medical.dtms.service.dataobject.item.QMSItemsDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.qms.QMSItemDetailsMapper;
@@ -84,9 +85,31 @@ public class QMSItemDetailsManager {
     /**
      * 字典明细表 - 添加功能
      */
-    public Integer insert(QMSItemDetailsDTO detailsDTO) {
-        QMSItemDetailsDO aDo = BeanConvertUtils.convert(detailsDTO, QMSItemDetailsDO.class);
-        return detailsMapper.insert(aDo);
+    public Integer insert(QMSItemDetailsDTO dto) {
+        QMSItemDetailsDO newDo = BeanConvertUtils.convert(dto, QMSItemDetailsDO.class);
+
+        QMSItemDetailsDO oldDo = new QMSItemDetailsDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getBizId()),
+                // 操作人
+                dto.getCreator(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(dto.getCreatorId()),
+                // 备注，这里是操作模块名
+                "字典类别明细管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        return detailsMapper.insert(newDo);
     }
 
     /**

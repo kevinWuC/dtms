@@ -180,7 +180,6 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
             startExamUserPlan.setExamUserPlanModelId(examUserPlanModelDTO.getExamUserPlanModelId());
             startExamUserPlan.setModifyUserName(examUserPlanModelDTO.getModifyUserName());
             startExamUserPlan.setModifyUserId(examUserPlanModelDTO.getModifyUserId());
-            //startExamUserPlan.setStartDate(new Date());
             startExamUserPlan.setIsBegin(true);
             examUserPlanModelManager.updateExamUserPlanModel(startExamUserPlan);
         }

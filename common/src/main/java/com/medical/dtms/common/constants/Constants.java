@@ -33,7 +33,7 @@ public class Constants {
     /**
      * 无权限
      */
-    public static final String NO_PERMISSION = "/noPermission.html";
+    public static final String NO_PERMISSION = "/noPermission";
     /**
      * 登录页
      */

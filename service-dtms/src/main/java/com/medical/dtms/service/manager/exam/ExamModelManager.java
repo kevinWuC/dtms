@@ -1,15 +1,11 @@
 package com.medical.dtms.service.manager.exam;
 
-import java.util.Date;
 import java.util.List;
 
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
-import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.logclient.service.LogClient;
-import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
-import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,15 +28,11 @@ public class ExamModelManager {
     @Autowired
     private ExamModelMapper examModelMapper;
     @Autowired
-    private IdGenerator idGenerator;
-    @Autowired
     private SysLoginLogManager loginLogManager;
     @Autowired
     private OperateManager operateManager;
     @Autowired
     private LogClient logClient;
-    @Autowired
-    private QMSSysLogsMapper qmsSysLogsMapper;
 
     /**
      * 新增
@@ -48,23 +40,31 @@ public class ExamModelManager {
      * @param
      * @return
      */
-    public Boolean insertExam(ExamModelDTO examModelDTO) {
-        ExamModelDO examModelDO = BeanConvertUtils.convert(examModelDTO, ExamModelDO.class);
-        Integer num = examModelMapper.insertExam(examModelDO);
-        if (num == 1) {
-            //新增修改日志记录
-            QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
-            qmsSysLogsDO.setBizId(idGenerator.nextId());
-            qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_INSERT.getType());
-            qmsSysLogsDO.setTableName(operateManager.getTableName(examModelDO.getClass()));
-            qmsSysLogsDO.setBusinessName(operateManager.getTableComment(examModelDO.getClass()));
-            qmsSysLogsDO.setObjectId(String.valueOf(examModelDO.getExamId()));
-            qmsSysLogsDO.setOperationIp(loginLogManager.getIpByUserId(String.valueOf(examModelDO.getCreateUserId())));
-            qmsSysLogsDO.setGmtCreated(new Date());
-            qmsSysLogsDO.setCreatorId(String.valueOf(examModelDO.getCreateUserId()));
-            qmsSysLogsDO.setCreator(examModelDO.getCreateUserName());
-            qmsSysLogsMapper.insert(qmsSysLogsDO);
-        }
+    public Boolean insertExam(ExamModelDTO dto) {
+        ExamModelDO newDo = BeanConvertUtils.convert(dto, ExamModelDO.class);
+
+        ExamModelDO oldDo = new ExamModelDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getExamId()),
+                // 操作人
+                dto.getCreateUserName(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(String.valueOf(dto.getCreateUserId())),
+                // 备注，这里是操作模块名
+                "试卷管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        Integer num = examModelMapper.insertExam(newDo);
         return num > 0 ? true : false;
     }
 

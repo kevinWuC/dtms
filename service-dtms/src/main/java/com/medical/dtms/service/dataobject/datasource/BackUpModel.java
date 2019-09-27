@@ -14,6 +14,6 @@ public class BackUpModel {
     /**
      * 备注
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "comment", builtinType = BuiltinTypeHandler.NORMAL)
     private String comment;
 }

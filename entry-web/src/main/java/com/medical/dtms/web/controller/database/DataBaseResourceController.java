@@ -120,8 +120,10 @@ public class DataBaseResourceController {
         if (null == dto || null == dto.getBizId()) {
             return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), ErrorCodeEnum.PARAM_IS_EMPTY.getErrorMessage());
         }
+        OperatorInfo info = SessionTools.getOperator();
+        dto.setModifier(info.getDspName());
+        dto.setModifierId(info.getUserId());
         dataBaseResourceService.deleteSqlBackUp(dto);
-
         return Result.buildSuccess(true);
     }
 

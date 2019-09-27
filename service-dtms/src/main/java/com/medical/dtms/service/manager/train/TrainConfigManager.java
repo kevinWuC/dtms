@@ -4,24 +4,15 @@ import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.train.TrainConfigModel;
 import com.medical.dtms.common.model.train.TrainConfigQueryModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
-import com.medical.dtms.common.util.DateUtils;
-import com.medical.dtms.common.util.IdGenerator;
 import com.medical.dtms.dto.train.TrainConfigDTO;
 import com.medical.dtms.dto.train.query.TrainConfigQuery;
 import com.medical.dtms.logclient.service.LogClient;
-import com.medical.dtms.service.dataobject.log.QMSSysLogDetailsDO;
-import com.medical.dtms.service.dataobject.log.QMSSysLogsDO;
 import com.medical.dtms.service.dataobject.train.TrainConfigDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
-import com.medical.dtms.service.mapper.qms.QMSSysLogDetailsMapper;
-import com.medical.dtms.service.mapper.qms.QMSSysLogsMapper;
 import com.medical.dtms.service.mapper.train.TrainConfigMapper;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,39 +25,40 @@ public class TrainConfigManager {
     @Autowired
     private TrainConfigMapper trainConfigMapper;
     @Autowired
-    private QMSSysLogsMapper qmsSysLogsMapper;
-    @Autowired
-    private IdGenerator idGenerator;
-    @Autowired
     private OperateManager operateManager;
     @Autowired
     private SysLoginLogManager loginLogManager;
     @Autowired
     private LogClient logClient;
-    @Autowired
-    private QMSSysLogDetailsMapper qmsSysLogDetailsMapper;
 
     /**
      * 培训配置 - 新增
      **/
     public Integer insert(TrainConfigDTO trainConfigDTO) {
-        TrainConfigDO aDo = BeanConvertUtils.convert(trainConfigDTO, TrainConfigDO.class);
-        int num = trainConfigMapper.insert(aDo);
-        if (num == 1) {
-            //新增日志记录
-            QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
-            qmsSysLogsDO.setBizId(idGenerator.nextId());
-            qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_INSERT.getType());
-            qmsSysLogsDO.setTableName(operateManager.getTableName(aDo.getClass()));
-            qmsSysLogsDO.setBusinessName(operateManager.getTableComment(aDo.getClass()));
-            qmsSysLogsDO.setObjectId(String.valueOf(aDo.getBizId()));
-            qmsSysLogsDO.setOperationIp(loginLogManager.getIpByUserId(aDo.getCreatorId()));
-            qmsSysLogsDO.setGmtCreated(new Date());
-            qmsSysLogsDO.setCreator(aDo.getCreator());
-            qmsSysLogsDO.setCreatorId(aDo.getCreatorId());
-            qmsSysLogsDO.setIsDeleted(false);
-            int insert = qmsSysLogsMapper.insert(qmsSysLogsDO);
-        }
+        TrainConfigDO newDo = BeanConvertUtils.convert(trainConfigDTO, TrainConfigDO.class);
+
+        TrainConfigDO oldDo = new TrainConfigDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getBizId()),
+                // 操作人
+                trainConfigDTO.getCreator(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(trainConfigDTO.getCreatorId()),
+                // 备注，这里是操作模块名
+                "培训配置",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        int num = trainConfigMapper.insert(newDo);
         return num;
     }
 

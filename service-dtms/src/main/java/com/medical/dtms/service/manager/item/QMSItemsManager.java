@@ -45,9 +45,31 @@ public class QMSItemsManager {
     /**
      * 字典类别 - 新增
      */
-    public Integer insert(QMSItemsDTO itemsDTO) {
-        QMSItemsDO aDo = BeanConvertUtils.convert(itemsDTO, QMSItemsDO.class);
-        return qmsItemsMapper.insert(aDo);
+    public Integer insert(QMSItemsDTO dto) {
+        QMSItemsDO newDo = BeanConvertUtils.convert(dto, QMSItemsDO.class);
+
+        QMSItemsDO oldDo = new QMSItemsDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getBizId()),
+                // 操作人
+                dto.getCreator(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(dto.getCreatorId()),
+                // 备注，这里是操作模块名
+                "字典类别管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        return qmsItemsMapper.insert(newDo);
     }
 
     /**

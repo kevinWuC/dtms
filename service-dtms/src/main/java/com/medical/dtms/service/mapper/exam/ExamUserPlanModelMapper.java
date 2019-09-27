@@ -13,11 +13,12 @@ import com.medical.dtms.service.dataobject.exam.ExamUserPlanModelDO;
 public interface ExamUserPlanModelMapper {
     /**
      * 批量新增
-     * 
+     *
      * @param list
      * @return
      */
     Integer insertBatchExamUserPlanModel(List<ExamUserPlanModelDO> list);
+
     /**
      * 重新安排考试
      *
@@ -28,7 +29,7 @@ public interface ExamUserPlanModelMapper {
 
     /**
      * 修改
-     * 
+     *
      * @param examUserPlanModelDO
      * @return
      */
@@ -36,7 +37,7 @@ public interface ExamUserPlanModelMapper {
 
     /**
      * 启动
-     * 
+     *
      * @param examPlanId
      * @return
      */
@@ -44,7 +45,7 @@ public interface ExamUserPlanModelMapper {
 
     /**
      * 根据考试安排id  删除
-     * 
+     *
      * @param examPlanId
      * @return
      */
@@ -52,11 +53,12 @@ public interface ExamUserPlanModelMapper {
 
     /**
      * 分页查询
-     * 
+     *
      * @param query
      * @return
      */
     List<ExamUserPlanModelDTO> listExamUserPlanByQuery(ExamPlanModelQuery query);
+
     /**
      * 分页查询（批卷用）
      *
@@ -71,7 +73,7 @@ public interface ExamUserPlanModelMapper {
      * @param bizId
      * @return
      */
-    ExamUserPlanModelDTO selectExamUserPlanModelByBizId(@Param("examUserPlanModelId")Long bizId);
+    ExamUserPlanModelDTO selectExamUserPlanModelByBizId(@Param("examUserPlanModelId") Long bizId);
 
     /**
      * 根据用户ID和考试ID删除用户和考试的关联
@@ -80,4 +82,9 @@ public interface ExamUserPlanModelMapper {
      * @return
      */
     Integer deleteBatchByCondition(List<ExamUserPlanModelDO> dos);
+
+    /**
+     * 主键查询考试信息
+     */
+    ExamUserPlanModelDO selectByPrimaryKey(@Param("examUserPlanModelId") Long bizId);
 }

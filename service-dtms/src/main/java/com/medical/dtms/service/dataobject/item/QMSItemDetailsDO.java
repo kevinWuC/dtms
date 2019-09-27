@@ -22,24 +22,25 @@ public class QMSItemDetailsDO {
 
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
+    @LogTag(alias = "bizId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long bizId;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "itemsId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long itemsId;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "itemName", builtinType = BuiltinTypeHandler.NORMAL)
     private String itemName;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "itemCode", builtinType = BuiltinTypeHandler.NORMAL)
     private String itemCode;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "description", builtinType = BuiltinTypeHandler.NORMAL)
     private String description;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "enabled", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean enabled;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "allowEdit", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEdit;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "allowDelete", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowDelete;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "sortCode", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "isDeleted", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
 
     private String creator;

@@ -86,9 +86,8 @@ public class FileApprovalServiceImpl implements FileApprovalService {
 //        List<FileApprovalModel> modelList = logManager.listLogs(fileIds);
         for (FileApprovalModel model : models) {
             if (null != model.getFileStatus() && FileStatusEnum.FILE_STATUS_ENUM_2.getStatus().equals(model.getFileStatus())) {
-//                model.setFileStatusName(FileStatusEnum.FILE_STATUS_ENUM_7.getName());
+                model.setFileStatusName(FileStatusEnum.FILE_STATUS_ENUM_7.getName());
             }
-
             model.setFileApplyTypeName(model.getFileApplyType() == null ? null : FileApplyTypeEnum.getNameByType(model.getFileApplyType()));
         }
         return new PageInfo<>(models);
@@ -205,6 +204,8 @@ public class FileApprovalServiceImpl implements FileApprovalService {
                     logDTO.setResult(LogResultEnum.LOG_RESULT_ENUM_5.getResult());
                     logDTO.setOperatorType(2);
                     logDTO.setRemark(Constants.MANDATORY.replace("receiveUserName", dto.getReceiveUserName()));
+                    logDTO.setModifier(dto.getModifier());
+                    logDTO.setModifierId(dto.getModifierId());
                     logManager.updateLog(logDTO);
                 }
 

@@ -27,58 +27,59 @@ public class QMSItemsDO {
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
+    @LogTag(alias = "bizId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long bizId;
     /**
      * 编号
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "code", builtinType = BuiltinTypeHandler.NORMAL)
     private String code;
     /**
      * 名称
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "fullName", builtinType = BuiltinTypeHandler.NORMAL)
     private String fullName;
     /**
      * 父节点主键
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "parentId", builtinType = BuiltinTypeHandler.NORMAL)
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long parentId;
     /**
      * 分类
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "category", builtinType = BuiltinTypeHandler.NORMAL)
     private String category;
     /**
      * 树型结构
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "isTree", builtinType = BuiltinTypeHandler.NORMAL)
     private Integer isTree;
     /**
      * 有效：1-有效，0-无效
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "enabled", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean enabled;
     /**
      * 允许编辑
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "allowEdit", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEdit;
     /**
      * 允许删除
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "allowDelete", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowDelete;
     /**
      * 排序码
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "sortCode", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
     /**
      * 删除标记:0-正常，1-删除
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "isDeleted", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建用户

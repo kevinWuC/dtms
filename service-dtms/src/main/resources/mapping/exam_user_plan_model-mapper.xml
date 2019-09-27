@@ -263,5 +263,14 @@
     and userPlan.biz_id = #{examUserPlanModelId,jdbcType=BIGINT}
   </select>
 
-
+    <!--    主键查询是否存在-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        tb_dtms_exam_user_plan_model
+        where
+        is_deleted = 0
+        and biz_id = #{examUserPlanModelId,jdbcType=BIGINT}
+    </select>
 </mapper>

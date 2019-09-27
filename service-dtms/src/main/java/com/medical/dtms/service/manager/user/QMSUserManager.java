@@ -6,6 +6,7 @@ import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
 import com.medical.dtms.common.model.user.SimpleUserModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.common.util.IdGenerator;
+import com.medical.dtms.dto.menu.QMSMenuDTO;
 import com.medical.dtms.dto.user.QMSUserDTO;
 import com.medical.dtms.dto.user.query.BaseUserQuery;
 import com.medical.dtms.common.model.user.QMSUserModel;
@@ -60,24 +61,30 @@ public class QMSUserManager {
      * 用户管理 - 新增用户
      */
     public Integer insert(QMSUserDTO dto) {
-        QMSUserDO aDo = BeanConvertUtils.convert(dto, QMSUserDO.class);
-        int num = userMapper.insert(aDo);
-        if (num == 1) {
-            //新增日志记录
-            QMSSysLogsDO qmsSysLogsDO = new QMSSysLogsDO();
-            qmsSysLogsDO.setBizId(idGenerator.nextId());
-            qmsSysLogsDO.setOperationType(OperationTypeEnum.OPERATION_TYPE_INSERT.getType());
-            qmsSysLogsDO.setTableName(operateManager.getTableName(aDo.getClass()));
-            qmsSysLogsDO.setBusinessName(operateManager.getTableComment(aDo.getClass()));
-            qmsSysLogsDO.setObjectId(String.valueOf(aDo.getBizId()));
-            qmsSysLogsDO.setOperationIp(loginLogManager.getIpByUserId(aDo.getCreatorId()));
-            qmsSysLogsDO.setGmtCreated(new Date());
-            qmsSysLogsDO.setCreator(aDo.getCreator());
-            qmsSysLogsDO.setCreatorId(aDo.getCreatorId());
-            qmsSysLogsDO.setIsDeleted(false);
-            int insert = qmsSysLogsMapper.insert(qmsSysLogsDO);
-        }
-        return num;
+        QMSUserDO newDo = BeanConvertUtils.convert(dto, QMSUserDO.class);
+
+        QMSUserDO oldDo = new QMSUserDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getBizId()),
+                // 操作人
+                dto.getCreator(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(dto.getCreatorId()),
+                // 备注，这里是操作模块名
+                "用户管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        return userMapper.insert(newDo);
     }
 
     /**

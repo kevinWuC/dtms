@@ -27,78 +27,79 @@ public class QMSMenuDO {
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
+    @LogTag(alias = "bizId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long bizId;
     /**
      * 上级模块
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "parentId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long parentId;
     /**
      * 模块编号
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "code", builtinType = BuiltinTypeHandler.NORMAL)
     private String code;
     /**
      * 模块名称
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "fullName", builtinType = BuiltinTypeHandler.NORMAL)
     private String fullName;
     /**
      * 描述
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "description", builtinType = BuiltinTypeHandler.NORMAL)
     private String description;
     /**
      * 菜单图标
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "img", builtinType = BuiltinTypeHandler.NORMAL)
     private String img;
     /**
      * 类别
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "category", builtinType = BuiltinTypeHandler.NORMAL)
     private String category;
     /**
      * 导航Url
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "navigateUrl", builtinType = BuiltinTypeHandler.NORMAL)
     private String navigateUrl;
     /**
      * 链接目标
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "target", builtinType = BuiltinTypeHandler.NORMAL)
     private String target;
     /**
      * 是否展开 true - 是 false - 否
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "isUnfold", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isUnfold;
     /**
      * 允许编辑 true - 是 false - 否
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "allowEdit", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowEdit;
     /**
      * 允许删除 true - 是 false - 否
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "allowDelete", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean allowDelete;
     /**
      * 是否有效 true - 是 false - 否
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "enabled", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean enabled;
     /**
      * 排序码
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "sortCode", builtinType = BuiltinTypeHandler.NORMAL)
     private String sortCode;
     /**
      * 删除 true - 是 false - 否
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "isDeleted", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建人

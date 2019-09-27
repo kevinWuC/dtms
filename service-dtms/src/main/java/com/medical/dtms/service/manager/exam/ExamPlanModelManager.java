@@ -75,10 +75,31 @@ public class ExamPlanModelManager {
      * @param examPlanModelDTO
      * @return
      */
-    public Boolean insertExamPlanModel(ExamPlanModelDTO examPlanModelDTO) {
-        ExamPlanModelDO examPlanModelDO = BeanConvertUtils.convert(examPlanModelDTO,
+    public Boolean insertExamPlanModel(ExamPlanModelDTO dto) {
+        ExamPlanModelDO newDo = BeanConvertUtils.convert(dto,
                 ExamPlanModelDO.class);
-        Integer num = examPlanModelMapper.insertExamPlanModel(examPlanModelDO);
+
+        ExamPlanModelDO oldDo = new ExamPlanModelDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getExamId()),
+                // 操作人
+                dto.getCreateUserName(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(String.valueOf(dto.getCreateUserId())),
+                // 备注，这里是操作模块名
+                "考试安排",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+        Integer num = examPlanModelMapper.insertExamPlanModel(newDo);
         return num > 0 ? true : false;
     }
 

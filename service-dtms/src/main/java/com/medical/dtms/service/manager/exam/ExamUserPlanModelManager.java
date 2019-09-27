@@ -2,7 +2,10 @@ package com.medical.dtms.service.manager.exam;
 
 import java.util.List;
 
-import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
+import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
+import com.medical.dtms.logclient.service.LogClient;
+import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
+import com.medical.dtms.service.manager.table.OperateManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,13 @@ import com.medical.dtms.service.mapper.exam.ExamUserPlanModelMapper;
 public class ExamUserPlanModelManager {
     @Autowired
     private ExamUserPlanModelMapper examUserPlanModelMapper;
+    @Autowired
+    private OperateManager operateManager;
+    @Autowired
+    private LogClient logClient;
+    @Autowired
+    private SysLoginLogManager loginLogManager;
+
 
     /**
      * 批量新增
@@ -49,10 +59,33 @@ public class ExamUserPlanModelManager {
      * @param examUserPlanModelDO
      * @return
      */
-    public Boolean updateExamUserPlanModel(ExamUserPlanModelDTO examUserPlanModelDTO) {
-        ExamUserPlanModelDO examUserPlanModelDO = BeanConvertUtils.convert(examUserPlanModelDTO,
+    public Boolean updateExamUserPlanModel(ExamUserPlanModelDTO dto) {
+        ExamUserPlanModelDO newDo = BeanConvertUtils.convert(dto,
                 ExamUserPlanModelDO.class);
-        Integer num = examUserPlanModelMapper.updateExamUserPlanModel(examUserPlanModelDO);
+
+        ExamUserPlanModelDO oldDo = examUserPlanModelMapper.selectByPrimaryKey(dto.getExamUserPlanModelId());
+
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getExamUserPlanModelId()),
+                // 操作人
+                dto.getModifyUserName(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(String.valueOf(dto.getModifyUserId())),
+                // 备注，这里是操作模块名
+                "开始考试",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        Integer num = examUserPlanModelMapper.updateExamUserPlanModel(newDo);
         return num > 0 ? true : false;
     }
 

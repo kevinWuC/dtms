@@ -50,7 +50,7 @@ public class FileApplyManager {
                 // 本次操作的别名，这里是操作的表名
                 operateManager.getTableName(newDo.getClass()),
                 // 本次操作的额外描述，这里记录为操作人的ip
-                loginLogManager.getIpByUserId(dto.getModifierId()),
+                loginLogManager.getIpByUserId(dto.getCreatorId()),
                 // 备注，这里是操作模块名
                 "提交修改/作废申请",
                 // 旧值

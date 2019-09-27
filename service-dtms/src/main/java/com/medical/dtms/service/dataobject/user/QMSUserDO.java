@@ -27,6 +27,7 @@ public class QMSUserDO {
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
+    @LogTag(alias = "bizId", builtinType = BuiltinTypeHandler.NORMAL)
     private Long bizId;
     /**
      * 用户账号
@@ -98,7 +99,7 @@ public class QMSUserDO {
     /**
      * false-未删除  true-删除
      */
-    @LogTag(alias = "account", builtinType = BuiltinTypeHandler.NORMAL)
+    @LogTag(alias = "isDeleted", builtinType = BuiltinTypeHandler.NORMAL)
     private Boolean isDeleted;
     /**
      * 创建人

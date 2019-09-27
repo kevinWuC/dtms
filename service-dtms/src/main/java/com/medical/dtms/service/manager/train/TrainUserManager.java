@@ -1,5 +1,6 @@
 package com.medical.dtms.service.manager.train;
 
+import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
@@ -7,7 +8,10 @@ import com.medical.dtms.common.model.train.TrainUserQueryModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
+import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.dataobject.train.TrainUserDO;
+import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
+import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.train.TrainUserMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,13 @@ public class TrainUserManager {
 
     @Autowired
     private TrainUserMapper trainUserMapper;
+    @Autowired
+    private OperateManager operateManager;
+    @Autowired
+    private SysLoginLogManager loginLogManager;
+    @Autowired
+    private LogClient logClient;
+
 
     /**
      * 校验培训用户是否存在
@@ -142,8 +153,30 @@ public class TrainUserManager {
      * 新增记录
      */
     public Integer addTrainUser(TrainUserDTO dto) {
-        TrainUserDO aDo = BeanConvertUtils.convert(dto, TrainUserDO.class);
-        return trainUserMapper.addTrainUser(aDo);
+        TrainUserDO newDo = BeanConvertUtils.convert(dto, TrainUserDO.class);
+
+        TrainUserDO oldDo = new TrainUserDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getBizId()),
+                // 操作人
+                dto.getCreator(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(dto.getCreatorId()),
+                // 备注，这里是操作模块名
+                "培训管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        return trainUserMapper.addTrainUser(newDo);
     }
 
 

@@ -5,10 +5,8 @@ import com.medical.dtms.common.model.dept.QMSDeptModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.dept.QMSDeptDTO;
 import com.medical.dtms.dto.dept.query.QMSDeptQuery;
-import com.medical.dtms.dto.job.query.QMSJobsQuery;
 import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.dataobject.dept.QMSDeptDO;
-import com.medical.dtms.service.dataobject.job.QMSJobsDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.qms.QMSDeptMapper;
@@ -64,8 +62,29 @@ public class QMSDeptManager {
      * 部门类别 - 新增
      */
     public Integer insert(QMSDeptDTO deptDTO) {
-        QMSDeptDO aDo = BeanConvertUtils.convert(deptDTO, QMSDeptDO.class);
-        return qmsDeptMapper.insert(aDo);
+        QMSDeptDO newDo = BeanConvertUtils.convert(deptDTO, QMSDeptDO.class);
+
+        QMSDeptDO oldDo = new QMSDeptDO();
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getBizId()),
+                // 操作人
+                deptDTO.getCreator(),
+                // 操作类型
+                OperationTypeEnum.OPERATION_TYPE_INSERT.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(deptDTO.getCreatorId()),
+                // 备注，这里是操作模块名
+                "部门管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+        return qmsDeptMapper.insert(newDo);
     }
 
     /**

@@ -22,6 +22,7 @@ public class FileModelDO {
     /**
      * 业务主键
      */
+    @LogTag(alias = "bizId", builtinType = BuiltinTypeHandler.NORMAL)
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long bizId;

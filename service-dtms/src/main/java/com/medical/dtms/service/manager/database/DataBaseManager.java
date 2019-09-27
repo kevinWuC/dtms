@@ -85,8 +85,31 @@ public class DataBaseManager {
      * 更新
      */
     public Integer updateByPrimaryKeySelective(QMSBackUpDTO dto) {
-        QMSBackUpDO aDo = BeanConvertUtils.convert(dto, QMSBackUpDO.class);
-        return upDOMapper.updateByPrimaryKeySelective(aDo);
+        QMSBackUpDO newDo = BeanConvertUtils.convert(dto, QMSBackUpDO.class);
+
+        QMSBackUpDO oldDo = upDOMapper.selectByPrimaryKey(dto.getBizId());
+
+        // 记录日志
+        logClient.logObject(
+                // 对象主键
+                String.valueOf(oldDo.getBizId()),
+                // 操作人
+                dto.getModifier(),
+                // 操作类型
+                dto.getIsDeleted() == null ? OperationTypeEnum.OPERATION_TYPE_UPDATE.getType() : dto.getIsDeleted() == true ? OperationTypeEnum.OPERATION_TYPE_DELETE.getType() : OperationTypeEnum.OPERATION_TYPE_UPDATE.getType(),
+                // 本次操作的别名，这里是操作的表名
+                operateManager.getTableName(newDo.getClass()),
+                // 本次操作的额外描述，这里记录为操作人的ip
+                loginLogManager.getIpByUserId(dto.getModifierId()),
+                // 备注，这里是操作模块名
+                "岗位管理",
+                // 旧值
+                oldDo,
+                // 新值
+                newDo
+        );
+
+        return upDOMapper.updateByPrimaryKeySelective(newDo);
     }
 
     /**
