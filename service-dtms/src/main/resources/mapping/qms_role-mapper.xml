@@ -190,11 +190,25 @@
         allow_audit AS allowAudit,allow_approve AS allowApprove,allow_receive AS allowReceive,allow_authorization AS
         allowAuthorization,
         allow_print AS allowPrint,allow_archive AS allowArchive,
-        allow_configure AS allowConfigure,allow_enable AS allowEnable,allow_freeze AS allowFreeze,allow_year AS allowYear,
+        allow_configure AS allowConfigure,allow_enable AS allowEnable,allow_freeze AS allowFreeze,allow_year AS
+        allowYear,
         allow_device AS allowDevice,allow_down_source_file AS allowDownSourceFile,sort_code AS sortCode
         from
         <include refid="table_name"/>
         where is_deleted = 0
         order by gmt_created desc
+    </select>
+
+    <!-- 根据角色 id 查询数据-->
+    <select id="showRoleInfoByRoleIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and biz_id in
+        <foreach collection="list" item="item" separator="," index="index" open="(" close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>

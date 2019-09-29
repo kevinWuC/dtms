@@ -205,4 +205,16 @@
         </foreach>
     </select>
 
+    <!--  根据 部门ids 查询数据-->
+    <select id="showDeptInfoByDeptIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        AND biz_id IN
+        <foreach collection="list" item="bizId" open="(" close=")" index="index" separator=",">
+            #{bizId}
+        </foreach>
+    </select>
 </mapper>

@@ -10,9 +10,11 @@ import com.medical.dtms.service.dataobject.dept.QMSDeptDO;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
 import com.medical.dtms.service.mapper.qms.QMSDeptMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -145,5 +147,14 @@ public class QMSDeptManager {
         return qmsDeptMapper.deleteByPatentId(bizId);
     }
 
-
+    /**
+     * 根据 部门 ids 查询数据
+     */
+    public List<QMSDeptDTO> showDeptInfoByDeptIds(List<Long> deptIds) {
+        List<QMSDeptDO> deptDOS = qmsDeptMapper.showDeptInfoByDeptIds(deptIds);
+        if (CollectionUtils.isEmpty(deptDOS)){
+            return new ArrayList<>();
+        }
+        return BeanConvertUtils.convertList(deptDOS,QMSDeptDTO.class);
+    }
 }

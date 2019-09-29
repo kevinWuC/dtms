@@ -74,7 +74,8 @@
     </delete>
 
     <!-- 根据用户id 查询角色-->
-    <select id="listRoleInfoByUserId" resultType="com.medical.dtms.common.model.user.QMSUserInRoleModel" parameterType="java.lang.Long">
+    <select id="listRoleInfoByUserId" resultType="com.medical.dtms.common.model.user.QMSUserInRoleModel"
+            parameterType="java.lang.Long">
         select role.role_name AS roleName,usr.role_id AS roleId
         from tb_dtms_qms_user_in_role usr
         left join tb_dtms_qms_role role on usr.role_id = role.biz_id
@@ -86,11 +87,13 @@
     <!-- 根据用户 ids 查询角色 ids-->
     <select id="listRoleIdsByUserIds" parameterType="java.util.List"
             resultType="com.medical.dtms.common.model.syslog.BaseSimpleUserModel">
-        select user_id AS userId,role_id AS roleId
+        select usr.user_id AS userId,usr.role_id AS roleId,role.role_name AS roleName
         from
-        <include refid="table_name"/>
-        where is_deleted = 0
-        and user_id in
+        <include refid="table_name"/> usr
+        LEFT JOIN tb_dtms_qms_role role ON usr.role_id = role.biz_id
+        where usr.is_deleted = 0
+        AND role.is_deleted = 0
+        and usr.user_id in
         <foreach collection="list" index="index" separator="," open="(" close=")" item="userId">
             #{userId}
         </foreach>
