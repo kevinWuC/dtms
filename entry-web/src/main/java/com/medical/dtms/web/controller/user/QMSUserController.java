@@ -1,7 +1,6 @@
 package com.medical.dtms.web.controller.user;
 
 import com.github.pagehelper.PageInfo;
-import com.medical.dtms.common.eception.BizException;
 import com.medical.dtms.dto.log.QMSSysLoginLogDTO;
 import com.medical.dtms.feignservice.syslogs.SysLoginLogService;
 import com.medical.dtms.common.model.menu.QMSMenuModel;

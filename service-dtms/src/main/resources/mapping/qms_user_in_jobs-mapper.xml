@@ -75,11 +75,13 @@
     <!-- 根据用户 ids 查询岗位 ids-->
     <select id="listJobIdsByUserIds" parameterType="java.util.List"
             resultType="com.medical.dtms.common.model.syslog.BaseSimpleUserModel">
-        select user_id AS userId,job_id AS jobId
+        select usr.user_id AS userId,usr.job_id AS jobId,job.job_name AS jobName
         from
-        <include refid="table_name"/>
-        where is_deleted = 0
-        and user_id in
+        <include refid="table_name"/> usr
+        left join tb_dtms_qms_jobs job on usr.job_id = job.biz_id
+        where usr.is_deleted = 0
+        and job.is_deleted = 0
+        and usr.user_id in
         <foreach collection="list" index="index" separator="," open="(" close=")" item="userId">
             #{userId}
         </foreach>

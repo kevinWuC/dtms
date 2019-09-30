@@ -130,11 +130,7 @@ public class QMSUserManager {
      * 用户管理 - 分页展示用户列表
      */
     public List<QMSUserModel> pageListUser(BaseUserQuery query) {
-        List<QMSUserModel> dos = userMapper.pageListUser(query);
-        if (CollectionUtils.isEmpty(dos)) {
-            return new ArrayList<>();
-        }
-        return dos;
+        return userMapper.pageListUser(query);
     }
 
     /**

@@ -124,4 +124,15 @@ public class QMSRoleManager {
         }
         return roleDOS;
     }
+
+    /**
+     * 根据 角色 id 查询数据
+     */
+    public List<QMSRoleDTO> showRoleInfoByRoleIds(List<Long> roleIds) {
+        List<QMSRoleDO> roleDOS = roleMapper.showRoleInfoByRoleIds(roleIds);
+        if (CollectionUtils.isEmpty(roleDOS)) {
+            return new ArrayList<>();
+        }
+        return BeanConvertUtils.convertList(roleDOS, QMSRoleDTO.class);
+    }
 }

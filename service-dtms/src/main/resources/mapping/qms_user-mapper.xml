@@ -155,34 +155,55 @@
     </select>
 
     <!-- 分页展示用户数据-->
+<!--    <select id="pageListUser" parameterType="com.medical.dtms.dto.user.query.BaseUserQuery"-->
+<!--            resultType="com.medical.dtms.common.model.user.QMSUserModel">-->
+<!--        select-->
+<!--        usr.biz_id AS bizId,usr.account AS account,usr.dsp_name AS dspName,usr.dept_id AS deptId,dept.dept_name AS-->
+<!--        deptName,usr.role_id AS roleId,role.role_name AS roleName,usr.pass_word AS passWord,usr.allow_enable AS-->
+<!--        allowEnable,usr.sort_code AS sortCode,-->
+<!--        usr.mobile AS mobile,usr.email AS email,usr.QQ AS qq,usr.wx AS wx-->
+<!--        from-->
+<!--        tb_dtms_qms_user usr-->
+<!--        LEFT JOIN tb_dtms_qms_role role ON usr.role_id = role.biz_id-->
+<!--        LEFT JOIN tb_dtms_qms_dept dept ON usr.dept_id = dept.biz_id-->
+<!--        WHERE-->
+<!--        usr.allow_enable = 1-->
+<!--        and usr.is_deleted = 0-->
+<!--        AND role.is_deleted = 0-->
+<!--        AND dept.is_deleted = 0-->
+<!--        <if test="account != null and account != ''">-->
+<!--            AND (-->
+<!--            usr.account = #{account,jdbcType=VARCHAR}-->
+<!--            or usr.dsp_name LIKE concat(concat('%',#{account,jdbcType=VARCHAR}),'%')-->
+<!--            )-->
+<!--        </if>-->
+<!--        <if test="deptId != null">-->
+<!--            AND usr.dept_id = #{deptId,jdbcType=BIGINT}-->
+<!--        </if>-->
+<!--        order by usr.gmt_created desc-->
+<!--    </select>-->
+
+    <!-- 分页展示用户数据-->
     <select id="pageListUser" parameterType="com.medical.dtms.dto.user.query.BaseUserQuery"
             resultType="com.medical.dtms.common.model.user.QMSUserModel">
         select
-        usr.biz_id AS bizId,usr.account AS account,usr.dsp_name AS dspName,usr.dept_id AS deptId,dept.dept_name AS
-        deptName,
-        usr.role_id AS roleId,role.role_name AS roleName,usr.pass_word AS passWord,usr.allow_enable AS
-        allowEnable,usr.sort_code AS sortCode,
-        usr.mobile AS mobile,usr.email AS email,usr.QQ AS
-        qq,usr.wx AS wx
+        biz_id AS bizId,account AS account,dsp_name AS dspName,dept_id AS deptId,role_id AS roleId,pass_word AS passWord,
+        allow_enable AS allowEnable,sort_code AS sortCode,mobile AS mobile,email AS email,QQ AS qq,wx AS wx
         from
-        tb_dtms_qms_user usr
-        LEFT JOIN tb_dtms_qms_role role ON usr.role_id = role.biz_id
-        LEFT JOIN tb_dtms_qms_dept dept ON usr.dept_id = dept.biz_id
+        tb_dtms_qms_user
         WHERE
-        usr.allow_enable = 1
-        and usr.is_deleted = 0
-        AND role.is_deleted = 0
-        AND dept.is_deleted = 0
+        allow_enable = 1
+        and is_deleted = 0
         <if test="account != null and account != ''">
             AND (
-            usr.account = #{account,jdbcType=VARCHAR}
-            or usr.dsp_name LIKE concat(concat('%',#{account,jdbcType=VARCHAR}),'%')
+            account = #{account,jdbcType=VARCHAR}
+            or dsp_name LIKE concat(concat('%',#{account,jdbcType=VARCHAR}),'%')
             )
         </if>
         <if test="deptId != null">
-            AND usr.dept_id = #{deptId,jdbcType=BIGINT}
+            AND dept_id = #{deptId,jdbcType=BIGINT}
         </if>
-        order by usr.gmt_created desc
+        order by gmt_created desc
     </select>
 
     <!-- 用户列表-->

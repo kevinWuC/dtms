@@ -39,6 +39,10 @@ public class Constants {
      */
     public static final String LOGIN = "/index.html";
     /**
+     * 欢迎页
+     */
+    public static final String WELCOME = "/workBench";
+    /**
      * 新增当前提交人的日志表记录 - 意见 栏
      */
     public static final String USER_SUBMIT = "用户提交";

@@ -19,4 +19,6 @@ public interface QMSRoleMapper {
     QMSRoleDO getRoleByCondition(QMSRoleQuery query);
 
     List<QMSRoleModel> listQMSRoles(QMSRoleQuery query);
+
+    List<QMSRoleDO> showRoleInfoByRoleIds(List<Long> roleIds);
 }

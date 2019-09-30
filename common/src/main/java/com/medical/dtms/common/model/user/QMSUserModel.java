@@ -51,10 +51,6 @@ public class QMSUserModel {
      * 角色名称
      */
     private String roleName;
-//    /**
-//     * 密码
-//     */
-//    private String passWord;
     /**
      * 是否启用 true 是 false 否
      */

@@ -231,61 +231,103 @@ public class QMSUserServiceImpl implements QMSUserService {
         if (CollectionUtils.isEmpty(list)) {
             return new PageInfo<>(new ArrayList<>());
         }
-
-        // 处理登录次数、最后登录时间、角色、职位、部门
+        // 获取用户 ids
         List<Long> userIds = list.stream().map(QMSUserModel::getBizId).distinct().collect(Collectors.toList());
-        List<SimpleLogInLogModel> logModels = logManager.listUserLastVisitAndVisitTime(userIds);
-        logModels.removeAll(Collections.singleton(null));
+        // 获取用户默认的部门、角色id
+        List<Long> roleIds = list.stream().map(QMSUserModel::getRoleId).collect(Collectors.toList());
+        List<Long> deptIds = list.stream().map(QMSUserModel::getDeptId).collect(Collectors.toList());
 
-        List<BaseSimpleUserModel> roleIds = userInRoleManager.listRoleIdsByUserIds(userIds);
-        List<BaseSimpleUserModel> deptIds = userInDeptManager.listDeptIdsByUserIds(userIds);
-        List<BaseSimpleUserModel> jobIds = userInJobsManager.listJobIdsByUserIds(userIds);
-
-
-        if (CollectionUtils.isNotEmpty(logModels)) {
-            List<Long> users = logModels.stream().map(SimpleLogInLogModel::getUserId).distinct().collect(Collectors.toList());
-            users.removeAll(Collections.singleton(null));
-            List<SimpleLogInLogModel> collect = new ArrayList<>();
-            for (QMSUserModel model : list) {
-                if (CollectionUtils.isNotEmpty(users)) {
-                    collect = logModels.stream().filter(simpleLogInLogModel -> simpleLogInLogModel.getUserId().equals(model.getBizId())).distinct().collect(Collectors.toList());
-                }
-                model.setLogOnCount(CollectionUtils.isEmpty(collect) == true ? 0 : collect.get(0).getLogOnCount() == null ? 0 : collect.get(0).getLogOnCount());
-                model.setLastVisit(CollectionUtils.isEmpty(collect) == true ? null : collect.get(0).getLastVisit() == null ? null : collect.get(0).getLastVisit());
-                model.setPreviousVisit(CollectionUtils.isEmpty(collect) == true ? null : collect.get(0).getLastVisit() == null ? null : collect.get(0).getLastVisit());
-
-                if (CollectionUtils.isEmpty(roleIds)) {
-                    model.setRoleIdListStr(null);
-                } else {
-                    List<String> roleList = new ArrayList<>();
-                    if (CollectionUtils.isEmpty(roleIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) != true) {
-                        roleIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getRoleId).distinct().collect(Collectors.toList()).forEach(aLong -> roleList.add(String.valueOf(aLong)));
-                    }
-                    model.setRoleIdListStr(roleList);
-                }
-
-                if (CollectionUtils.isEmpty(deptIds)) {
-                    model.setDeptIdListStr(null);
-                } else {
-                    List<String> deptList = new ArrayList<>();
-                    if (CollectionUtils.isEmpty(deptIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) != true) {
-                        deptIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getDeptId).distinct().collect(Collectors.toList()).forEach(aLong -> deptList.add(String.valueOf(aLong)));
-                    }
-                    model.setDeptIdListStr(deptList);
-                }
-
-                if (CollectionUtils.isEmpty(jobIds)) {
-                    model.setJobIdListStr(null);
-                } else {
-                    List<String> jobList = new ArrayList<>();
-                    if (CollectionUtils.isEmpty(jobIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) != true) {
-                        jobIds.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getJobId).distinct().collect(Collectors.toList()).forEach(aLong -> jobList.add(String.valueOf(aLong)));
-                    }
-                    model.setJobIdListStr(jobList);
-                }
-            }
+        List<QMSRoleDTO> defaultRole = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(roleIds)) {
+            defaultRole = roleManager.showRoleInfoByRoleIds(roleIds);
         }
 
+        List<QMSDeptDTO> defaultDept = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(deptIds)) {
+            defaultDept = deptManager.showDeptInfoByDeptIds(deptIds);
+        }
+
+        // 查询登录次数、最后登录时间
+        List<SimpleLogInLogModel> logModels = logManager.listUserLastVisitAndVisitTime(userIds);
+
+        // 查询是否有角色、职位、部门授权
+        List<BaseSimpleUserModel> userRoleModels = userInRoleManager.listRoleIdsByUserIds(userIds);
+        List<BaseSimpleUserModel> userDeptModels = userInDeptManager.listDeptIdsByUserIds(userIds);
+        List<BaseSimpleUserModel> userJobModels = userInJobsManager.listJobIdsByUserIds(userIds);
+
+        // 去除 null
+        logModels.removeAll(Collections.singleton(null));
+        userRoleModels.removeAll(Collections.singleton(null));
+        userDeptModels.removeAll(Collections.singleton(null));
+        userJobModels.removeAll(Collections.singleton(null));
+        defaultRole.removeAll(Collections.singleton(null));
+        defaultDept.removeAll(Collections.singleton(null));
+
+
+        for (QMSUserModel model : list) {
+            // 处理登录次数、最后登录时间
+            if (CollectionUtils.isNotEmpty(logModels)) {
+                logModels = logModels.stream().filter(simpleLogInLogModel -> simpleLogInLogModel.getUserId().equals(model.getBizId())).distinct().collect(Collectors.toList());
+                model.setLogOnCount(CollectionUtils.isEmpty(logModels) == true ? 0 : logModels.get(0).getLogOnCount() == null ? 0 : logModels.get(0).getLogOnCount());
+                model.setLastVisit(CollectionUtils.isEmpty(logModels) == true ? null : logModels.get(0).getLastVisit() == null ? null : logModels.get(0).getLastVisit());
+                model.setPreviousVisit(CollectionUtils.isEmpty(logModels) == true ? null : logModels.get(0).getLastVisit() == null ? null : logModels.get(0).getLastVisit());
+            } else {
+                model.setLogOnCount(0);
+                model.setLastVisit(null);
+                model.setPreviousVisit(null);
+            }
+
+            // 处理授权角色
+            if (CollectionUtils.isEmpty(userRoleModels)) {
+                model.setRoleIdListStr(new ArrayList<>());
+            } else {
+                List<String> roleList = new ArrayList<>();
+                if (CollectionUtils.isEmpty(userRoleModels.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) != true) {
+                    userRoleModels.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getRoleId).distinct().collect(Collectors.toList()).forEach(aLong -> roleList.add(String.valueOf(aLong)));
+                }
+                model.setRoleIdListStr(roleList);
+            }
+
+            // 处理授权部门
+            if (CollectionUtils.isEmpty(userDeptModels)) {
+                model.setDeptIdListStr(new ArrayList<>());
+            } else {
+                List<String> deptList = new ArrayList<>();
+                if (CollectionUtils.isEmpty(userDeptModels.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) != true) {
+                    userDeptModels.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getDeptId).distinct().collect(Collectors.toList()).forEach(aLong -> deptList.add(String.valueOf(aLong)));
+                }
+                model.setDeptIdListStr(deptList);
+            }
+
+            // 处理授权职位
+            if (CollectionUtils.isEmpty(userJobModels)) {
+                model.setJobIdListStr(null);
+            } else {
+                List<String> jobList = new ArrayList<>();
+                if (CollectionUtils.isEmpty(userJobModels.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList())) != true) {
+                    userJobModels.stream().filter(userModel -> model.getBizId().equals(userModel.getUserId())).collect(Collectors.toList()).stream().map(BaseSimpleUserModel::getJobId).distinct().collect(Collectors.toList()).forEach(aLong -> jobList.add(String.valueOf(aLong)));
+                }
+                model.setJobIdListStr(jobList);
+            }
+
+            // 处理默认部门
+            if (CollectionUtils.isNotEmpty(defaultDept)) {
+                List<QMSDeptDTO> collect = defaultDept.stream().filter(qmsDeptDTO -> model.getDeptId().equals(qmsDeptDTO.getBizId())).collect(Collectors.toList());
+                model.setDeptName(CollectionUtils.isEmpty(collect) == true ? null : null == collect.get(0) ? null : StringUtils.isBlank(collect.get(0).getDeptName()) == true ? null : collect.get(0).getDeptName());
+            } else {
+                model.setDeptId(null);
+                model.setDeptName(null);
+            }
+
+            // 处理默认角色
+            if (CollectionUtils.isNotEmpty(defaultRole)) {
+                List<QMSRoleDTO> collect = defaultRole.stream().filter(qmsRoleDTO -> model.getRoleId().equals(qmsRoleDTO.getBizId())).collect(Collectors.toList());
+                model.setRoleName(CollectionUtils.isEmpty(collect) == true ? null : null == collect.get(0) ? null : StringUtils.isBlank(collect.get(0).getRoleName()) == true ? null : collect.get(0).getRoleName());
+            } else {
+                model.setRoleId(null);
+                model.setRoleName(null);
+            }
+        }
         return new PageInfo<>(list);
     }
 

@@ -12,9 +12,9 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
  * @date Date : 2018年10月28日 16:01
  * @Description:
  */
-@SpringBootApplication(scanBasePackages = { "com.medical.dtms.common", "com.medical.dtms.web" })
+@SpringBootApplication(scanBasePackages = {"com.medical.dtms.common", "com.medical.dtms.web"})
 @EnableEurekaClient
-@EnableFeignClients(basePackages = { "com.medical.dtms.feignservice" })
+@EnableFeignClients(basePackages = {"com.medical.dtms.feignservice"})
 @EnableCircuitBreaker
 @EnableHystrix
 public class EntryWebApplication {

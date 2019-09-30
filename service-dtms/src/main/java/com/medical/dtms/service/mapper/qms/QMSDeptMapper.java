@@ -28,4 +28,6 @@ public interface QMSDeptMapper {
     List<QMSDeptModel> listQMSDept(QMSDeptQuery query);
 
     List<QMSDeptModel> listParentInfos(List<Long> parentIds);
+
+    List<QMSDeptDO> showDeptInfoByDeptIds(List<Long> deptIds);
 }
