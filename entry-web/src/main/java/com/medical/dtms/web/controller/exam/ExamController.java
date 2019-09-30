@@ -59,6 +59,9 @@ public class ExamController {
             log.error("缺少参数");
             throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "缺少参数");
         }
+        if (CollectionUtils.isEmpty(examModelDTO.getExamQuestionsTypes().get(0).getExamQuestions())){
+            throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "试卷不能为空");
+        }
         //获取用户信息
         OperatorInfo operatorInfo = SessionTools.getOperator();
         examModelDTO.setCreateUserId(operatorInfo.getBizId());

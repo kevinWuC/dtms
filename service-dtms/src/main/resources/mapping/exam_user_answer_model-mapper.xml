@@ -47,13 +47,15 @@
         )
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id,jdbcType=BIGINT}, #{item.examUserAnswerModeId,jdbcType=BIGINT},
+            (
+            #{item.id,jdbcType=BIGINT},#{item.examUserAnswerModeId,jdbcType=BIGINT},
             #{item.questionsId,jdbcType=BIGINT},
-            #{item.examId,jdbcType=BIGINT}, #{item.examPlanId,jdbcType=BIGINT}, #{item.examUserPlanId,jdbcType=BIGINT},
-            #{item.userId,jdbcType=BIGINT}, #{item.answer,jdbcType=VARCHAR}, 0,
-            #{item.sortCode,jdbcType=INTEGER},0, #{item.creator,jdbcType=VARCHAR},
-            #{item.creatorId,jdbcType=VARCHAR}, NOW(), #{item.modifier,jdbcType=VARCHAR},
-            #{item.modifierId,jdbcType=VARCHAR}, NOW())
+            #{item.examId,jdbcType=BIGINT},#{item.examPlanId,jdbcType=BIGINT},#{item.examUserPlanId,jdbcType=BIGINT},
+            #{item.userId,jdbcType=BIGINT},#{item.answer,jdbcType=VARCHAR},0,
+            #{item.sortCode,jdbcType=INTEGER},0,#{item.creator,jdbcType=VARCHAR},
+            #{item.creatorId,jdbcType=VARCHAR},NOW(),#{item.modifier,jdbcType=VARCHAR},
+            #{item.modifierId,jdbcType=VARCHAR},NOW()
+            )
         </foreach>
     </insert>
 

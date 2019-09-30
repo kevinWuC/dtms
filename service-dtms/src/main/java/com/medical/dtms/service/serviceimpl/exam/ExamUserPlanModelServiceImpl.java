@@ -152,24 +152,29 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
                 userAnswerModelDTO.setUserId(examUserPlanModelDTO.getUserId());
                 userAnswerModelDTO.setCreator(userPlanModelDTO.getCreateUserName());
                 userAnswerModelDTO.setCreatorId(userPlanModelDTO.getCreateUserId().toString());
+                userAnswerModelDTO.setModifierId(String.valueOf(userPlanModelDTO.getModifyUserId()));
+                userAnswerModelDTO.setModifier(userPlanModelDTO.getModifyUserName());
                 //添加试题
                 if (CollectionUtils.isNotEmpty(typeModels)) {
                     List<ExamUserAnswerModelDTO> dtos = new ArrayList<>();
                     for (int lenType = typeModels.size(), i = 0; i < lenType; i++) {
                         ExamQuestionsTypeModel typeModel = typeModels.get(i);
                         ExamUserAnswerModelDTO dto;
-                        for (int lenQ = typeModel.getQuestionForPreview().size(), j = 0; j < lenQ; j++) {
-                            dto = new ExamUserAnswerModelDTO();
-                            dto.setExamId(userAnswerModelDTO.getExamId());
-                            dto.setExamPlanId(userAnswerModelDTO.getExamPlanId());
-                            dto.setExamUserPlanId(userAnswerModelDTO.getExamUserPlanId());
-                            dto.setUserId(userAnswerModelDTO.getUserId());
-                            dto.setCreator(userAnswerModelDTO.getCreator());
-                            dto.setCreatorId(userAnswerModelDTO.getCreatorId());
-                            dto.setExamUserAnswerModeId(idGenerator.nextId());
-                            dto.setQuestionsId(typeModel.getQuestionForPreview().get(j).getBizId());
-                            dtos.add(dto);
+                        if (CollectionUtils.isNotEmpty(typeModel.getQuestionForPreview())){
+                            for (int lenQ = typeModel.getQuestionForPreview().size(), j = 0; j < lenQ; j++) {
+                                dto = new ExamUserAnswerModelDTO();
+                                dto.setExamId(userAnswerModelDTO.getExamId());
+                                dto.setExamPlanId(userAnswerModelDTO.getExamPlanId());
+                                dto.setExamUserPlanId(userAnswerModelDTO.getExamUserPlanId());
+                                dto.setUserId(userAnswerModelDTO.getUserId());
+                                dto.setCreator(userAnswerModelDTO.getCreator());
+                                dto.setCreatorId(userAnswerModelDTO.getCreatorId());
+                                dto.setExamUserAnswerModeId(idGenerator.nextId());
+                                dto.setQuestionsId(typeModel.getQuestionForPreview().get(j).getBizId());
+                                dtos.add(dto);
+                            }
                         }
+
                     }
                     userAnswerModelManager.insertBatchExamUserAnswerModel(dtos);
                 }
@@ -178,8 +183,8 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
             //开始考试
             ExamUserPlanModelDTO startExamUserPlan = new ExamUserPlanModelDTO();
             startExamUserPlan.setExamUserPlanModelId(examUserPlanModelDTO.getExamUserPlanModelId());
-            startExamUserPlan.setModifyUserName(examUserPlanModelDTO.getModifyUserName());
-            startExamUserPlan.setModifyUserId(examUserPlanModelDTO.getModifyUserId());
+            startExamUserPlan.setModifyUserName(userPlanModelDTO.getModifyUserName());
+            startExamUserPlan.setModifyUserId(userPlanModelDTO.getModifyUserId());
             startExamUserPlan.setIsBegin(true);
             examUserPlanModelManager.updateExamUserPlanModel(startExamUserPlan);
         }

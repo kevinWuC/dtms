@@ -102,6 +102,8 @@ public class ExamUserPlanModelController {
         OperatorInfo operatorInfo = SessionTools.getOperator();
         userPlanModelDTO.setCreateUserId(operatorInfo.getBizId());
         userPlanModelDTO.setCreateUserName(operatorInfo.getDspName());
+        userPlanModelDTO.setModifyUserId(operatorInfo.getBizId());
+        userPlanModelDTO.setModifyUserName(operatorInfo.getDspName());
 
         ExamStartModel exam = examUserPlanModelService.startExam(userPlanModelDTO);
 

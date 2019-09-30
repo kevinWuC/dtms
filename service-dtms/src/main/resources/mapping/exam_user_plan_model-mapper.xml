@@ -225,7 +225,7 @@
             and plan.exam_plan_name like concat(concat('%',#{examPlanName}),'%')
         </if>
         ORDER BY
-        userPlan.create_date DESC
+        plan.createdate DESC
     </select>
 
     <select id="listExamUserPlanByQueryForMark" parameterType="com.medical.dtms.dto.exam.query.ExamPlanModelQuery"
