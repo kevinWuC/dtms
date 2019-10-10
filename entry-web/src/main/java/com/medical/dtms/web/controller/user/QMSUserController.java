@@ -244,6 +244,16 @@ public class QMSUserController {
     }
 
     /**
+     * 登录用户信息返回
+     */
+    @RequestMapping(value = "/user/getUserInfo")
+    public Result<OperatorInfo> getUserInfo() {
+        OperatorInfo info = SessionTools.getOperator();
+        return Result.buildSuccess(info);
+
+    }
+
+    /**
      * 分页参数校验
      *
      * @param query
