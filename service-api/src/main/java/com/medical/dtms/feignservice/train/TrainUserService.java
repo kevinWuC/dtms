@@ -3,10 +3,12 @@ package com.medical.dtms.feignservice.train;
 import com.github.pagehelper.PageInfo;
 import com.medical.dtms.common.model.exam.ExamExcelModel;
 import com.medical.dtms.common.model.exam.ExamTotalModel;
+import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainExcelModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
+import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
 import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -33,7 +35,7 @@ public interface TrainUserService {
     PageInfo<TrainUserModel> listTrainTimely(@RequestBody TrainUserQuery query);
 
     @RequestMapping(value = "/train/viewMyTrain", method = RequestMethod.POST)
-    PageInfo<TrainUserModel> viewMyTrain(@RequestBody TrainUserQuery query);
+    MyTrainTestModel viewMyTrain(@RequestBody TrainUserQuery query);
 
     @RequestMapping(value = "/train/beginTrainExam", method = RequestMethod.POST)
     MyTrainTestModel beginTrainExam(@RequestBody TrainUserDTO trainUserDTO);
@@ -41,8 +43,14 @@ public interface TrainUserService {
     @RequestMapping(value = "/train/listTrainExam", method = RequestMethod.POST)
     PageInfo<TrainUserQueryModel> listTrainExam(@RequestBody TrainUserQuery query);
 
-    @RequestMapping(value = "/train/addTrainUser", method = RequestMethod.POST)
-    Boolean addTrainUser(@RequestBody TrainUserDTO processDTO);
+    /**
+     * 提交考试答案
+     *
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/train/submitTrainAnswer", method = RequestMethod.POST)
+    Boolean submitTrainAnswer(@RequestBody TrainSubmitAnswerQuery query);
 
     //考试
     @RequestMapping(value = "/train/pageListExamTotal", method = RequestMethod.POST)

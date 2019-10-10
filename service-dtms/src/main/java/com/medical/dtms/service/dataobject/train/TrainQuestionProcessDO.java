@@ -1,5 +1,9 @@
 package com.medical.dtms.service.dataobject.train;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.medical.dtms.common.convert.LongJsonDeserializer;
+import com.medical.dtms.common.convert.LongJsonSerializer;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -20,53 +24,75 @@ public class TrainQuestionProcessDO {
     /**
      * 业务主键
      */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long bizId;
     /**
      * 培训ID
      */
     private Long trainId;
     /**
-     * 用户ID
-     */
-    private Long userId;
-    /**
      * 试题ID
-     */
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long questionsId;
     /**
-     * 试题类型ID
-     */
-    private Long questionTypeId;
+     * 试卷ID
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long examId;
     /**
-     * 用户答案
-     */
-    private String userAnswer;
+     * 培训用户ID
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long trainUserId;
     /**
-     * 是否正确 true 是 false 否
-     */
-    private Boolean isRight;
+     * 用户ID
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long userId;
     /**
-     * 创建日期
-     */
-    private Date createDate;
+     * 答案
+     **/
+    private String answer;
     /**
-     * 创建者Id
-     */
-    private Long createUserId;
+     * 本题得分
+     **/
+    private Integer answerPoints;
     /**
-     * 创建者
-     */
-    private String createUserName;
+     * 排序
+     **/
+    private Integer sortCode;
     /**
-     * 修改日期
+     * 删除标记:true-删除，false-正常
      */
-    private Date modifyDate;
+    private Boolean isDeleted;
     /**
-     * 修改者ID
+     * 创建用户
      */
-    private Long modifyUserId;
+    private String creator;
     /**
-     * 修改者
+     * 创建用户主键
      */
-    private String modifyUserName;
+    private String creatorId;
+    /**
+     * 创建时间
+     */
+    private Date gmtCreated;
+    /**
+     * 修改用户
+     */
+    private String modifier;
+    /**
+     * 修改用户主键
+     */
+    private String modifierId;
+    /**
+     * 修改时间
+     */
+    private Date gmtModified;
 }

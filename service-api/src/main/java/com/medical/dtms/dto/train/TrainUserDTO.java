@@ -221,4 +221,16 @@ public class TrainUserDTO {
      * F答案
      */
     private String questionF;
+    /**
+     * 是否结束
+     * */
+    private Boolean isFinish;
+    /**
+     * 培训用户ID
+     **/
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
+    private Long trainUserId;
+    /**得分*/
+    private Integer baseTotalPoints;
 }

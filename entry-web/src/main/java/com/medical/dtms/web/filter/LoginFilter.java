@@ -92,12 +92,12 @@ public class LoginFilter implements Filter {
         }
 
         // 校验有无菜单权限
-        List<String> models = operator.getMenuUrls();
-        if (CollectionUtils.isEmpty(models) || StringUtils.isNotBlank(menuUrl) && !models.contains(menuUrl) && !StringUtils.equals(menuUrl, Constants.NO_PERMISSION)) {
-            log.info("该用户无菜单权限,用户名:" + operator.getDspName());
-            httpResponse.sendRedirect(urlPath + Constants.NO_PERMISSION);
-            return;
-        }
+//        List<String> models = operator.getMenuUrls();
+//        if (CollectionUtils.isEmpty(models) || StringUtils.isNotBlank(menuUrl) && !models.contains(menuUrl) && !StringUtils.equals(menuUrl, Constants.NO_PERMISSION)) {
+//            log.info("该用户无菜单权限,用户名:" + operator.getDspName());
+//            httpResponse.sendRedirect(urlPath + Constants.NO_PERMISSION);
+//            return;
+//        }
 
         chain.doFilter(httpRequest, httpResponse);
         return;

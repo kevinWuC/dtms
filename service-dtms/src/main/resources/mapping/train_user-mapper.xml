@@ -43,7 +43,7 @@
 
 
     <!--校验培训用户数据是否存在-->
-    <select id="getTrainUserByCondition" parameterType="com.medical.dtms.dto.train.query.TrainUserQuery"
+    <select id="getTrainUserByCondition" parameterType="java.lang.Long"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -337,16 +337,16 @@
         <include refid="Base_Column_List"/>
         )
         values (
-        #{rel.id,jdbcType=BIGINT}, #{rel.bizId,jdbcType=BIGINT}, #{rel.trainId,jdbcType=BIGINT},
-        #{rel.userId,jdbcType=BIGINT}, #{rel.isFinishFile,jdbcType=BIT}, #{rel.readTime,jdbcType=TIMESTAMP},
-        #{rel.state,jdbcType=INTEGER}, #{rel.beginTime,jdbcType=TIMESTAMP}, #{rel.answer,jdbcType=VARCHAR},
-        #{rel.des,jdbcType=VARCHAR}, #{rel.startDate,jdbcType=TIMESTAMP}, #{rel.endDate,jdbcType=TIMESTAMP},
-        #{rel.finishTime,jdbcType=TIMESTAMP}, #{rel.isFinishQuestions,jdbcType=BIT},
-        #{rel.trainName,jdbcType=VARCHAR},
-        #{rel.typeId,jdbcType=BIGINT}, #{rel.userExamTotal,jdbcType=INTEGER}, #{rel.pointStr,jdbcType=VARCHAR},
-        #{rel.startReadTime,jdbcType=TIMESTAMP}, 0, #{rel.creator,jdbcType=VARCHAR},
-        #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
-        #{rel.modifierId,jdbcType=VARCHAR}, NOW()
+        #{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{trainId,jdbcType=BIGINT},
+        #{userId,jdbcType=BIGINT}, #{isFinishFile,jdbcType=BIT}, #{readTime,jdbcType=TIMESTAMP},
+        #{state,jdbcType=INTEGER}, #{beginTime,jdbcType=TIMESTAMP}, #{answer,jdbcType=VARCHAR},
+        #{des,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
+        #{finishTime,jdbcType=TIMESTAMP}, #{isFinishQuestions,jdbcType=BIT},
+        #{trainName,jdbcType=VARCHAR},
+        #{typeId,jdbcType=BIGINT}, #{userExamTotal,jdbcType=INTEGER}, #{pointStr,jdbcType=VARCHAR},
+        #{startReadTime,jdbcType=TIMESTAMP}, 0, #{creator,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, NOW(), #{modifier,jdbcType=VARCHAR},
+        #{modifierId,jdbcType=VARCHAR}, NOW()
         )
     </insert>
 
@@ -396,14 +396,15 @@
         order by any_value(tusr.gmt_created) desc
     </select>
 
-    <!-- 主键查询是否存在-->
-    <select id="getTrainUserByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!-- 查询用户 - 培训关联是否存在-->
+    <select id="getTrainUserByPrimaryKey" parameterType="com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from
         <include refid="table_name"/>
         where is_deleted = 0
-        and biz_id = #{bizId}
+        and train_id = #{trainId}
+        and user_id = #{trainUserId}
     </select>
 
     <!-- 查询考试 信息-->

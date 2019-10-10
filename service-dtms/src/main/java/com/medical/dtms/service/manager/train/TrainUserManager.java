@@ -5,7 +5,9 @@ import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
+import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
 import com.medical.dtms.common.util.BeanConvertUtils;
+import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
 import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.logclient.service.LogClient;
@@ -39,13 +41,10 @@ public class TrainUserManager {
 
     /**
      * 校验培训用户是否存在
+     * @return
      */
-    public TrainUserDTO getTrainUserByCondition(TrainUserQuery query) {
-        TrainUserDO tDo = trainUserMapper.getTrainUserByCondition(query);
-        if (null == tDo) {
-            return null;
-        }
-        return BeanConvertUtils.convert(tDo, TrainUserDTO.class);
+    public TrainUserDTO getTrainUserByCondition(Long bizId) {
+        return trainUserMapper.getTrainUserByCondition(bizId);
     }
 
 
@@ -205,8 +204,8 @@ public class TrainUserManager {
     /**
      * 主键查询 用户 - 培训 是否存在
      */
-    public TrainUserDTO getTrainUserByPrimaryKey(Long bizId) {
-        TrainUserDO userDO = trainUserMapper.getTrainUserByPrimaryKey(bizId);
+    public TrainUserDTO getTrainUserByPrimaryKey(TrainSubmitAnswerQuery query) {
+        TrainUserDO userDO = trainUserMapper.getTrainUserByPrimaryKey(query);
         return BeanConvertUtils.convert(userDO, TrainUserDTO.class);
     }
 

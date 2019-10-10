@@ -1,39 +1,28 @@
-package com.medical.dtms.dto.train;
+package com.medical.dtms.common.model.train.query;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medical.dtms.common.convert.LongJsonDeserializer;
 import com.medical.dtms.common.convert.LongJsonSerializer;
+import com.medical.dtms.common.model.exam.query.ExamSubmintQuestionQuery;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 
 /**
- * @version： TrainQuestionProcessDTO.java v 1.0, 2019年08月29日 10:45 ruanqiuhan Exp$
- * @Description 用户培训答题过程 实体类
+ * @version： ExamSubmitAnswerQuery.java v 1.0, 2019年09月11日 19:10 huangshuaiquan Exp$
+ * @Description
  **/
 @Data
-public class TrainQuestionProcessDTO {
+public class TrainSubmitAnswerQuery {
+
+
     /**
-     * 自增主键
-     */
-    private Long id;
-    /**
-     * 业务主键
+     * 培训id
      */
     @JsonDeserialize(using = LongJsonDeserializer.class)
     @JsonSerialize(using = LongJsonSerializer.class)
-    private Long bizId;
-    /**
-     * 培训ID
-     */
     private Long trainId;
-    /**
-     * 试题ID
-     **/
-    @JsonDeserialize(using = LongJsonDeserializer.class)
-    @JsonSerialize(using = LongJsonSerializer.class)
-    private Long questionsId;
     /**
      * 试卷ID
      **/
@@ -53,34 +42,6 @@ public class TrainQuestionProcessDTO {
     @JsonSerialize(using = LongJsonSerializer.class)
     private Long userId;
     /**
-     * 答案
-     **/
-    private String answer;
-    /**
-     * 本题得分
-     **/
-    private Integer answerPoints;
-    /**
-     * 排序
-     **/
-    private Integer sortCode;
-    /**
-     * 删除标记:true-删除，false-正常
-     */
-    private Boolean isDeleted;
-    /**
-     * 创建用户
-     */
-    private String creator;
-    /**
-     * 创建用户主键
-     */
-    private String creatorId;
-    /**
-     * 创建时间
-     */
-    private Date gmtCreated;
-    /**
      * 修改用户
      */
     private String modifier;
@@ -89,7 +50,11 @@ public class TrainQuestionProcessDTO {
      */
     private String modifierId;
     /**
-     * 修改时间
-     */
-    private Date gmtModified;
+     * 试题答案集合
+     **/
+    private List<ExamSubmintQuestionQuery> questions;
+
+
+
+
 }

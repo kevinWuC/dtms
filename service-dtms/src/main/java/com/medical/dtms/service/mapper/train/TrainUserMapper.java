@@ -4,6 +4,9 @@ import com.medical.dtms.common.model.exam.ExamTotalModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
+import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
+import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
+import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.service.dataobject.train.TrainUserDO;
 import org.apache.ibatis.annotations.Param;
@@ -28,7 +31,7 @@ public interface TrainUserMapper {
 
     List<TrainUserModel> beginTrainExam(TrainUserQuery query);
 
-    TrainUserDO getTrainUserByCondition(TrainUserQuery query);
+    TrainUserDTO getTrainUserByCondition(@Param("trainUserId") Long bizId);
 
     int insert(List<TrainUserDO> dos);
 
@@ -41,7 +44,7 @@ public interface TrainUserMapper {
     //考试
     List<ExamTotalModel> pageListExamTotal(TrainUserQuery query);
 
-    TrainUserDO getTrainUserByPrimaryKey(@Param("bizId") Long bizId);
+    TrainUserDO getTrainUserByPrimaryKey(TrainSubmitAnswerQuery query);
 
     MyTrainTestModel listExamIds(@Param("bizId") Long bizId);
 }

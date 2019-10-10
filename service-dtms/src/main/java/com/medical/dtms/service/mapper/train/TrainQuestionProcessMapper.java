@@ -1,7 +1,10 @@
 package com.medical.dtms.service.mapper.train;
 
+import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
 import com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface TrainQuestionProcessMapper {
@@ -16,4 +19,12 @@ public interface TrainQuestionProcessMapper {
     int updateByPrimaryKeySelective(TrainQuestionProcessDO record);
 
     int updateByPrimaryKey(TrainQuestionProcessDO record);
+
+    /**
+     * 批量更新
+     *
+     * @param dos
+     * @return
+     */
+    int updateBatchTrainQuestionProcess(List<TrainQuestionProcessDO> dos);
 }

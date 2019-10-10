@@ -159,6 +159,8 @@ public class TrainUserQuery {
      * 考试名称
      */
     private String examName;
-
-
+    /**
+     * 创建者id
+     */
+    private String creatorId;
 }
