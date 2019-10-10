@@ -76,9 +76,6 @@ public class IpAddressManager {
     public String getCityAddress(HttpServletRequest request) {
         try {
             String address = request.getRemoteHost();
-            if (address.startsWith("0.0")){
-                return HostConstants.LOCAL_HOST_Name;
-            }
             if (address.startsWith("127.")) {
                 return HostConstants.LOCAL_HOST_Name;
             }

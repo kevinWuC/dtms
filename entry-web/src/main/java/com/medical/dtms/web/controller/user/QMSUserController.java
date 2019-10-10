@@ -1,6 +1,7 @@
 package com.medical.dtms.web.controller.user;
 
 import com.github.pagehelper.PageInfo;
+import com.medical.dtms.common.constants.HostConstants;
 import com.medical.dtms.dto.log.QMSSysLoginLogDTO;
 import com.medical.dtms.feignservice.syslogs.SysLoginLogService;
 import com.medical.dtms.common.model.menu.QMSMenuModel;
@@ -59,13 +60,21 @@ public class QMSUserController {
         SessionTools.saveUserInfo(model, request);
 
         // 保存登录信息到 登录日志表
-        String address = ipAddressManager.getCityAddress(request);
-
         QMSSysLoginLogDTO logDTO = new QMSSysLoginLogDTO();
         logDTO.setCreateDate(new Date());
         logDTO.setAccount(model.getAccount());
         logDTO.setLoginLogStatus(true);
-        logDTO.setIpAddress(request.getRemoteAddr());
+
+        String address = null;
+        String IP = request.getRemoteAddr();
+        if (IP.startsWith("0:0")){
+            IP= "127.0.0.1";
+            address = HostConstants.LOCAL_HOST_Name;
+        }else {
+             address = ipAddressManager.getCityAddress(request);
+        }
+
+        logDTO.setIpAddress(IP);
         logDTO.setCreatorId(model.getBizId());
         logDTO.setCreator(model.getDspName());
         logDTO.setIpAddressName(StringUtils.isBlank(address) == true ? null : address);
