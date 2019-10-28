@@ -1,6 +1,8 @@
 package com.medical.dtms.service.mapper.train;
 
-import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
+import com.medical.dtms.common.model.train.MyTrainSubmitModel;
+import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
+import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
 import com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +29,10 @@ public interface TrainQuestionProcessMapper {
      * @return
      */
     int updateBatchTrainQuestionProcess(List<TrainQuestionProcessDO> dos);
+
+    TrainQuestionProcessDO checkFirstExamOrNot(TrainSubmitAnswerQuery query);
+
+    Integer batchInsertInfo(List<TrainQuestionProcessDO> processDTOList);
+
+    Integer batchUpdateTrainQuestionProcess(MyTrainSubmitModel model);
 }

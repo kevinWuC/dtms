@@ -7,6 +7,7 @@ package com.medical.dtms.service.manager.question;
 import java.util.List;
 
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
+import com.medical.dtms.common.model.question.DtmsQuestionsModel;
 import com.medical.dtms.logclient.service.LogClient;
 import com.medical.dtms.service.manager.syslogs.SysLoginLogManager;
 import com.medical.dtms.service.manager.table.OperateManager;
@@ -174,5 +175,17 @@ public class DtmsQuestionManager {
     public List<DtmsQuestionsDTO> listQuestionsForPreview(QuestionQuery query) {
         return BeanConvertUtils.convertList(questionMapper.listQuestionsForPreview(query),
             DtmsQuestionsDTO.class);
+    }
+
+    /**
+     * 根据试卷 id 查询试题
+     *
+     * @param query
+     * @return
+     */
+    public List<DtmsQuestionsModel> listQuestionsByExamId(Long examId){
+        List<DtmsQuestionsDO> dos = questionMapper.listQuestionsByExamId(examId);
+        List<DtmsQuestionsModel> models = BeanConvertUtils.convertList(dos, DtmsQuestionsModel.class);
+        return models;
     }
 }

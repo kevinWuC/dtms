@@ -8,38 +8,21 @@ import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.model.dept.QMSUserInDeptModel;
 import com.medical.dtms.common.model.exam.ExamExcelModel;
 import com.medical.dtms.common.model.exam.ExamTotalModel;
-import com.medical.dtms.common.model.exam.query.ExamSubmintQuestionQuery;
-import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
 import com.medical.dtms.common.model.question.QuestionItemModel;
 import com.medical.dtms.common.model.train.*;
-import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.common.util.DateUtils;
-import com.medical.dtms.common.util.IdGenerator;
-import com.medical.dtms.dto.exam.ExamUserAnswerModelDTO;
-import com.medical.dtms.dto.exam.ExamUserPlanModelDTO;
-import com.medical.dtms.dto.exam.query.ExamUserAnswerModelQuery;
-import com.medical.dtms.dto.question.DtmsQuestionsDTO;
-import com.medical.dtms.dto.train.TrainConfigDTO;
-import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
-import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.dto.user.query.QMSUserInDeptQuery;
-import com.medical.dtms.feignservice.exam.ExamService;
 import com.medical.dtms.feignservice.train.TrainUserService;
-import com.medical.dtms.service.manager.exam.ExamUserAnswerModelManager;
 import com.medical.dtms.service.manager.item.QMSItemDetailsManager;
-import com.medical.dtms.service.manager.question.DtmsQuestionManager;
-import com.medical.dtms.service.manager.train.TrainConfigManager;
 import com.medical.dtms.service.manager.train.TrainFilesManager;
-import com.medical.dtms.service.manager.train.TrainQuestionProcessManager;
 import com.medical.dtms.service.manager.train.TrainUserManager;
 import com.medical.dtms.service.manager.user.QMSUserInDeptManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,21 +40,11 @@ public class TrainUserServiceImpl implements TrainUserService {
     @Autowired
     private TrainUserManager trainUserManager;
     @Autowired
-    private IdGenerator idGenerator;
-    @Autowired
     private QMSUserInDeptManager userInDeptManager;
     @Autowired
     private TrainFilesManager trainFilesManager;
     @Autowired
     private QMSItemDetailsManager detailsManager;
-    @Autowired
-    private ExamUserAnswerModelManager answerModelManager;
-    @Autowired
-    private DtmsQuestionManager questionManager;
-    @Autowired
-    private TrainQuestionProcessManager trainQuestionProcessManager;
-    @Autowired
-    private TrainConfigManager configManager;
 
     /**
      * @param [query]
@@ -253,162 +226,6 @@ public class TrainUserServiceImpl implements TrainUserService {
         }
 
         return null;
-    }
-
-
-    /**
-     * @param []beginTrainExam
-     * @return java.util.List<com.medical.dtms.model.train.TrainUserModel>
-     * @description 我的培训-开始考试
-     **/
-
-    /**
-     *  思路：
-     *  1. 需求：一次考试，只要还在规定的时间内（即 当前时间小于 考试结束时间），用户都可以点进来，然后提交
-     *  2. 实现：
-     *  （1） 首先确定用户是否是第一次参加本次考试：根据 用户 id、考试id 查询 用户培训答题过程表，如果没有记录，则说明是第一次参加考试，如果有，则说明不是第一次参加考试
-     *  （2） 用户在第一次点击开始考试时，向用户培训答题过程表（tb_dtms_train_question_process） 添加一条记录
-     *  （3） 第二次及以后点进来，回显用户已经提交的答案等信息
-     * */
-    @Override
-    public MyTrainTestModel beginTrainExam(@RequestBody TrainUserDTO trainUserDTO) {
-        // 查询 用户 与 培训是否关联，即 该用户是否有该次培训任务
-        TrainSubmitAnswerQuery submitAnswerQuery = new TrainSubmitAnswerQuery();
-        submitAnswerQuery.setTrainId(trainUserDTO.getTrainId());
-        submitAnswerQuery.setTrainUserId(trainUserDTO.getTrainUserId());
-        TrainUserDTO userDTO = trainUserManager.getTrainUserByPrimaryKey(submitAnswerQuery);
-        if (null == trainUserDTO) {
-            log.error("无本次培训");
-            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "无本次培训");
-        }
-
-        // 校验本次考试是否存在
-        TrainConfigDTO trainConfigDTO = configManager.selectByPrimaryKey(trainUserDTO.getTrainId());
-        if (null == trainConfigDTO){
-            log.error("本场考试不存在");
-            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "本场考试不存在");
-        }
-
-        if (null != userDTO.getIsFinishQuestions() && userDTO.getIsFinishQuestions()) {
-            log.error("考试已结束,不能重复考试");
-            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "考试已结束,不能重复考试");
-        }
-
-        // 校验用户是否第一次考试 TODO
-//        TrainQuestionProcessDTO processDTO = trainQuestionProcessManager.checkFirstExamOrNot(submitAnswerQuery);
-//        if (null == processDTO){
-//            // 说明用户是第一次考试，此时将考试、试卷信息添加到 用户培训答题过程 表
-//
-//        }
-
-        // 查询考试信息  TODO
-        MyTrainTestModel testModel = trainUserManager.listExamIds(userDTO.getBizId());
-        if (null == testModel) {
-            return null;
-        }
-
-        // 查询每一题得分和用户答案
-        ExamUserAnswerModelQuery modelQuery = new ExamUserAnswerModelQuery();
-        modelQuery.setExamId(testModel.getExamId());
-        modelQuery.setUserId(trainUserDTO.getUserId());
-        List<UserExamInfoModel> dtos = answerModelManager.listExamInfo(modelQuery);
-        if (CollectionUtils.isNotEmpty(dtos)) {
-            List<String> points = dtos.stream().map(UserExamInfoModel::getAnswerPoints).collect(Collectors.toList());
-            Integer point = 0;
-            for (String s : points) {
-                point += Integer.valueOf(s);
-            }
-            testModel.setTotalPoints(point);
-            testModel.setModels(dtos);
-        } else {
-            testModel.setModels(new ArrayList<>());
-        }
-
-        return testModel;
-    }
-
-
-    /**
-     * 提交试卷
-     *
-     * com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery
-     */
-
-    /**
-     *  思路：
-     *   1.需求：规定时间内参加考试都可以提交答案
-     *   2.实现：
-     *   （1）找到可以提交的试卷
-     *   （2）修改答案
-     *   （3）保存至当前表
-     *
-     *
-     *
-     *
-     *
-     * */
-    @Override
-    @Transactional
-    public Boolean submitTrainAnswer(@RequestBody TrainSubmitAnswerQuery query) {
-        // 查询 用户 与 培训是否关联，即 该用户是否有该次培训任务
-        TrainUserDTO trainUserDTO = trainUserManager.getTrainUserByPrimaryKey(query);
-        if (null == trainUserDTO) {
-            log.error("无本次培训");
-            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "无本次培训");
-        }
-        // 校验本次考试是否存在
-        TrainConfigDTO trainConfigDTO = configManager.selectByPrimaryKey(query.getTrainId());
-        if (null == trainConfigDTO){
-            log.error("本场考试不存在");
-            throw new BizException(ErrorCodeEnum.NO_DATA.getErrorCode(), "本场考试不存在");
-        }
-
-        if (null != trainUserDTO.getIsFinish() && trainUserDTO.getIsFinish()) {
-            log.error("该试卷已提交,勿重复提交");
-            throw new BizException(ErrorCodeEnum.FAILED.getErrorCode(), "该试卷已提交,勿重复提交");
-        }
-
-        //创建要修改的试卷内容(更新考试结束时间,考试得分,考试结束时间)
-        TrainUserDTO trainUsersDTO = new TrainUserDTO();
-        trainUsersDTO.setModifierId(query.getModifierId());
-        trainUsersDTO.setModifier(query.getModifier());
-        trainUsersDTO.setTrainUserId(query.getTrainUserId());
-        //准备提交更新的题目信息
-        List<TrainQuestionProcessDTO> dtos = new ArrayList<>();
-        List<ExamSubmintQuestionQuery> submitQuestions = query.getQuestions();
-        int total_points = 0;
-        if (CollectionUtils.isNotEmpty(submitQuestions)) {
-            TrainQuestionProcessDTO dto;
-            DtmsQuestionsDTO dtmsQuestionsDTO;
-            for (ExamSubmintQuestionQuery submitQuestion : submitQuestions) {
-                dto = new TrainQuestionProcessDTO();
-                dto.setModifier(query.getModifier());
-                dto.setModifierId(query.getModifierId());
-                dto.setUserId(query.getUserId());
-                dto.setExamId(query.getExamId());
-                dto.setTrainId(query.getTrainId());
-                dto.setTrainUserId(query.getTrainUserId());
-                String submitAnswer = submitQuestion.getAnswer();
-                if (null != submitAnswer && !"".equals(submitAnswer)) {
-                    dtmsQuestionsDTO = questionManager.getQuestionById(submitQuestion.getQuestionsId());
-                    String answer = dtmsQuestionsDTO.getAnswer();
-                    if (answer.equals(submitAnswer)) {
-                        Integer questionsPoints = submitQuestion.getQuestionsPoints();
-                        dto.setAnswerPoints(questionsPoints);
-                        total_points += questionsPoints;
-                    }
-                    dto.setAnswer(submitAnswer);
-                }
-                dtos.add(dto);
-            }
-            if (CollectionUtils.isNotEmpty(dtos)) {
-                trainQuestionProcessManager.updateBatchTrainQuestionProcess(dtos);
-            }
-        }
-        trainUserDTO.setBaseTotalPoints(total_points);
-        trainUserDTO.setIsFinish(true);
-        trainUserManager.addTrainUser(trainUserDTO);
-        return true;
     }
 
     /**

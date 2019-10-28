@@ -1,15 +1,11 @@
 package com.medical.dtms.service.manager.train;
 
-import com.medical.dtms.common.model.train.UserExamInfoModel;
+import com.medical.dtms.common.model.train.MyTrainSubmitModel;
+import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
 import com.medical.dtms.common.util.BeanConvertUtils;
-import com.medical.dtms.dto.exam.ExamUserAnswerModelDTO;
-import com.medical.dtms.dto.exam.query.ExamUserAnswerModelQuery;
 import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
-import com.medical.dtms.service.dataobject.exam.ExamUserAnswerModelDo;
 import com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO;
-import com.medical.dtms.service.mapper.exam.ExamUserAnswerModelMapper;
 import com.medical.dtms.service.mapper.train.TrainQuestionProcessMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +22,6 @@ public class TrainQuestionProcessManager {
     TrainQuestionProcessMapper trainQuestionProcessMapper;
 
 
-
     /**
      * 批量更新
      *
@@ -39,7 +34,21 @@ public class TrainQuestionProcessManager {
         return num > 0 ? true : false;
     }
 
+    /**
+     * 校验是否是第一次考试
+     */
+    public TrainQuestionProcessDTO checkFirstExamOrNot(TrainSubmitAnswerQuery query) {
+        TrainQuestionProcessDO processDO = trainQuestionProcessMapper.checkFirstExamOrNot(query);
+        return BeanConvertUtils.convert(processDO, TrainQuestionProcessDTO.class);
+    }
 
+    public Integer batchInsertInfo(List<TrainQuestionProcessDTO> processDTOList){
+        List<TrainQuestionProcessDO> processDOS = BeanConvertUtils.convertList(processDTOList, TrainQuestionProcessDO.class);
+        return trainQuestionProcessMapper.batchInsertInfo(processDOS);
+    }
 
+    public Integer batchUpdateTrainQuestionProcess(MyTrainSubmitModel model){
+        return trainQuestionProcessMapper.batchUpdateTrainQuestionProcess(model);
+    }
 
 }

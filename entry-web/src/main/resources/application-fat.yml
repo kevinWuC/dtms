@@ -48,4 +48,4 @@ sqlbackup:
   staticPath: /dtms/files/**
 
 geolite2:
-  dbdir: /home/dtms/GeoLite2-City_20190903/
+  dbdir: /home/dtms/GeoLite2-City_20191022/

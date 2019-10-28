@@ -128,7 +128,7 @@ public class ExamUserPlanModelServiceImpl implements ExamUserPlanModelService {
         //2.查询试题类型
         List<ExamQuestionsTypeModel> typeModels = examQuestionsTypeManager.listQuestionTypeByExamId(examUserPlanModelDTO.getExamId());
         if (CollectionUtils.isNotEmpty(typeModels)) {
-            //查询试题试题
+            //查询试题
             QuestionQuery query = new QuestionQuery();
             for (ExamQuestionsTypeModel typeModel : typeModels) {
                 if (StringUtils.isNotBlank(typeModel.getExamQuestionString())) {

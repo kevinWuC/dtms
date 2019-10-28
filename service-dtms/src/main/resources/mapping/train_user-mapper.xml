@@ -20,6 +20,7 @@
         <result column="type_id" jdbcType="BIGINT" property="typeId"/>
         <result column="user_exam_total" jdbcType="INTEGER" property="userExamTotal"/>
         <result column="point_str" jdbcType="VARCHAR" property="pointStr"/>
+        <result column="pass_point" jdbcType="INTEGER" property="passPoint"/>
         <result column="start_read_time" jdbcType="TIMESTAMP" property="startReadTime"/>
         <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
@@ -32,7 +33,7 @@
     <sql id="Base_Column_List">
     id, biz_id, train_id, user_id, is_finish_file, read_time, state, begin_time, answer, 
     des, start_date, end_date, finish_time, is_finish_questions, train_name, type_id, 
-    user_exam_total, point_str, start_read_time, is_deleted, creator, creator_id, gmt_created, 
+    user_exam_total, point_str,pass_point,start_read_time, is_deleted, creator, creator_id, gmt_created,
     modifier, modifier_id, gmt_modified
   </sql>
 
@@ -289,7 +290,8 @@
             #{rel.des,jdbcType=VARCHAR}, #{rel.startDate,jdbcType=TIMESTAMP}, #{rel.endDate,jdbcType=TIMESTAMP},
             #{rel.finishTime,jdbcType=TIMESTAMP}, #{rel.isFinishQuestions,jdbcType=BIT},
             #{rel.trainName,jdbcType=VARCHAR},
-            #{rel.typeId,jdbcType=BIGINT}, #{rel.userExamTotal,jdbcType=INTEGER}, #{rel.pointStr,jdbcType=VARCHAR},
+            #{rel.typeId,jdbcType=BIGINT}, #{rel.userExamTotal,jdbcType=INTEGER},
+            #{rel.pointStr,jdbcType=VARCHAR},#{rel.passPoint,jdbcType=INTEGER},
             #{rel.startReadTime,jdbcType=TIMESTAMP}, 0, #{rel.creator,jdbcType=VARCHAR},
             #{rel.creatorId,jdbcType=VARCHAR}, NOW(), #{rel.modifier,jdbcType=VARCHAR},
             #{rel.modifierId,jdbcType=VARCHAR}, NOW()
@@ -343,7 +345,8 @@
         #{des,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
         #{finishTime,jdbcType=TIMESTAMP}, #{isFinishQuestions,jdbcType=BIT},
         #{trainName,jdbcType=VARCHAR},
-        #{typeId,jdbcType=BIGINT}, #{userExamTotal,jdbcType=INTEGER}, #{pointStr,jdbcType=VARCHAR},
+        #{typeId,jdbcType=BIGINT}, #{userExamTotal,jdbcType=INTEGER},
+        #{pointStr,jdbcType=VARCHAR},#{rel.passPoint,jdbcType=INTEGER},
         #{startReadTime,jdbcType=TIMESTAMP}, 0, #{creator,jdbcType=VARCHAR},
         #{creatorId,jdbcType=VARCHAR}, NOW(), #{modifier,jdbcType=VARCHAR},
         #{modifierId,jdbcType=VARCHAR}, NOW()
@@ -397,7 +400,8 @@
     </select>
 
     <!-- 查询用户 - 培训关联是否存在-->
-    <select id="getTrainUserByPrimaryKey" parameterType="com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery" resultMap="BaseResultMap">
+    <select id="getTrainUserByPrimaryKey"
+            parameterType="com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from
@@ -422,4 +426,104 @@
 	    config.biz_id IN
 	        ( SELECT train_id FROM tb_dtms_train_user WHERE is_deleted = 0 and biz_id = #{bizId} )
     </select>
+
+    <!--  培训管理 我的培训 分页展示-->
+    <select id="pageListMyTrain" parameterType="com.medical.dtms.common.model.train.query.MyTrainPageQuery"
+            resultType="com.medical.dtms.common.model.train.MyTrainPageModel">
+        select
+        train_id AS trainId,train_name AS trainName,type_id AS trainTypeId,is_finish_file AS isFinishFile,read_time AS
+        readTime,is_finish_questions AS isFinishQuestions,end_date AS endDate,pass_point AS passPoint,
+        state AS state,start_date AS beginTime,finish_time AS finishTime
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and user_id = #{userId}
+        order by gmt_created desc
+    </select>
+
+    <!--  更新数据-->
+    <update id="updateUserInfo" parameterType="com.medical.dtms.service.dataobject.train.TrainUserDO">
+        update tb_dtms_train_user
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=BIGINT},
+            </if>
+            <if test="trainId != null">
+                train_id = #{trainId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="isFinishFile != null">
+                is_finish_file = #{isFinishFile,jdbcType=BIT},
+            </if>
+            <if test="readTime != null">
+                read_time = #{readTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="beginTime != null">
+                begin_time = #{beginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="des != null">
+                des = #{des,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finishTime != null">
+                finish_time = #{finishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isFinishQuestions != null">
+                is_finish_questions = #{isFinishQuestions,jdbcType=BIT},
+            </if>
+            <if test="trainName != null">
+                train_name = #{trainName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId,jdbcType=BIGINT},
+            </if>
+            <if test="userExamTotal != null">
+                user_exam_total = #{userExamTotal,jdbcType=INTEGER},
+            </if>
+            <if test="pointStr != null">
+                point_str = #{pointStr,jdbcType=VARCHAR},
+            </if>
+            <if test="passPoint != null">
+                pass_point = #{passPoint,jdbcType=INTEGER},
+            </if>
+            <if test="startReadTime != null">
+                start_read_time = #{startReadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreated != null">
+                gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="modifierId != null">
+                modifier_id = #{modifierId,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

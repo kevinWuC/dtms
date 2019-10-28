@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.medical.dtms.service.mapper.question.DtmsQuestionsMapper">
-  <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.question.DtmsQuestionsDO">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="biz_id" jdbcType="BIGINT" property="bizId" />
-    <result column="exam_type_id" jdbcType="BIGINT" property="examTypeId" />
-    <result column="questions_bank_type_id" jdbcType="BIGINT" property="questionsBankTypeId" />
-    <result column="questions_type_id" jdbcType="BIGINT" property="questionsTypeId" />
-    <result column="question_title" jdbcType="VARCHAR" property="questionTitle" />
-    <result column="question_content" jdbcType="VARCHAR" property="questionContent" />
-    <result column="question_a" jdbcType="VARCHAR" property="questionA" />
-    <result column="question_b" jdbcType="VARCHAR" property="questionB" />
-    <result column="question_c" jdbcType="VARCHAR" property="questionC" />
-    <result column="question_d" jdbcType="VARCHAR" property="questionD" />
-    <result column="question_e" jdbcType="VARCHAR" property="questionE" />
-    <result column="question_f" jdbcType="VARCHAR" property="questionF" />
-    <result column="answer" jdbcType="VARCHAR" property="answer" />
-    <result column="use_dept_id" jdbcType="VARCHAR" property="useDeptId" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
-    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
-    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
-    <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId" />
-    <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName" />
-    <result column="is_deleted" jdbcType="BIT" property="deleted" />
-    <result column="is_used" jdbcType="BIT" property="isUsed" />
-    <result column="imgs" jdbcType="VARCHAR" property="imgs" />
-    <result column="source_url" jdbcType="VARCHAR" property="sourceUrl" />
-    <result column="exam_explain" jdbcType="VARCHAR" property="examExplain" />
-  </resultMap>
-  <sql id="Insert_Column_List">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.question.DtmsQuestionsDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="bizId"/>
+        <result column="exam_type_id" jdbcType="BIGINT" property="examTypeId"/>
+        <result column="questions_bank_type_id" jdbcType="BIGINT" property="questionsBankTypeId"/>
+        <result column="questions_type_id" jdbcType="BIGINT" property="questionsTypeId"/>
+        <result column="question_title" jdbcType="VARCHAR" property="questionTitle"/>
+        <result column="question_content" jdbcType="VARCHAR" property="questionContent"/>
+        <result column="question_a" jdbcType="VARCHAR" property="questionA"/>
+        <result column="question_b" jdbcType="VARCHAR" property="questionB"/>
+        <result column="question_c" jdbcType="VARCHAR" property="questionC"/>
+        <result column="question_d" jdbcType="VARCHAR" property="questionD"/>
+        <result column="question_e" jdbcType="VARCHAR" property="questionE"/>
+        <result column="question_f" jdbcType="VARCHAR" property="questionF"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="use_dept_id" jdbcType="VARCHAR" property="useDeptId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId"/>
+        <result column="modify_user_name" jdbcType="VARCHAR" property="modifyUserName"/>
+        <result column="is_deleted" jdbcType="BIT" property="deleted"/>
+        <result column="is_used" jdbcType="BIT" property="isUsed"/>
+        <result column="imgs" jdbcType="VARCHAR" property="imgs"/>
+        <result column="source_url" jdbcType="VARCHAR" property="sourceUrl"/>
+        <result column="exam_explain" jdbcType="VARCHAR" property="examExplain"/>
+    </resultMap>
+    <sql id="Insert_Column_List">
      biz_id, exam_type_id, questions_bank_type_id, questions_type_id, question_title, 
     question_content, question_a, question_b, question_c, question_d, question_e, question_f, 
     answer, use_dept_id, create_date, create_user_id, create_user_name, modify_date, 
@@ -37,133 +37,134 @@
   </sql>
 
 
-  
-  
-  <insert id="saveQuestion" parameterType="com.medical.dtms.service.dataobject.question.DtmsQuestionsDO">
-    insert into tb_dtms_questions (<include refid="Insert_Column_List"/>)
-    values ( #{bizId,jdbcType=BIGINT}, #{examTypeId,jdbcType=BIGINT}, 
-      #{questionsBankTypeId,jdbcType=BIGINT}, #{questionsTypeId,jdbcType=BIGINT}, #{questionTitle,jdbcType=VARCHAR}, 
-      #{questionContent,jdbcType=VARCHAR}, #{questionA,jdbcType=VARCHAR}, #{questionB,jdbcType=VARCHAR}, 
-      #{questionC,jdbcType=VARCHAR}, #{questionD,jdbcType=VARCHAR}, #{questionE,jdbcType=VARCHAR}, 
-      #{questionF,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, #{useDeptId,jdbcType=VARCHAR}, 
-      NOW(), #{createUserId,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, 
-      NOW(), #{modifyUserId,jdbcType=VARCHAR}, #{modifyUserName,jdbcType=VARCHAR}, 
-      0,0, #{imgs,jdbcType=VARCHAR}, #{sourceUrl,jdbcType=VARCHAR}, 
-      #{examExplain,jdbcType=VARCHAR})
-  </insert>
-  
-  
-  <insert id="saveBatchQuestion" parameterType="java.util.List">
-    insert into tb_dtms_questions (<include refid="Insert_Column_List"/>)
-    values 
-    <foreach collection="list" item="item" index="index" separator=",">
-		( #{item.bizId,jdbcType=BIGINT}, #{item.examTypeId,jdbcType=BIGINT}, 
-      #{item.questionsBankTypeId,jdbcType=BIGINT}, #{item.questionsTypeId,jdbcType=BIGINT}, #{item.questionTitle,jdbcType=VARCHAR}, 
-      #{item.questionContent,jdbcType=VARCHAR}, #{item.questionA,jdbcType=VARCHAR}, #{item.questionB,jdbcType=VARCHAR}, 
-      #{item.questionC,jdbcType=VARCHAR}, #{item.questionD,jdbcType=VARCHAR}, #{item.questionE,jdbcType=VARCHAR}, 
-      #{item.questionF,jdbcType=VARCHAR}, #{item.answer,jdbcType=VARCHAR}, #{item.useDeptId,jdbcType=VARCHAR}, 
-      NOW(), #{item.createUserId,jdbcType=VARCHAR}, #{item.createUserName,jdbcType=VARCHAR}, 
-      NOW(), #{item.modifyUserId,jdbcType=VARCHAR}, #{item.modifyUserName,jdbcType=VARCHAR}, 
-      0,0, #{item.imgs,jdbcType=VARCHAR}, #{item.sourceUrl,jdbcType=VARCHAR}, 
-      #{item.examExplain,jdbcType=VARCHAR})    
-    </foreach>
-  </insert>
-   
-  
-  <update id="updateQuestion" parameterType="com.medical.dtms.service.dataobject.question.DtmsQuestionsDO">
-    update tb_dtms_questions
-    <set>
-      <if test="examTypeId != null">
-        exam_type_id = #{examTypeId,jdbcType=BIGINT},
-      </if>
-      <if test="questionsBankTypeId != null">
-        questions_bank_type_id = #{questionsBankTypeId,jdbcType=BIGINT},
-      </if>
-      <if test="questionsTypeId != null">
-        questions_type_id = #{questionsTypeId,jdbcType=BIGINT},
-      </if>
-      <if test="questionTitle != null and questionTitle != '' ">
-        question_title = #{questionTitle,jdbcType=VARCHAR},
-      </if>
-      <if test="questionContent != null and questionContent != '' ">
-        question_content = #{questionContent,jdbcType=VARCHAR},
-      </if>
-      <if test="questionA != null and questionA != '' ">
-        question_a = #{questionA,jdbcType=VARCHAR},
-      </if>
-      <if test="questionB != null and questionB != '' ">
-        question_b = #{questionB,jdbcType=VARCHAR},
-      </if>
-      <if test="questionC != null and questionC != '' ">
-        question_c = #{questionC,jdbcType=VARCHAR},
-      </if>
-      <if test="questionD != null and  questionD != '' ">
-        question_d = #{questionD,jdbcType=VARCHAR},
-      </if>
-      <if test="questionE != null and questionE != '' ">
-        question_e = #{questionE,jdbcType=VARCHAR},
-      </if>
-      <if test="questionF != null and questionF != '' ">
-        question_f = #{questionF,jdbcType=VARCHAR},
-      </if>
-      <if test="answer != null and answer != ''">
-        answer = #{answer,jdbcType=VARCHAR},
-      </if>
-      <if test="useDeptId != null">
-        use_dept_id = #{useDeptId,jdbcType=VARCHAR},
-      </if>
-      <if test="modifyDate != null">
-        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyUserId != null and modifyUserId != ''">
-        modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="modifyUserName != null">
-        modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="isUsed != null">
-        is_used = #{isUsed,jdbcType=BIT},
-      </if>
-      <if test="deleted != null">
-        is_deleted = #{deleted,jdbcType=BIT},
-      </if>
-      <if test="imgs != null and imgs != '' ">
-        imgs = #{imgs,jdbcType=VARCHAR},
-      </if>
-      <if test="sourceUrl != null and sourceUrl != '' ">
-        source_url = #{sourceUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="examExplain != null and examExplain != ''">
-        exam_explain = #{examExplain,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where biz_id = #{bizId,jdbcType=BIGINT}
-  </update>
-  
-  <select id="listQuestionsByQuery" parameterType="com.medical.dtms.dto.question.QuestionQuery" 
-  resultType="com.medical.dtms.common.model.question.DtmsQuestionListModel">
-  	select question.biz_id as bizId,question.questions_type_id as questionsTypeId ,
-  	item.item_name   as questionsTypeName,
-  	question.question_title as questionTitle  ,question.modify_date as modifyDate   ,
-  	question.modify_user_name as modifyUserName  ,question.is_used as isUsed
-  	from tb_dtms_questions question left join tb_dtms_qms_item_details item on question.questions_type_id = item.biz_id
-  	where question.is_deleted = 0
-  	and item.is_deleted = 0
-  	<if test="examTypeId !=null">
-  		and question.exam_type_id = #{examTypeId}
-  	</if>
-  	<if test="questionsBankTypeId !=null">
-  		and question.questions_bank_type_id = #{questionsBankTypeId}
-  	</if>
-  	<if test="questionsTypeId !=null">
-  		and question.questions_type_id = #{questionsTypeId}
-  	</if>
-  	<if test="questionTitle !=null and questionTitle!=''">
-  		and question.question_title = #{questionTitle}
-  	</if>
-  </select>
-  
-  <select id="getQuestionById" resultMap="BaseResultMap">
+    <insert id="saveQuestion" parameterType="com.medical.dtms.service.dataobject.question.DtmsQuestionsDO">
+        insert into tb_dtms_questions (<include refid="Insert_Column_List"/>)
+        values ( #{bizId,jdbcType=BIGINT}, #{examTypeId,jdbcType=BIGINT},
+        #{questionsBankTypeId,jdbcType=BIGINT}, #{questionsTypeId,jdbcType=BIGINT}, #{questionTitle,jdbcType=VARCHAR},
+        #{questionContent,jdbcType=VARCHAR}, #{questionA,jdbcType=VARCHAR}, #{questionB,jdbcType=VARCHAR},
+        #{questionC,jdbcType=VARCHAR}, #{questionD,jdbcType=VARCHAR}, #{questionE,jdbcType=VARCHAR},
+        #{questionF,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, #{useDeptId,jdbcType=VARCHAR},
+        NOW(), #{createUserId,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR},
+        NOW(), #{modifyUserId,jdbcType=VARCHAR}, #{modifyUserName,jdbcType=VARCHAR},
+        0,0, #{imgs,jdbcType=VARCHAR}, #{sourceUrl,jdbcType=VARCHAR},
+        #{examExplain,jdbcType=VARCHAR})
+    </insert>
+
+
+    <insert id="saveBatchQuestion" parameterType="java.util.List">
+        insert into tb_dtms_questions (<include refid="Insert_Column_List"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.bizId,jdbcType=BIGINT}, #{item.examTypeId,jdbcType=BIGINT},
+            #{item.questionsBankTypeId,jdbcType=BIGINT}, #{item.questionsTypeId,jdbcType=BIGINT},
+            #{item.questionTitle,jdbcType=VARCHAR},
+            #{item.questionContent,jdbcType=VARCHAR}, #{item.questionA,jdbcType=VARCHAR},
+            #{item.questionB,jdbcType=VARCHAR},
+            #{item.questionC,jdbcType=VARCHAR}, #{item.questionD,jdbcType=VARCHAR}, #{item.questionE,jdbcType=VARCHAR},
+            #{item.questionF,jdbcType=VARCHAR}, #{item.answer,jdbcType=VARCHAR}, #{item.useDeptId,jdbcType=VARCHAR},
+            NOW(), #{item.createUserId,jdbcType=VARCHAR}, #{item.createUserName,jdbcType=VARCHAR},
+            NOW(), #{item.modifyUserId,jdbcType=VARCHAR}, #{item.modifyUserName,jdbcType=VARCHAR},
+            0,0, #{item.imgs,jdbcType=VARCHAR}, #{item.sourceUrl,jdbcType=VARCHAR},
+            #{item.examExplain,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+
+    <update id="updateQuestion" parameterType="com.medical.dtms.service.dataobject.question.DtmsQuestionsDO">
+        update tb_dtms_questions
+        <set>
+            <if test="examTypeId != null">
+                exam_type_id = #{examTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="questionsBankTypeId != null">
+                questions_bank_type_id = #{questionsBankTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="questionsTypeId != null">
+                questions_type_id = #{questionsTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="questionTitle != null and questionTitle != '' ">
+                question_title = #{questionTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="questionContent != null and questionContent != '' ">
+                question_content = #{questionContent,jdbcType=VARCHAR},
+            </if>
+            <if test="questionA != null and questionA != '' ">
+                question_a = #{questionA,jdbcType=VARCHAR},
+            </if>
+            <if test="questionB != null and questionB != '' ">
+                question_b = #{questionB,jdbcType=VARCHAR},
+            </if>
+            <if test="questionC != null and questionC != '' ">
+                question_c = #{questionC,jdbcType=VARCHAR},
+            </if>
+            <if test="questionD != null and  questionD != '' ">
+                question_d = #{questionD,jdbcType=VARCHAR},
+            </if>
+            <if test="questionE != null and questionE != '' ">
+                question_e = #{questionE,jdbcType=VARCHAR},
+            </if>
+            <if test="questionF != null and questionF != '' ">
+                question_f = #{questionF,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null and answer != ''">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="useDeptId != null">
+                use_dept_id = #{useDeptId,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null and modifyUserId != ''">
+                modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyUserName != null">
+                modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="isUsed != null">
+                is_used = #{isUsed,jdbcType=BIT},
+            </if>
+            <if test="deleted != null">
+                is_deleted = #{deleted,jdbcType=BIT},
+            </if>
+            <if test="imgs != null and imgs != '' ">
+                imgs = #{imgs,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceUrl != null and sourceUrl != '' ">
+                source_url = #{sourceUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="examExplain != null and examExplain != ''">
+                exam_explain = #{examExplain,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where biz_id = #{bizId,jdbcType=BIGINT}
+    </update>
+
+    <select id="listQuestionsByQuery" parameterType="com.medical.dtms.dto.question.QuestionQuery"
+            resultType="com.medical.dtms.common.model.question.DtmsQuestionListModel">
+        select question.biz_id as bizId,question.questions_type_id as questionsTypeId ,
+        item.item_name as questionsTypeName,
+        question.question_title as questionTitle ,question.modify_date as modifyDate ,
+        question.modify_user_name as modifyUserName ,question.is_used as isUsed
+        from tb_dtms_questions question left join tb_dtms_qms_item_details item on question.questions_type_id =
+        item.biz_id
+        where question.is_deleted = 0
+        and item.is_deleted = 0
+        <if test="examTypeId !=null">
+            and question.exam_type_id = #{examTypeId}
+        </if>
+        <if test="questionsBankTypeId !=null">
+            and question.questions_bank_type_id = #{questionsBankTypeId}
+        </if>
+        <if test="questionsTypeId !=null">
+            and question.questions_type_id = #{questionsTypeId}
+        </if>
+        <if test="questionTitle !=null and questionTitle!=''">
+            and question.question_title = #{questionTitle}
+        </if>
+    </select>
+
+    <select id="getQuestionById" resultMap="BaseResultMap">
   	select biz_id, exam_type_id, questions_bank_type_id, questions_type_id, question_title, 
     question_content, question_a, question_b, question_c, question_d, question_e, question_f, 
     answer, use_dept_id, create_date, create_user_id, create_user_name, modify_date, 
@@ -171,62 +172,77 @@
     from tb_dtms_questions
     where biz_id = #{bizId}
   </select>
-   
-    <select id="listQuestionByQueryForExam" parameterType="com.medical.dtms.dto.question.QuestionQuery" 
-  resultType="com.medical.dtms.common.model.question.DtmsQuestionListModel">
-  select question.biz_id as bizId,question.questions_type_id as questionsTypeId ,
-  	question.question_title as questionTitle  ,question.modify_date as modifyDate   ,
-  	item.item_name   as questionsTypeName,
-  	question.modify_user_name as modifyUserName  ,question.is_used as isUsed
-  	from tb_dtms_questions question left join tb_dtms_qms_item_details item on question.questions_type_id = item.biz_id
-  	where question.is_deleted = 0
-  	and item.is_deleted = 0
-  		and question.biz_id  in 
-  		<foreach collection="questionIds" item="item" index="index" open="(" close=")" separator=",">
-  			#{item}
-  		</foreach>
-  
-  </select>
-   
-   
-   <select id="listQuestionByQueryForExamNotChose" parameterType="com.medical.dtms.dto.question.QuestionQuery" 
-  resultType="com.medical.dtms.common.model.question.DtmsQuestionListModel">
-  select question.biz_id as bizId,question.questions_type_id as questionsTypeId ,
-  	question.question_title as questionTitle  ,question.modify_date as modifyDate   ,
-  	item.item_name   as questionsTypeName,
-  	question.modify_user_name as modifyUserName  ,question.is_used as isUsed
-  	from tb_dtms_questions question left join tb_dtms_qms_item_details item on question.questions_type_id = item.biz_id
-  	where question.is_deleted = 0
-  	<if test="examTypeId !=null">
-  		and question.exam_type_id = #{examTypeId}
-  	</if>
-  	<if test="questionsBankTypeId !=null">
-  		and question.questions_bank_type_id = #{questionsBankTypeId}
-  	</if>
-  	<if test="questionsTypeId !=null">
-  		and question.questions_type_id = #{questionsTypeId}
-  	</if>
-  	<if test="questionTitle !=null and questionTitle != ''">
-  		and question.question_title = #{questionTitle}
-  	</if> 
-  	<if test="questionIds != null and questionIds.size>0">
-  		and question.biz_id not in 
-  		<foreach collection="questionIds" item="item" index="index" open="(" close=")" separator=",">
-  			#{item}
-  		</foreach>
-  	</if>
-  </select>
-  
-  
-  <select id="listQuestionsForPreview" parameterType="com.medical.dtms.dto.question.QuestionQuery" 
-  	resultMap="BaseResultMap">
-  	select <include refid="Insert_Column_List"/>
-  	from tb_dtms_questions   
-  	where  is_deleted = 0
-  		and biz_id  in 
-  		<foreach collection="questionIds" item="item" index="index" open="(" close=")" separator=",">
-  			#{item}
-  		</foreach>
-  
-  </select>
+
+    <select id="listQuestionByQueryForExam" parameterType="com.medical.dtms.dto.question.QuestionQuery"
+            resultType="com.medical.dtms.common.model.question.DtmsQuestionListModel">
+        select question.biz_id as bizId,question.questions_type_id as questionsTypeId ,
+        question.question_title as questionTitle ,question.modify_date as modifyDate ,
+        item.item_name as questionsTypeName,
+        question.modify_user_name as modifyUserName ,question.is_used as isUsed
+        from tb_dtms_questions question left join tb_dtms_qms_item_details item on question.questions_type_id =
+        item.biz_id
+        where question.is_deleted = 0
+        and item.is_deleted = 0
+        and question.biz_id in
+        <foreach collection="questionIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+
+    </select>
+
+
+    <select id="listQuestionByQueryForExamNotChose" parameterType="com.medical.dtms.dto.question.QuestionQuery"
+            resultType="com.medical.dtms.common.model.question.DtmsQuestionListModel">
+        select question.biz_id as bizId,question.questions_type_id as questionsTypeId ,
+        question.question_title as questionTitle ,question.modify_date as modifyDate ,
+        item.item_name as questionsTypeName,
+        question.modify_user_name as modifyUserName ,question.is_used as isUsed
+        from tb_dtms_questions question left join tb_dtms_qms_item_details item on question.questions_type_id =
+        item.biz_id
+        where question.is_deleted = 0
+        <if test="examTypeId !=null">
+            and question.exam_type_id = #{examTypeId}
+        </if>
+        <if test="questionsBankTypeId !=null">
+            and question.questions_bank_type_id = #{questionsBankTypeId}
+        </if>
+        <if test="questionsTypeId !=null">
+            and question.questions_type_id = #{questionsTypeId}
+        </if>
+        <if test="questionTitle !=null and questionTitle != ''">
+            and question.question_title = #{questionTitle}
+        </if>
+        <if test="questionIds != null and questionIds.size>0">
+            and question.biz_id not in
+            <foreach collection="questionIds" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="listQuestionsForPreview" parameterType="com.medical.dtms.dto.question.QuestionQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Insert_Column_List"/>
+        from tb_dtms_questions
+        where is_deleted = 0
+        and biz_id in
+        <foreach collection="questionIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="listQuestionsByExamId" parameterType="java.lang.Long"
+            resultType="com.medical.dtms.service.dataobject.question.DtmsQuestionsDO">
+        select
+         ques.biz_id AS bizId, ques.exam_type_id AS examTypeId, ques.questions_bank_type_id AS questionsBankTypeId, ques.questions_type_id AS questionsTypeId, ques.question_title AS questionTitle,
+         ques.question_content AS questionContent, ques.question_a AS questionA, ques.question_b AS questionB, ques.question_c AS questionC, ques.question_d AS questionD, ques.question_e AS questionE, ques.question_f AS questionF,
+         ques.answer AS answer, ques.use_dept_id AS useDeptId, ques.is_used AS isUsed, ques.imgs AS imgs, ques.source_url AS sourceUrl, ques.exam_explain AS examExplain
+        from tb_dtms_questions ques
+        left join tb_dtms_exam_questions eques
+        on ques.biz_id = eques.questions_id
+        where ques.is_deleted = 0
+        and eques.exam_id = #{examId}
+    </select>
 </mapper>

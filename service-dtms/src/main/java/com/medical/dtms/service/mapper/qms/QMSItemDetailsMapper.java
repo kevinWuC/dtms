@@ -4,6 +4,7 @@ import com.medical.dtms.common.model.dropdown.DropDownDetailsModel;
 import com.medical.dtms.common.model.dropdown.DropDownModel;
 import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
 import com.medical.dtms.common.model.item.QMSItemDetailsModel;
+import com.medical.dtms.common.model.item.SimpleQMSItemDetailsModel;
 import com.medical.dtms.common.model.question.QuestionItemModel;
 import com.medical.dtms.dto.item.query.QMSItemDetailsQuery;
 import com.medical.dtms.service.dataobject.item.QMSItemDetailsDO;
@@ -35,8 +36,10 @@ public interface QMSItemDetailsMapper {
 
     List<QuestionItemModel> listDetailsByItemsIdForQuestion(@Param("itemsId") Long itemsId);
 
-    List<QuestionItemModel> queryDetailsList(List<Long> questionsTypeIds);
+//    List<QuestionItemModel> queryDetailsList(List<Long> questionsTypeIds);
 
     List<DropDownDetailsModel> listTypeDetailsName(@Param("itemsId") Long itemsId);
+
+    List<SimpleQMSItemDetailsModel> getQMSItemDetailsByIds(List<Long> trainTypeIds);
 
 }

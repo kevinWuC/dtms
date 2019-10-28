@@ -61,7 +61,7 @@ public class DataBaseResourceController {
     /**
      * @param [query]
      * @return com.medical.dtms.common.resp.Result<?>
-     * @description 数据库资源 - 执行 sql TODO
+     * @description 数据库资源 - 执行 sql
      **/
     @RequestMapping(value = "/table/executeSql", method = RequestMethod.POST)
     public Result<?> executeSql(@RequestBody DataBaseTableQuery query) {

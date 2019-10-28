@@ -9,7 +9,7 @@
         <result column="train_user_id" jdbcType="BIGINT" property="trainUserId"/>
         <result column="questions_id" jdbcType="BIGINT" property="questionsId"/>
         <result column="exam_id" jdbcType="BIGINT" property="examId"/>
-        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="user_answer" jdbcType="VARCHAR" property="answer"/>
         <result column="answer_points" jdbcType="INTEGER" property="answerPoints"/>
         <result column="sort_code" jdbcType="INTEGER" property="sortCode"/>
         <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
@@ -21,8 +21,9 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, biz_id, questions_id, exam_id, train_id, train_user_id, user_id, answer,answer_points,sort_code, is_deleted,
-    creator, creator_id, gmt_created, modifier, modifier_id, gmt_modified
+    id, biz_id, train_id, user_id, train_user_id, questions_id, exam_id, user_answer, answer_points,
+    sort_code, is_deleted, gmt_created, creator_id, creator, gmt_modified, modifier_id,
+    modifier
   </sql>
 
     <sql id="table_name">
@@ -50,10 +51,12 @@
         <include refid="Base_Column_List"/>
         )
         values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=BIGINT}, #{trainId,jdbcType=BIGINT},
-        #{userId,jdbcType=BIGINT}, #{questionsId,jdbcType=BIGINT}, #{questionTypeId,jdbcType=BIGINT},
-        #{userAnswer,jdbcType=VARCHAR}, #{isRight,jdbcType=BIT}, NOW(),
-        #{createUserId,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR}, NOW(),
-        #{modifyUserId,jdbcType=BIGINT}, #{modifyUserName,jdbcType=VARCHAR})
+        #{userId,jdbcType=BIGINT}, #{trainUserId,jdbcType=BIGINT}, #{questionsId,jdbcType=BIGINT},
+        #{examId,jdbcType=BIGINT}, #{user_answer,jdbcType=VARCHAR},
+        #{answerPoints,jdbcType=INTEGER},#{sortCode,jdbcType=INTEGER},
+        0,NOW(),
+        #{creatorId,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, NOW(),
+        #{modifierId,jdbcType=BIGINT}, #{modifier,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.medical.dtms.service.dataobject.train.TrainQuestionProcessDO">
         insert into
@@ -220,7 +223,7 @@
             <set>
                 gmt_modified = NOW(),
                 <if test="item.answer != null">
-                    answer = #{item.answer,jdbcType=VARCHAR},
+                    user_answer = #{item.answer,jdbcType=VARCHAR},
                 </if>
                 <if test="item.answerPoints != null">
                     answer_points=#{item.answerPoints,jdbcType=INTEGER},
@@ -239,6 +242,64 @@
             and exam_id = #{item.examId,jdbcType=BIGINT}
             and train_id = #{item.trainId,jdbcType=BIGINT}
             and train_user_id = #{item.trainUserId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <!--  校验用户是否是第一次参加本次考试-->
+    <select id="checkFirstExamOrNot" parameterType="com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where is_deleted = 0
+        and train_user_id = #{trainUserId,jdbcType=BIGINT}
+        and exam_id = #{examId,jdbcType=BIGINT}
+    </select>
+
+    <!--  批量新增数据-->
+    <insert id="batchInsertInfo" parameterType="java.util.List">
+        insert into
+        <include refid="table_name"/>
+        (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=BIGINT}, #{item.bizId,jdbcType=BIGINT}, #{item.trainId,jdbcType=BIGINT},
+            #{item.userId,jdbcType=BIGINT}, #{item.trainUserId,jdbcType=BIGINT}, #{item.questionsId,jdbcType=BIGINT},
+            #{item.examId,jdbcType=BIGINT}, #{item.answer,jdbcType=VARCHAR}, #{item.answerPoints,jdbcType=INTEGER},
+            #{item.sortCode,jdbcType=INTEGER}, 0, NOW(),
+            #{item.creatorId,jdbcType=VARCHAR}, #{item.creator,jdbcType=VARCHAR}, NOW(),
+            #{item.modifierId,jdbcType=VARCHAR}, #{item.modifier,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <update id="batchUpdateTrainQuestionProcess" parameterType="com.medical.dtms.common.model.train.MyTrainSubmitModel">
+        <foreach collection="questions" item="item" index="index" open="" close="" separator=";">
+            update
+            <include refid="table_name"/>
+            <set>
+                <if test="item.answer != null">
+                    user_answer = #{item.answer,jdbcType=VARCHAR},
+                </if>
+                <if test="item.questionsPoints != null">
+                    answer_points = #{item.questionsPoints,jdbcType=INTEGER},
+                </if>
+                <if test="modifier != null">
+                    modifier = #{modifier,jdbcType=VARCHAR},
+                </if>
+                <if test="modifierId != null">
+                    modifier_id = #{modifierId,jdbcType=VARCHAR},
+                </if>
+            </set>
+            where train_id = #{trainId,jdbcType=BIGINT}
+            and user_id = #{userId,jdbcType=BIGINT}
+            and train_user_id = #{userId,jdbcType=BIGINT}
+            and exam_id = #{examId,jdbcType=BIGINT}
+            and questions_id = #{item.questionsId}
         </foreach>
     </update>
 </mapper>

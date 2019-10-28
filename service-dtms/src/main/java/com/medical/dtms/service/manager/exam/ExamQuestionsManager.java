@@ -57,4 +57,8 @@ public class ExamQuestionsManager {
         Integer num = examQuestionsMapper.deleteByExamId(examId);
         return num > 0 ? true : false;
     }
+
+    public List<Long> queryByExamId(Long examId){
+        return examQuestionsMapper.queryByExamId(examId);
+    }
 }

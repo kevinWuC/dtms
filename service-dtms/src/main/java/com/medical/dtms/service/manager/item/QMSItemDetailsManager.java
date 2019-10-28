@@ -5,6 +5,7 @@ import com.medical.dtms.common.model.dropdown.DropDownDetailsModel;
 import com.medical.dtms.common.model.dropdown.DropDownModel;
 import com.medical.dtms.common.model.dropdown.query.DropDownQuery;
 import com.medical.dtms.common.model.item.QMSItemDetailsModel;
+import com.medical.dtms.common.model.item.SimpleQMSItemDetailsModel;
 import com.medical.dtms.common.model.question.QuestionItemModel;
 import com.medical.dtms.common.util.BeanConvertUtils;
 import com.medical.dtms.dto.item.QMSItemDetailsDTO;
@@ -161,6 +162,15 @@ public class QMSItemDetailsManager {
      * 我的培训 - 试题类型id转name
      */
     public List<QuestionItemModel> queryDetailsList(List<Long> questionsTypeIds) {
-        return detailsMapper.queryDetailsList(questionsTypeIds);
+        return null;
     }
+
+    /**
+     * 根据id 集合批量查询数据
+     */
+    public List<SimpleQMSItemDetailsModel> getQMSItemDetailsByIds(List<Long> trainTypeIds) {
+        return detailsMapper.getQMSItemDetailsByIds(trainTypeIds);
+    }
+
+
 }

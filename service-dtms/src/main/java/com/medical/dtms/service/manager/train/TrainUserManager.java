@@ -2,12 +2,13 @@ package com.medical.dtms.service.manager.train;
 
 import com.medical.dtms.common.enumeration.log.OperationTypeEnum;
 import com.medical.dtms.common.model.exam.ExamTotalModel;
+import com.medical.dtms.common.model.train.MyTrainPageModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
+import com.medical.dtms.common.model.train.query.MyTrainPageQuery;
 import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
 import com.medical.dtms.common.util.BeanConvertUtils;
-import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
 import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.logclient.service.LogClient;
@@ -41,6 +42,7 @@ public class TrainUserManager {
 
     /**
      * 校验培训用户是否存在
+     *
      * @return
      */
     public TrainUserDTO getTrainUserByCondition(Long bizId) {
@@ -214,5 +216,17 @@ public class TrainUserManager {
      */
     public MyTrainTestModel listExamIds(Long bizId) {
         return trainUserMapper.listExamIds(bizId);
+    }
+
+    /**
+     * 培训管理 - 我的培训 - 分页展示
+     */
+    public List<MyTrainPageModel> pageListMyTrain(MyTrainPageQuery query) {
+        return trainUserMapper.pageListMyTrain(query);
+    }
+
+    public Integer updateUserInfo(TrainUserDTO dto){
+        TrainUserDO aDo = BeanConvertUtils.convert(dto, TrainUserDO.class);
+        return trainUserMapper.updateUserInfo(aDo);
     }
 }

@@ -1,68 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.medical.dtms.service.mapper.exam.ExamQuestionsMapper">
-  <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamQuestionsDO">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="biz_id" jdbcType="BIGINT" property="examQuestionId" />
-    <result column="exam_id" jdbcType="BIGINT" property="examId" />
-    <result column="exam_question_type_id" jdbcType="BIGINT" property="examQuestionTypeId" />
-    <result column="questions_id" jdbcType="BIGINT" property="questionsId" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
-    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.medical.dtms.service.dataobject.exam.ExamQuestionsDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="biz_id" jdbcType="BIGINT" property="examQuestionId"/>
+        <result column="exam_id" jdbcType="BIGINT" property="examId"/>
+        <result column="exam_question_type_id" jdbcType="BIGINT" property="examQuestionTypeId"/>
+        <result column="questions_id" jdbcType="BIGINT" property="questionsId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+    </resultMap>
+    <sql id="Base_Column_List">
       biz_id, exam_id, exam_question_type_id, questions_id, create_date, create_user_id, 
     create_user_name
   </sql>
-  
-  <insert id="insertExamQuestion" parameterType="com.medical.dtms.service.dataobject.exam.ExamQuestionsDO">
-    insert into tb_dtms_exam_questions (<include refid="Base_Column_List"/>)
-    values (  #{examQuestionId,jdbcType=BIGINT}, #{examId,jdbcType=BIGINT}, 
-      #{examQuestionTypeId,jdbcType=BIGINT}, #{questionsId,jdbcType=BIGINT}, NOW(), 
-      #{createUserId,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR})
-  </insert>
-  
-   <insert id="insertBatchExamQuestion" parameterType="java.util.List">
-    insert into tb_dtms_exam_questions (<include refid="Base_Column_List"/>)
-    values 
-    <foreach collection="list" item="item" index="index" separator=",">
-		(  #{item.examQuestionId,jdbcType=BIGINT}, #{item.examId,jdbcType=BIGINT}, 
-      #{item.examQuestionTypeId,jdbcType=BIGINT}, #{item.questionsId,jdbcType=BIGINT}, NOW(), 
-      #{item.createUserId,jdbcType=BIGINT}, #{item.createUserName,jdbcType=VARCHAR})
-    </foreach>
-    
-  </insert>
-   <delete id="deleteByExamId">
+
+    <insert id="insertExamQuestion" parameterType="com.medical.dtms.service.dataobject.exam.ExamQuestionsDO">
+        insert into tb_dtms_exam_questions (<include refid="Base_Column_List"/>)
+        values ( #{examQuestionId,jdbcType=BIGINT}, #{examId,jdbcType=BIGINT},
+        #{examQuestionTypeId,jdbcType=BIGINT}, #{questionsId,jdbcType=BIGINT}, NOW(),
+        #{createUserId,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertBatchExamQuestion" parameterType="java.util.List">
+        insert into tb_dtms_exam_questions (<include refid="Base_Column_List"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.examQuestionId,jdbcType=BIGINT}, #{item.examId,jdbcType=BIGINT},
+            #{item.examQuestionTypeId,jdbcType=BIGINT}, #{item.questionsId,jdbcType=BIGINT}, NOW(),
+            #{item.createUserId,jdbcType=BIGINT}, #{item.createUserName,jdbcType=VARCHAR})
+        </foreach>
+
+    </insert>
+    <delete id="deleteByExamId">
    	delete from tb_dtms_exam_questions
    	where exam_id = #{examId}
    </delete>
-<!--   <update id="updateByPrimaryKeySelective" parameterType="model.ExamQuestionsDO">
-    update tb_dtms_exam_questions
-    <set>
-      <if test="bizId != null">
-        biz_id = #{bizId,jdbcType=BIGINT},
-      </if>
-      <if test="examId != null">
-        exam_id = #{examId,jdbcType=BIGINT},
-      </if>
-      <if test="examQuestionTypeId != null">
-        exam_question_type_id = #{examQuestionTypeId,jdbcType=BIGINT},
-      </if>
-      <if test="questionsId != null">
-        questions_id = #{questionsId,jdbcType=BIGINT},
-      </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUserId != null">
-        create_user_id = #{createUserId,jdbcType=BIGINT},
-      </if>
-      <if test="createUserName != null">
-        create_user_name = #{createUserName,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update> -->
-   
+    <!--   <update id="updateByPrimaryKeySelective" parameterType="model.ExamQuestionsDO">
+        update tb_dtms_exam_questions
+        <set>
+          <if test="bizId != null">
+            biz_id = #{bizId,jdbcType=BIGINT},
+          </if>
+          <if test="examId != null">
+            exam_id = #{examId,jdbcType=BIGINT},
+          </if>
+          <if test="examQuestionTypeId != null">
+            exam_question_type_id = #{examQuestionTypeId,jdbcType=BIGINT},
+          </if>
+          <if test="questionsId != null">
+            questions_id = #{questionsId,jdbcType=BIGINT},
+          </if>
+          <if test="createDate != null">
+            create_date = #{createDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="createUserId != null">
+            create_user_id = #{createUserId,jdbcType=BIGINT},
+          </if>
+          <if test="createUserName != null">
+            create_user_name = #{createUserName,jdbcType=VARCHAR},
+          </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+      </update> -->
+
+
+    <select id="queryByExamId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select  questions_id from
+       tb_dtms_exam_questions
+       where exam_id = #{examId}
+    </select>
 </mapper>

@@ -53,5 +53,9 @@ public class TrainConfigModel {
      */
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
     private Date gmtCreated;
+    /**
+     * 及格分数
+     */
+    private Integer passPoint;
 
 }

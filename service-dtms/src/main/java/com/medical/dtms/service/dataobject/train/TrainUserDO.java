@@ -137,6 +137,11 @@ public class TrainUserDO {
     @LogTag(alias = "pointStr", builtinType = BuiltinTypeHandler.NORMAL)
     private String pointStr;
     /**
+     * 及格分数
+     */
+    @LogTag(alias = "passPoint", builtinType = BuiltinTypeHandler.NORMAL)
+    private Integer passPoint;
+    /**
      * 开始阅读时间
      */
     @LogTag(alias = "startReadTime", builtinType = BuiltinTypeHandler.NORMAL)

@@ -329,7 +329,7 @@
             config.biz_id AS bizId , details.item_name AS trainTypeName ,config.train_name AS trainName
             ,config.train_description AS trainDescription ,config.start_date AS startDate
             ,config.end_date AS endDate ,config.is_start AS isStart
-            ,config.gmt_created AS gmtCreated
+            ,config.gmt_created AS gmtCreated,config.pass_point AS passPoint
         from
         tb_dtms_train_config config
         left join tb_dtms_qms_item_details details on config.train_type_id = details.biz_id

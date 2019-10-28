@@ -1,11 +1,12 @@
 package com.medical.dtms.service.mapper.train;
 
 import com.medical.dtms.common.model.exam.ExamTotalModel;
+import com.medical.dtms.common.model.train.MyTrainPageModel;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
 import com.medical.dtms.common.model.train.TrainUserQueryModel;
+import com.medical.dtms.common.model.train.query.MyTrainPageQuery;
 import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
-import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
 import com.medical.dtms.dto.train.TrainUserDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.service.dataobject.train.TrainUserDO;
@@ -47,4 +48,8 @@ public interface TrainUserMapper {
     TrainUserDO getTrainUserByPrimaryKey(TrainSubmitAnswerQuery query);
 
     MyTrainTestModel listExamIds(@Param("bizId") Long bizId);
+
+    List<MyTrainPageModel> pageListMyTrain(MyTrainPageQuery query);
+
+    Integer updateUserInfo(TrainUserDO dto);
 }

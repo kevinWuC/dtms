@@ -38,4 +38,6 @@ public interface ExamQuestionsMapper {
      * @return
      */
     Integer deleteByExamId(@Param("examId") Long examId);
+
+    List<Long> queryByExamId(Long examId);
 }

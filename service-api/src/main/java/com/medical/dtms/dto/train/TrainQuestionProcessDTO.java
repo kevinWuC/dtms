@@ -27,6 +27,8 @@ public class TrainQuestionProcessDTO {
     /**
      * 培训ID
      */
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long trainId;
     /**
      * 试题ID

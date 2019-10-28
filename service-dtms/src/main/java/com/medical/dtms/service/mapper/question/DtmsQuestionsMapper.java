@@ -2,6 +2,7 @@ package com.medical.dtms.service.mapper.question;
 
 import java.util.List;
 
+import com.medical.dtms.common.model.question.DtmsQuestionsModel;
 import org.springframework.stereotype.Repository;
 
 import com.medical.dtms.common.model.question.DtmsQuestionListModel;
@@ -79,4 +80,6 @@ public interface DtmsQuestionsMapper {
      * @return
      */
     List<DtmsQuestionsDO> listQuestionsForPreview(QuestionQuery query);
+
+    List<DtmsQuestionsDO> listQuestionsByExamId(Long examId);
 }

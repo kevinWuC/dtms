@@ -6,24 +6,20 @@ import com.medical.dtms.common.enumeration.ErrorCodeEnum;
 import com.medical.dtms.common.login.OperatorInfo;
 import com.medical.dtms.common.login.SessionTools;
 import com.medical.dtms.common.model.exam.ExamExcelModel;
-import com.medical.dtms.common.model.exam.ExamStartModel;
 import com.medical.dtms.common.model.exam.ExamTotalModel;
-import com.medical.dtms.common.model.exam.query.ExamSubmitAnswerQuery;
 import com.medical.dtms.common.model.train.MyTrainTestModel;
 import com.medical.dtms.common.model.train.TrainExcelModel;
 import com.medical.dtms.common.model.train.TrainUserModel;
-import com.medical.dtms.common.model.train.TrainUserQueryModel;
 import com.medical.dtms.common.model.train.query.TrainSubmitAnswerQuery;
 import com.medical.dtms.common.resp.Result;
 import com.medical.dtms.common.export.ExcelHandlerService;
-import com.medical.dtms.dto.train.TrainUserDTO;
+import com.medical.dtms.dto.train.TrainQuestionProcessDTO;
 import com.medical.dtms.dto.train.query.TrainUserQuery;
 import com.medical.dtms.feignservice.train.TrainUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -75,7 +71,7 @@ public class TrainUserController {
     /**
      * @param [query, request, response]
      * @return void
-     * @description 培训统计-导出考试人员的成绩信息(导出所有记录)  TODO 调整表格样式
+     * @description 培训统计-导出考试人员的成绩信息(导出所有记录)
      **/
     @RequestMapping(value = "/train/exportTrain", method = RequestMethod.GET)
     public void exportTrain(TrainUserQuery query, HttpServletRequest request, HttpServletResponse response) {
@@ -118,64 +114,6 @@ public class TrainUserController {
     }
 
     /**
-     * @param userPlanModelDTO
-     * @return
-     * @description 我的培训- 开始考试
-     **/
-    @RequestMapping(value = "/train/beginTrainExam", method = RequestMethod.POST)
-    public Result<MyTrainTestModel> beginTrainExam(@RequestBody TrainUserDTO trainUserDTO) {
-        if (null == trainUserDTO || null == trainUserDTO.getBizId()){
-            return Result.buildFailed(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "主键为空");
-        }
-
-        OperatorInfo operatorInfo = SessionTools.getOperator();
-        trainUserDTO.setCreatorId(operatorInfo.getBizId().toString());
-        trainUserDTO.setCreator(operatorInfo.getDspName());
-
-        MyTrainTestModel testModel = trainUserService.beginTrainExam(trainUserDTO);
-        return Result.buildSuccess(testModel);
-    }
-
-
-    /**
-     * @param [query]
-     * @return com.medical.dtms.common.resp.Result<java.util.List < com.medical.dtms.model.train.trainuserModel>>
-     * @description 我的培训- 查询培训试卷
-     **/
-    @RequestMapping(value = "/train/listTrainExam", method = RequestMethod.POST)
-    public Result<PageInfo<TrainUserQueryModel>> listTrainExam(@RequestBody TrainUserQuery query) {
-        checkParams(query);
-        PageInfo<TrainUserQueryModel> pageInfo = trainUserService.listTrainExam(query);
-        return Result.buildSuccess(pageInfo);
-    }
-
-    /**
-     * 提交考试答案
-     *
-     * @param query
-     * @return
-     */
-    @RequestMapping(value = "/train/submitTrainAnswer", method = RequestMethod.POST)
-    public Result<Boolean> submitTrainAnswer(@RequestBody TrainSubmitAnswerQuery query){
-        if (null == query || null == query.getExamId()
-                || null == query.getTrainId()
-                || null == query.getTrainUserId()
-                || CollectionUtils.isEmpty(query.getQuestions())
-            ) {
-            log.error("缺少参数");
-            throw new BizException(ErrorCodeEnum.PARAM_IS_EMPTY.getErrorCode(), "缺少参数");
-        }
-        //获取用户信息
-        OperatorInfo info = SessionTools.getOperator();
-        query.setModifier(info.getDspName());
-        query.setModifierId(info.getUserId());
-        query.setUserId(info.getBizId());
-        trainUserService.submitTrainAnswer(query);
-
-        return new Result<Boolean>(ErrorCodeEnum.SUCCESS.getErrorCode(), true, "提交成功", true);
-    }
-
-    /**
      * @param [query]
      * @return com.medical.dtms.common.resp.Result<java.lang.Boolean>
      * @description 考试统计 - 查询查看（分页展示）
@@ -191,7 +129,7 @@ public class TrainUserController {
     /**
      * @param [query, request, response]
      * @return void
-     * @description 考试统计-导出考试人员的成绩信息(导出所有记录)  TODO 调整表格样式
+     * @description 考试统计-导出考试人员的成绩信息(导出所有记录)
      **/
     @RequestMapping(value = "/train/exportExam", method = RequestMethod.GET)
     public void exportExam(TrainUserQuery query, HttpServletRequest request, HttpServletResponse response) {

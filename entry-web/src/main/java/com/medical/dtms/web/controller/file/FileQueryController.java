@@ -78,7 +78,7 @@ public class FileQueryController {
     /**
      * @param [query, request, response]
      * @return void
-     * @description 导出文件(导出所有记录)  TODO 调整表格样式
+     * @description 导出文件(导出所有记录)
      **/
     @RequestMapping(value = "/query/exportFiles", method = RequestMethod.GET)
     public void exportFiles(FileModelQuery query, HttpServletRequest request, HttpServletResponse response) {
